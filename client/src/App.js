@@ -10,7 +10,7 @@ function App() {
       .then(data => setMessage(data.message))
   }, [])
 
-  return <h1>{message}</h1>
+  return <h1 className="text-3xl text-red-800 font-bold underline">{message}</h1>
 }
 
 export default App
