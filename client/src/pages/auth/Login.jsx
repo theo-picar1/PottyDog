@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom'
 
 function Login() {
     return (
-        <AuthLayout>
+        <AuthLayout
+            title="Welcome Back!"
+            message="Let's get back to tracking potty times."
+        >
             <form className="space-y-4">
                 <div>
                     <label htmlFor="email" className="block text-gray-700 mb-2">
@@ -15,7 +18,7 @@ function Login() {
                         <input
                             id="email"
                             type="email"
-                            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="text-sm w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="your@email.com"
                             required
                         />
@@ -31,7 +34,7 @@ function Login() {
                         <input
                             id="password"
                             type="password"
-                            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="text-sm w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="••••••••"
                             required
                         />
