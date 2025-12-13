@@ -1,7 +1,71 @@
-{% block title %}
-    Register An Account!
-{% endblock %}
+{% extends "layout.html" %}
+{% block title %} Register An Account! {% endblock %} {% block body %}
+<div
+  class="container d-flex justify-content-center align-items-center min-vh-100"
+>
+  <div class="card shadow-lg border-0" style="max-width: 420px; width: 100%">
+    <div class="card-body p-4">
+      <h2 class="card-title text-center mb-4">Create Account</h2>
 
-{% block body %}
-    <h1>Register</h1>
+      <form method="POST">
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="John Doe"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="dog_name" class="form-label">Dog's Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="dog_name"
+            name="dog_name"
+            placeholder="Buddy"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            required
+          />
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg">Register</button>
+        </div>
+      </form>
+
+      <p class="text-center text-muted mt-3 mb-0">
+        Already have an account?
+        <a href="/login" class="text-decoration-none">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
 {% endblock %}
