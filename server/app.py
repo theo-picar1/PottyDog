@@ -44,6 +44,9 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        cursor = None
+        conn = None
+        
         try:
             username = request.form.get('username')
             email = request.form.get('email')
@@ -98,13 +101,15 @@ def register():
             return render_template('register.html', error="An error occurred during registration. Please try again."), 500
 
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
 
         # Everything passed
-        return render_template('login.html')
+        return render_template('login.html'), 200
             
-    return render_template('register.html')
+    return render_template('register.html'), 200
 
 
 if __name__ == "__main__":
