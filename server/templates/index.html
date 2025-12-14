@@ -4,4 +4,9 @@
 
 {% block body %}
     <h1>PottyDog Application</h1>
+
+    <div class="row">
+        <a href="{{ url_for('register') }}"><button>Register</button></a>
+        <a href="{{ url_for('login') }}"><button>Login</button></a>
+    </div>
 {% endblock %}

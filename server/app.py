@@ -58,20 +58,20 @@ def register():
                 return render_template('register.html', error="Please fill in all required fields!"), 400
             
             if len(username) > 50:
-                return render_template('register.html', error="Username must be 50 characters or fewer."), 400
+                return render_template('register.html', long_username_error="Username must be 50 characters or fewer."), 400
             
             if dog_name and len(dog_name) > 25:
-                return render_template('register.html', error="Dog name must be 25 characters or fewer."), 400
+                return render_template('register.html', long_dog_name_error="Dog name must be 25 characters or fewer."), 400
             
             # Standard email format
             email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(email_regex, email):
-                return render_template('register.html', error="Invalid email format."), 400
+                return render_template('register.html', email_format_error="Invalid email format."), 400
             
             # At least 8 characters, one uppercase, one lowercase, one digit, one special character
             password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
             if not re.match(password_regex, password):
-                return render_template('register.html', error="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character."), 400
+                return render_template('register.html', weak_password_error="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character."), 400
             
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -84,7 +84,7 @@ def register():
                 (email,)
             )
             if cursor.fetchone():
-                return render_template('register.html', error="An account with this email already exists."), 400
+                return render_template('register.html', existing_user_error="An account with this email already exists."), 400
 
             # Otherwise, proceed
             cursor.execute(
