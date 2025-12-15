@@ -45,6 +45,9 @@ def login():
             email = request.form.get('email')
             password = request.form.get('password')
 
+            if not email or not password:
+                return render_template('login.html', error="Please fill in all required fields!"), 400
+
             conn = get_db_connection()
             cursor = conn.cursor(dictionary=True)
 
@@ -56,12 +59,11 @@ def login():
             # Check if that user exists
             user = cursor.fetchone()
             if not user:
-                return render_template('login.html', error="Invalid email or password."), 400
+                return render_template('login.html', user_error="No existing user found."), 404
             
             # Check two passwords with each other
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            if not bcrypt.check_password_hash(hashed_password, password):
-                return render_template('login.html', error="Invalid email or password."), 400
+            if not bcrypt.check_password_hash(user['password'], password):
+                return render_template('login.html', error="Invalid email or password."), 401
             
             return render_template('index.html', user=user), 200
         
@@ -74,7 +76,7 @@ def login():
             if conn:
                 conn.close()
 
-    return render_template('login.html')
+    return render_template('login.html'), 200
 
 
 # Registration page and logic
