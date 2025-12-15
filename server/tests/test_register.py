@@ -103,7 +103,21 @@ def test_weak_register_password(client):
     }
     response = client.post('/register', data=data)
     assert response.status_code == 400
-    assert b"Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character." in response.data  
+    assert b"Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character." in response.data 
+
+
+# Test mismatched passwords
+def test_confirm_passsword_mismatch_register(client):
+    data = {
+        'username': 'testuser',
+        'email': 'test@email.com',
+        'password': 'Password12!',
+        'confirm_password': 'Password34!'
+    }  
+
+    response = client.post('/register', data=data)
+    assert response.status_code == 400
+    assert b"Passwords do not match." in response.data
 
 
 # Test for existing email

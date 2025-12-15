@@ -91,6 +91,7 @@ def register():
             email = request.form.get('email')
             dog_name = request.form.get('dog_name') # Not required
             password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
 
             # Case handling for registering
             if not username or not email or not password:
@@ -111,6 +112,9 @@ def register():
             password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
             if not re.match(password_regex, password):
                 return render_template('register.html', weak_password_error="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character."), 400
+            
+            if confirm_password and confirm_password != password:
+                return render_template('register.html', confirm_password_error="Passwords do not match."), 400
             
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
