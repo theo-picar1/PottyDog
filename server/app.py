@@ -37,6 +37,43 @@ def index():
 # Login page and logic
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        conn = None
+        cursor = None
+
+        try:
+            email = request.form.get('email')
+            password = request.form.get('password')
+
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+
+            cursor.execute(
+                "SELECT * FROM users WHERE email = %s",
+                (email,)
+            )
+
+            # Check if that user exists
+            user = cursor.fetchone()
+            if not user:
+                return render_template('login.html', error="Invalid email or password."), 400
+            
+            # Check two passwords with each other
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            if not bcrypt.check_password_hash(hashed_password, password):
+                return render_template('login.html', error="Invalid email or password."), 400
+            
+            return render_template('index.html', user=user), 200
+        
+        except:
+            return render_template('login.html', error="An error occurred during login. Please try again."), 500
+        
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
     return render_template('login.html')
 
 
