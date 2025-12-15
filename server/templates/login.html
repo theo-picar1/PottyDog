@@ -7,7 +7,7 @@
     <div class="card-body p-4">
       <h2 class="card-title text-center mb-4">Login to PottyDog</h2>
 
-      <form method="POST">
+      <form method="POST" action="/login">
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
           <input
@@ -18,6 +18,9 @@
             placeholder="name@example.com"
             required
           />
+          {% if user_error %}
+            <div class="form-text text-danger">{{ user_error }}</div>
+          {% endif %}
         </div>
 
         <div class="mb-4">
@@ -31,6 +34,13 @@
             required
           />
         </div>
+
+        <!-- Non-specific errors -->
+        {% if error %}
+          <div class="mb-3">
+            <div class="form-text text-danger">{{ error }}</div>
+          </div>
+        {% endif %}
 
         <div class="d-grid">
           <button type="submit" class="btn btn-primary btn-lg">Login</button>

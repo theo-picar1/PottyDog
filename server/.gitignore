@@ -24,3 +24,8 @@ instance/
 
 # Environment variables
 .env
+
+# Test folder
+tests/__pycache__
+tests/.pytest_cache/
+tests/*.log

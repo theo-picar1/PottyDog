@@ -7,17 +7,20 @@
     <div class="card-body p-4">
       <h2 class="card-title text-center mb-4">Create Account</h2>
 
-      <form method="POST">
+      <form method="POST" action="/register">
         <div class="mb-3">
-          <label for="name" class="form-label">Full Name</label>
+          <label for="name" class="form-label">Username</label>
           <input
             type="text"
             class="form-control"
-            id="name"
-            name="name"
-            placeholder="John Doe"
+            id="username"
+            name="username"
+            placeholder="Enter your username here"
             required
           />
+          {% if long_username_error %}
+            <div class="form-text text-danger">{{ long_username_error }}</div>
+          {% endif %}
         </div>
 
         <div class="mb-3">
@@ -30,6 +33,9 @@
             placeholder="Buddy"
             required
           />
+          {% if long_dog_name_error %}
+            <div class="form-text text-danger">{{ long_dog_name_error }}</div>
+          {% endif %}
         </div>
 
         <div class="mb-3">
@@ -42,6 +48,11 @@
             placeholder="name@example.com"
             required
           />
+          {% if email_format_error %}
+            <div class="form-text text-danger">{{ email_format_error }}</div>
+          {% elif existing_user_error %}
+            <div class="form-text text-danger">{{ existing_user_error }}</div>
+          {% endif %}
         </div>
 
         <div class="mb-4">
@@ -54,7 +65,32 @@
             placeholder="••••••••"
             required
           />
+          {% if weak_password_error %}
+            <div class="form-text text-danger">{{ weak_password_error }}</div>
+          {% endif %}
         </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="••••••••"
+            required
+          />
+          {% if confirm_password_error %}
+            <div class="form-text text-danger">{{ confirm_password_error }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Non-specific errors -->
+        {% if error %}
+          <div class="mb-3">
+            <div class="form-text text-danger">{{ error }}</div>
+          </div>
+        {% endif %}
 
         <div class="d-grid">
           <button type="submit" class="btn btn-primary btn-lg">Register</button>
