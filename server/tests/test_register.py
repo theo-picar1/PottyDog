@@ -157,6 +157,6 @@ def test_successful_register(mock_db, client):
         'password': 'StrongPass1!'
     }
 
-    response = client.post('/register', data=data)
+    response = client.post('/register', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b"Login to PottyDog" in response.data  # Redirected to login page

@@ -1,15 +1,26 @@
-from flask import Flask, render_template, request, redirect
-import re
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_bcrypt import Bcrypt
-import os
-import mysql.connector
+from datetime import timedelta
 from dotenv import load_dotenv
-import traceback
+import mysql.connector
+import re
+import os
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 load_dotenv()
+
+# Session cookie setup
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+IS_PROD = os.environ.get("FLASK_ENV") == "production"
+
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=IS_PROD,      
+    SESSION_COOKIE_SAMESITE="Lax",
+    PERMANENT_SESSION_LIFETIME=timedelta(days=3)
+)
 
 # DB credentials
 DB_NAME = os.getenv('DB_NAME')
@@ -31,7 +42,45 @@ def get_db_connection():
 # Main page
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    if 'user_id' in session:
+        user_id = session['user_id']
+        conn = None
+        cursor = None
+
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+
+            cursor.execute(
+                "SELECT * FROM users WHERE id = %s",
+                (user_id,)
+            )
+
+            user = cursor.fetchone()
+            
+            if user:
+                userData = {
+                    'user_id': session.get('user_id'),
+                    'username': session.get('username'),
+                    'dog_name': session.get('dog_name')
+                }
+
+                return render_template('index.html', userData=userData), 200
+            else:
+                # The user no longer exists in db
+                session.pop('user_id', None)
+                return redirect(url_for('/login'))
+
+        except:
+            return render_template('index.html'), 500
+
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+    
+    return render_template('index.html'), 200
 
 
 # Login page and logic
@@ -65,7 +114,13 @@ def login():
             if not bcrypt.check_password_hash(user['password'], password):
                 return render_template('login.html', error="Invalid email or password."), 401
             
-            return render_template('index.html', user=user), 200
+            # Store user id in session when successsfull
+            session.permanent = True
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['dog_name'] = user['dog_name']
+            
+            return redirect(url_for('index'))
         
         except:
             return render_template('login.html', error="An error occurred during login. Please try again."), 500
@@ -150,9 +205,16 @@ def register():
                 conn.close()
 
         # Everything passed
-        return render_template('login.html'), 200
+        return redirect(url_for('login'))
             
     return render_template('register.html'), 200
+
+
+# Logging out logic
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
