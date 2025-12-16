@@ -48,3 +48,11 @@ def test_get_index_logged(mock_get_db_connection, client):
     assert response.status_code == 200
     assert b'DaDude' in response.data
     assert b'eaterOfWorlds' in response.data
+
+
+# Test logged out user
+def test_get_index_logged_out(client):
+    client.post('/logout')
+    response = client.get('/')
+
+    assert b"Please register or login to continue." in response.data

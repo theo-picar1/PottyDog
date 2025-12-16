@@ -12,7 +12,18 @@
     {% endif %}
 
     <div class="row">
-        <a href="{{ url_for('register') }}"><button>Register</button></a>
-        <a href="{{ url_for('login') }}"><button>Login</button></a>
+        <form action="{{ url_for('register') }}" method="get">
+            <button type="submit">Register</button>
+        </form>
+
+        <form action="{{ url_for('login') }}" method="get">
+            <button type="submit">Login</button>
+        </form>
+        
+        {% if userData %}
+            <form action="/logout" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

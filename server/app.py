@@ -212,5 +212,12 @@ def register():
     return render_template('register.html'), 200
 
 
+# Logging out logic
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
