@@ -5,8 +5,8 @@
 {% block body %}
     <h1>PottyDog Application</h1>
 
-    {% if user %}
-        <p>Welcome back, {{ user.username }}!</p>
+    {% if userData %}
+        <p>Welcome back, {{ userData.username }}! How is {{ userData.dog_name }} doing?</p>
     {% else %}
         <p>Please register or login to continue.</p>
     {% endif %}
