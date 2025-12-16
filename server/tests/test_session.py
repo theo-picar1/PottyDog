@@ -20,6 +20,7 @@ def test_get_index_unlogged(client):
     assert b"Please register or login to continue." in response.data
 
 
+# Just realised that this does not make sense to be in test_session.py
 # Test logged-in user
 @patch('app.get_db_connection')
 def test_get_index_logged(mock_get_db_connection, client):

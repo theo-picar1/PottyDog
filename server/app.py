@@ -60,8 +60,9 @@ def index():
             
             if user:
                 userData = {
-                    'username': user['username'],
-                    'dog_name': user['dog_name']
+                    'user_id': session.get('user_id'),
+                    'username': session.get('username'),
+                    'dog_name': session.get('dog_name')
                 }
 
                 return render_template('index.html', userData=userData), 200
@@ -116,13 +117,10 @@ def login():
             # Store user id in session when successsfull
             session.permanent = True
             session['user_id'] = user['id']
-
-            userData = {
-                'username': user['username'],
-                'dog_name': user['dog_name']
-            }
+            session['username'] = user['username']
+            session['dog_name'] = user['dog_name']
             
-            return render_template('index.html', userData=userData), 200
+            return redirect(url_for('index'))
         
         except:
             return render_template('login.html', error="An error occurred during login. Please try again."), 500
@@ -207,7 +205,7 @@ def register():
                 conn.close()
 
         # Everything passed
-        return render_template('login.html'), 200
+        return redirect(url_for('login'))
             
     return render_template('register.html'), 200
 
