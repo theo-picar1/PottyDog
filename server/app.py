@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, session
-from flask_session import Session
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -65,13 +64,14 @@ def index():
                     'dog_name': user['dog_name']
                 }
 
-                return render_template('index.html', userData=userData)
+                return render_template('index.html', userData=userData), 200
             else:
+                # The user no longer exists in db
                 session.pop('user_id', None)
-                return render_template('index.html')
+                return redirect(url_for('/login'))
 
         except:
-            return render_template('index.html')
+            return render_template('index.html'), 500
 
         finally:
             if cursor:
@@ -79,7 +79,7 @@ def index():
             if conn:
                 conn.close()
     
-    return render_template('index.html')
+    return render_template('index.html'), 200
 
 
 # Login page and logic
