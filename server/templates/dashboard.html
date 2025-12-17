@@ -1,65 +1,58 @@
-{% extends 'layout.html' %}
-
-{% block title %} Dashboard Page {% endblock %}
-{% block body %}
-{% include 'header.html' %}
+{% extends 'layout.html' %} 
+{% block title %} Dashboard Page {% endblock %} 
+{% block body %} {% include 'header.html' %}
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
+  <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
 
-    <!-- Main potty status -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card bg-success text-white text-center">
-                <div class="card-body py-5">
-                    <h3 class="card-title mb-3">Potty Status</h3>
-                    <p class="display-6 mb-0">
-                        Dog is not by the door
-                    </p>
-                </div>
-            </div>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-lg border-start border border-secondary text-center"> 
+        <div class="card-body py-4">
+          <img
+            src="/static/images/inactive_dog.png"
+            class="img-fluid w-25 mb-3"
+            style="filter: grayscale(100%) brightness(75%);"
+            alt="Inactive Dog Status"
+          />
+          <p class="fs-5 text-muted mb-0">
+            Lala has not been around the door for some time
+          </p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-6 mb-3 mb-md-0">
+      <div class="card shadow-sm border-start border-1 border-info h-100">
+        <div class="card-body p-4"> 
+          <h5 class="card-title mb-2">Last Potty Time</h5>
+          <p class="text-muted mb-0">1 hour 20 minutes ago</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Basic info of activity -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card bg-info text-white h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Last Potty Time</h5>
-                    <p class="card-text">
-                        1 hour 20 minutes ago
-                    </p>
-                </div>
-            </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm border-start border-1 border-secondary h-100">
+        <div class="card-body p-4"> 
+          <h5 class="card-title mb-2">Today’s Potty Count</h5>
+          <p class="text-muted mb-0">No potty trips today</p> 
         </div>
-
-        <div class="col-md-6 mb-3 mb-md-0">
-            <div class="card bg-secondary text-white h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Today’s Potty Count</h5>
-                    <p class="card-text">
-                        3 potty trips today
-                    </p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Activity section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-primary">
-                <div class="card-body">
-                    <h5 class="card-title">All Activity</h5>
-                    <p class="card-text">
-                        Your dog has not gone to potty today!
-                    </p>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h5 class="card-title">All Activity</h5>
+          <p class="card-text">Your dog has not gone to potty today!</p>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
-{% include 'footer.html' %}
-{% endblock %}
+{% include 'footer.html' %} {% endblock %}
