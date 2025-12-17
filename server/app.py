@@ -83,6 +83,14 @@ def index():
     return render_template('index.html'), 200
 
 
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    if not 'user_id' in session:
+        return redirect(url_for('login'))
+    
+    return render_template('dashboard.html', dog_name=session['dog_name'])
+
+
 # Login page and logic
 @app.route('/login', methods=['GET', 'POST'])
 def login():
