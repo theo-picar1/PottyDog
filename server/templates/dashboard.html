@@ -1,36 +1,30 @@
 {% extends 'layout.html' %}
 
-{% block title %} Dashboard Page {% endblock %} {% block body %}
+{% block title %} Dashboard Page {% endblock %}
+{% block body %}
 {% include 'header.html' %}
 
 <div class="container mt-4">
-    <h2 class="mb-4">Dog Potty Tracker</h2>
+    <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
 
+    <!-- Main potty status -->
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Dog Status</h5>
-                    <p class="card-text">
+        <div class="col-12">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body py-5">
+                    <h3 class="card-title mb-3">Potty Status</h3>
+                    <p class="display-6 mb-0">
                         Dog is not by the door
                     </p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-4">
-            <div class="card bg-warning text-dark">
-                <div class="card-body">
-                    <h5 class="card-title">Door Sensor</h5>
-                    <p class="card-text">
-                        No motion detected
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-info text-white">
+    <!-- Basic info of activity -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-info text-white h-100">
                 <div class="card-body">
                     <h5 class="card-title">Last Potty Time</h5>
                     <p class="card-text">
@@ -39,11 +33,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card bg-secondary text-white">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <div class="card bg-secondary text-white h-100">
                 <div class="card-body">
                     <h5 class="card-title">Today’s Potty Count</h5>
                     <p class="card-text">
@@ -52,26 +44,16 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="card bg-dark text-white">
-                <div class="card-body">
-                    <h5 class="card-title">System Status</h5>
-                    <p class="card-text">
-                        IoT device connected
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 
+    <!-- Activity section -->
     <div class="row">
         <div class="col-12">
             <div class="card border-primary">
                 <div class="card-body">
-                    <h5 class="card-title">Notifications</h5>
+                    <h5 class="card-title">All Activity</h5>
                     <p class="card-text">
-                        Might not need this, we'll see
+                        Your dog has not gone to potty today!
                     </p>
                 </div>
             </div>
