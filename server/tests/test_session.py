@@ -20,7 +20,6 @@ def test_get_index_unlogged(client):
     assert b"Please register or login to continue." in response.data
 
 
-# Just realised that this does not make sense to be in test_session.py
 # Test logged-in user
 @patch('app.get_db_connection')
 def test_get_index_logged(mock_get_db_connection, client):
@@ -45,6 +44,79 @@ def test_get_index_logged(mock_get_db_connection, client):
     client.post('/login', data=data)
 
     response = client.get('/')
+
+    assert response.status_code == 200
+    assert b'DaDude' in response.data
+    assert b'eaterOfWorlds' in response.data
+
+
+# Test getting settings page unlogged
+def test_get_settings_logged_out(client):
+    client.post('/logout')
+    response = client.get('/settings', follow_redirects=True)
+
+    assert b"Login to PottyDog" in response.data
+
+
+# Test getting settings page logged-in
+@patch('app.get_db_connection')
+def test_get_settings_logged_in(mock_get_db_connection, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor.return_value = mock_cursor
+    mock_cursor.fetchone.return_value = {
+        'id': 1,
+        'email': 'test@example.com',
+        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
+        'username': 'DaDude',
+        'dog_name': 'eaterOfWorlds'
+    }
+
+    data = {
+        'email': 'test@example.com',
+        'password': 'CorrectPassword1!'
+    }
+
+    # Login first 
+    client.post('/login', data=data)
+    response = client.get('/dashboard')
+
+    assert response.status_code == 200
+    assert b'Dog Potty tracker' in response.data
+
+
+# Test getting dashboard page unlogged
+def test_get_dashboard_logged_out(client):
+    client.post('/logout')
+    response = client.get('/dashboard', follow_redirects=True)
+
+    assert b"Login to PottyDog" in response.data
+
+
+# Test getting dashboard page logged-in
+@patch('app.get_db_connection')
+def test_get_settings_logged_in(mock_get_db_connection, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor.return_value = mock_cursor
+    mock_cursor.fetchone.return_value = {
+        'id': 1,
+        'email': 'test@example.com',
+        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
+        'username': 'DaDude',
+        'dog_name': 'eaterOfWorlds'
+    }
+
+    data = {
+        'email': 'test@example.com',
+        'password': 'CorrectPassword1!'
+    }
+
+    # Login first 
+    client.post('/login', data=data)
+    response = client.get('/settings')
 
     assert response.status_code == 200
     assert b'DaDude' in response.data

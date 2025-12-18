@@ -31,7 +31,13 @@
           <li><a class="dropdown-item" href="#">Profile</a></li>
           <li><a class="dropdown-item" href="/settings">Settings</a></li>
           <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+          <li>
+            <form method="POST" action="/logout">
+              <button type="submit" class="dropdown-item w-100 text-start text-danger">
+                Logout
+              </button>
+            </form>
+          </li>
         </ul>
       </div>
     </div>
