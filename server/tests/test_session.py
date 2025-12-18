@@ -46,8 +46,15 @@ def test_get_index_logged(mock_get_db_connection, client):
     response = client.get('/')
 
     assert response.status_code == 200
-    assert b'DaDude' in response.data
-    assert b'eaterOfWorlds' in response.data
+    assert b'You are logged in! You can now head over to the dashboard page!' in response.data
+
+
+# Test logged out user
+def test_get_index_logged_out(client):
+    client.post('/logout')
+    response = client.get('/')
+
+    assert b"Please register or login to continue." in response.data
 
 
 # Test getting settings page unlogged
@@ -121,11 +128,3 @@ def test_get_settings_logged_in(mock_get_db_connection, client):
     assert response.status_code == 200
     assert b'DaDude' in response.data
     assert b'eaterOfWorlds' in response.data
-
-
-# Test logged out user
-def test_get_index_logged_out(client):
-    client.post('/logout')
-    response = client.get('/')
-
-    assert b"Please register or login to continue." in response.data

@@ -1,14 +1,12 @@
-{% extends 'layout.html' %} {% block title %} PottyDog {% endblock %} {% block
-body %}
+{% extends 'layout.html' %} {% block title %} PottyDog {% endblock %} 
+{% block body %}
 <h1>PottyDog Application</h1>
 
 {% if userData %}
-<p>
-  Welcome back, {{ userData.username }}! How is {{ userData.dog_name }} doing?
-</p>
+<p>You are logged in! You can now head over to the dashboard page!</p>
 {% else %}
 <p>Please register or login to continue.</p>
-{% endif %} 
+{% endif %}
 
 <div class="row">
   <form action="{{ url_for('register') }}" method="get">
@@ -22,6 +20,10 @@ body %}
   {% if userData %}
   <form action="/logout" method="POST">
     <button type="submit">Logout</button>
+  </form>
+
+  <form method="GET" action="/dashboard">
+    <button type="submit">Dashboard</button>
   </form>
   {% endif %}
 </div>

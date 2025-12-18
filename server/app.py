@@ -89,7 +89,7 @@ def dashboard():
     if not 'user_id' in session:
         return redirect(url_for('login'))
     
-    return render_template('dashboard.html', dog_name=session['dog_name'])
+    return render_template('dashboard.html', dog_name=session.get('dog_name')), 200
 
 
 # Settings page. Logge-in users only
@@ -104,7 +104,7 @@ def settings():
         'dog_name': session.get('dog_name')
     }
 
-    return render_template('settings.html', userData=userData) 
+    return render_template('settings.html', userData=userData), 200
 
 
 # Login page and logic
@@ -144,7 +144,7 @@ def login():
             session['username'] = user['username']
             session['dog_name'] = user['dog_name']
             
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard'))
         
         except:
             return render_template('login.html', error="An error occurred during login. Please try again."), 500
