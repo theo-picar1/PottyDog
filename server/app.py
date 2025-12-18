@@ -39,7 +39,7 @@ def get_db_connection():
     )
 
 
-# Main page
+# Landing page
 @app.route('/', methods=['GET'])
 def index():
     if 'user_id' in session:
@@ -83,12 +83,28 @@ def index():
     return render_template('index.html'), 200
 
 
+# Dashboard page. Only for logged-in users
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     if not 'user_id' in session:
         return redirect(url_for('login'))
     
     return render_template('dashboard.html', dog_name=session['dog_name'])
+
+
+# Settings page. Logge-in users only
+@app.route('/settings', methods=['GET'])
+def settings():
+    if not 'user_id' in session:
+        return redirect(url_for('login'))
+
+    userData = {
+        'user_id': session.get('user_id'),
+        'username': session.get('username'),
+        'dog_name': session.get('dog_name')
+    }
+
+    return render_template('settings.html', userData=userData) 
 
 
 # Login page and logic
