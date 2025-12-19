@@ -38,6 +38,9 @@
               />
             </div>
 
+            {% if success %}
+              <p class="text-success">{{ success }}</p>
+            {% endif %}
             <div class="d-flex justify-content-end">
               <button type="submit" class="btn btn-primary btn-sm px-4">
                 Save Changes
