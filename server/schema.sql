@@ -19,6 +19,7 @@ CREATE TABLE users (
 CREATE TABLE settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
+    light_mode BOOLEAN DEFAULT TRUE,
     disabled_alerts BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_user
         FOREIGN KEY (user_id) 

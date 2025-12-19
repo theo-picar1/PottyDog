@@ -138,7 +138,7 @@ def login():
             if not bcrypt.check_password_hash(user['password'], password):
                 return render_template('login.html', error="Invalid email or password."), 401
             
-            # Store user id in session when successsfull
+            # Store user id in session when successfull
             session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
@@ -217,6 +217,15 @@ def register():
                 (username, email, dog_name, hashed_password)
             )
 
+            # Create a new row in settings table with user
+            user_id = cursor.lastrowid
+            cursor.execute(
+                """
+                INSERT INTO settings (user_id)
+                VALUES (%s)
+                """,
+                (user_id,)
+            )
             conn.commit()
 
         except:
