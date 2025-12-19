@@ -92,7 +92,7 @@ def dashboard():
     return render_template('dashboard.html', dog_name=session.get('dog_name')), 200
 
 
-# Settings page. Logge-in users only
+# Settings page. Logged-in users only
 @app.route('/settings', methods=['GET'])
 def settings():
     if not 'user_id' in session:
@@ -105,6 +105,71 @@ def settings():
     }
 
     return render_template('settings.html', userData=userData), 200
+
+
+# Edit username and/or dog name settings logic
+@app.route('/settings/credentials', methods=['PUT', 'POST'])
+def update_credentials():
+    if request.method == 'POST':
+        try:
+            conn = None
+            cursor = None
+
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+
+            # See if user exists to begin with
+            user_id = session.get('user_id')
+            cursor.execute(
+                "SELECT username, dog_name FROM users where id = %s",
+                (user_id,)
+            )
+            user = cursor.fetchone()
+            
+            if not user:
+                return redirect(url_for('login'))
+
+            updates = []
+            values = []
+            
+            new_username = request.form.get('username')
+            new_dog_name = request.form.get('dog_name')
+
+            # Only add fields that have been changed
+            if new_username and new_username != user['username'] and len(new_username) < 50:
+                updates.append("username = %s")
+                values.append(new_username)
+                session['username'] = new_username
+
+            if new_dog_name and new_dog_name != user['dog_name'] and len(new_dog_name) < 50:
+                updates.append("dog_name = %s")
+                values.append(new_dog_name)
+                session['dog_name'] = new_dog_name
+                
+            userData = {
+                'username': session.get('username', user['username']),
+                'dog_name': session.get('dog_name', user['dog_name'])
+            }
+
+            if not updates:
+                return render_template('settings.html', success="No changes were made!", userData=userData), 200
+                
+            # Update all fields that have changes to them
+            query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+            values.append(user_id)
+            cursor.execute(query, tuple(values))
+            conn.commit()
+            
+            return render_template('settings.html', success="Succesfully saved changes!", userData=userData), 200
+
+        except: 
+            return render_template('settings.html', error="Error trying to update credentials. Please try again!"), 500
+        
+        finally:
+            if conn:
+                conn.close()
+            if cursor:
+                cursor.close()
 
 
 # Login page and logic
