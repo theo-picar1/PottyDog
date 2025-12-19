@@ -29,19 +29,15 @@ def test_get_index_logged(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
-        'username': 'DaDude',
-        'dog_name': 'eaterOfWorlds'
+        'username': 'TheoPic',
+        'dog_name': 'Lala'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first to have logged-in version of index.html
-    client.post('/login', data=data)
+    # Set up session directly instead of logging in first
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'TheoPic'
+        session['dog_name'] = 'Lala'
 
     response = client.get('/')
 
@@ -51,7 +47,9 @@ def test_get_index_logged(mock_get_db_connection, client):
 
 # Test logged out user
 def test_get_index_logged_out(client):
-    client.post('/logout')
+    with client.session_transaction() as session:
+        session.clear()
+        
     response = client.get('/')
 
     assert b"Please register or login to continue." in response.data
@@ -59,7 +57,9 @@ def test_get_index_logged_out(client):
 
 # Test getting settings page unlogged
 def test_get_settings_logged_out(client):
-    client.post('/logout')
+    with client.session_transaction() as session:
+        session.clear() 
+    
     response = client.get('/settings', follow_redirects=True)
 
     assert b"Login to PottyDog" in response.data
@@ -74,19 +74,15 @@ def test_get_settings_logged_in(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
-        'username': 'DaDude',
-        'dog_name': 'eaterOfWorlds'
+        'username': 'TheoPic',
+        'dog_name': 'Lala'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first 
-    client.post('/login', data=data)
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'TheoPic'
+        session['dog_name'] = 'Lala'
+        
     response = client.get('/dashboard')
 
     assert response.status_code == 200
@@ -95,7 +91,9 @@ def test_get_settings_logged_in(mock_get_db_connection, client):
 
 # Test getting dashboard page unlogged
 def test_get_dashboard_logged_out(client):
-    client.post('/logout')
+    with client.session_transaction() as session:
+        session.clear()
+        
     response = client.get('/dashboard', follow_redirects=True)
 
     assert b"Login to PottyDog" in response.data
@@ -110,21 +108,17 @@ def test_get_settings_logged_in(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
-        'username': 'DaDude',
-        'dog_name': 'eaterOfWorlds'
+        'username': 'TheoPic',
+        'dog_name': 'Lala'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first 
-    client.post('/login', data=data)
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'TheoPic'
+        session['dog_name'] = 'Lala'
+        
     response = client.get('/settings')
 
     assert response.status_code == 200
-    assert b'DaDude' in response.data
-    assert b'eaterOfWorlds' in response.data
+    assert b'TheoPic' in response.data
+    assert b'Lala' in response.data

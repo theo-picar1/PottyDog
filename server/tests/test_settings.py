@@ -30,19 +30,15 @@ def test_save_changes_no_changes(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
         'username': 'DaDude',
         'dog_name': 'eaterOfWorlds'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first
-    client.post('/login', data=data)
+    # Set up session directly instead of logging in first
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'DaDude'
+        session['dog_name'] = 'eaterOfWorlds'
     
     form = {
         'username': 'DaDude',
@@ -67,19 +63,14 @@ def test_save_changes_invalid_username(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
         'username': 'DaDude',
         'dog_name': 'eaterOfWorlds'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first
-    client.post('/login', data=data)
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'DaDude'
+        session['dog_name'] = 'eaterOfWorlds'
     
     form = {
         'username': 'thisusernameiswaytoolonganditisunreasonabletoevenhavethisasausernameonsomeoneswebsitedobetterandgetashorterusername',
@@ -104,19 +95,14 @@ def test_save_changes_invalid_dog_name(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
         'username': 'DaDude',
         'dog_name': 'eaterOfWorlds'
     }
-
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first
-    client.post('/login', data=data)
+    
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'DaDude'
+        session['dog_name'] = 'eaterOfWorlds'
     
     form = {
         'username': 'DaDude',
@@ -141,19 +127,14 @@ def test_save_changes_successful(mock_get_db_connection, client):
     mock_conn.cursor.return_value = mock_cursor
     mock_cursor.fetchone.return_value = {
         'id': 1,
-        'email': 'test@example.com',
-        'password': bcrypt.generate_password_hash('CorrectPassword1!').decode('utf-8'),
         'username': 'DaDude',
         'dog_name': 'eaterOfWorlds'
     }
 
-    data = {
-        'email': 'test@example.com',
-        'password': 'CorrectPassword1!'
-    }
-
-    # Login first
-    client.post('/login', data=data)
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['username'] = 'DaDude'
+        session['dog_name'] = 'eaterOfWorlds'
     
     form = {
         'username': 'Batman',
