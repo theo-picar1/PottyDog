@@ -59,8 +59,8 @@ def test_invalid_email_login(mock_get_db_connection, client):
     }
 
     response = client.post('/login', data=data)
-    assert response.status_code == 404
-    assert b"No existing user found." in response.data
+    assert response.status_code == 401
+    assert b"Invalid email or password." in response.data
 
 
 # Test invalid password credential

@@ -156,7 +156,7 @@ def update_credentials():
             }
 
             if not updates:
-                return render_template('settings.html', success="No changes were made!", userData=userData), 200
+                return render_template('settings.html', profile_success="No changes were made!", userData=userData), 200
                 
             # Update all fields that have changes to them
             query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
@@ -203,9 +203,16 @@ def update_preferences():
                 (user_id,)
             )
             
+            userData = {
+                'username': session.get('username'),
+                'dog_name': session.get('dog_name'),
+                'disabled_alerts': session.get('disabled_alerts'),
+                'light_mode': session.get('light_mode')
+            }
+            
             preferences = cursor.fetchone()
             if not preferences:
-                return render_template('settings.html', error="Error fetching preferences. Please try again!"), 404
+                return render_template('settings.html', error="Error fetching preferences. Please try again!", userData=userData), 404
             
             # If checkbox was checked, it will not be None 
             disabled_alerts = request.form.get('disabled_alerts') is not None
@@ -225,13 +232,6 @@ def update_preferences():
             # Update new preferences, if any
             session['disabled_alerts'] = disabled_alerts
             session['light_mode'] = light_mode
-            
-            userData = {
-                'username': session.get('username'),
-                'dog_name': session.get('dog_name'),
-                'disabled_alerts': session.get('disabled_alerts'),
-                'light_mode': session.get('light_mode')
-            }
             
             return render_template('settings.html', preferences_success="Successfully saved preferences!", userData=userData)
             
