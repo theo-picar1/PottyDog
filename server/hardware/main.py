@@ -9,17 +9,39 @@ PIR_PIN = 17
 pir = PIRSensor(PIR_PIN)
 buzzer = PiezoBuzzer()
 
+# Variables 
+curr_time = time.time()
+prev_time = time.time()
+start_detect_time = None
+INACTIVE_TIME_THRESHOLD = 15.0
+WAIT_TIME_THRESHOLD = 10.0 # If dog waiting this long, wants to go out
+
 try:
     print("Starting motion detection...")
-    time.sleep(2)  # Give PIR sensor time to stabilize
+    time.sleep(5)  # Give PIR sensor time to stabilize
 
     while True:
+        now = time.time()
+        
+        # No motion detected for some time
+        if now - prev_time > INACTIVE_TIME_THRESHOLD:
+            print("No activity for some time!")
+            publish_motion("inactive")
+        
+        # Basic motion detected
         if pir.motion_detected():
-            print("Motion Detected!")
+            print("Motion detected")
             publish_motion("detected")
-            buzzer.trigger_buzzer()
-        else:
-            print("No motion detected")
+            prev_time = now # Reset
+            
+            if start_detect_time is None:
+                start_detect_time = now
+            elif now - start_detect_time > WAIT_TIME_THRESHOLD: # Dog waiting by door
+                print("Dog wants to potty!")
+                publish_motion("potty")
+                start_detect_time = now
+                buzzer.trigger_buzzer()
+                
         time.sleep(1)  
 
 except KeyboardInterrupt:
