@@ -20,7 +20,7 @@ try:
             buzzer.trigger_buzzer()
         else:
             print("No motion detected")
-        time.sleep(0.5)  
+        time.sleep(1)  
 
 except KeyboardInterrupt:
     print("Exiting program...")
