@@ -13,8 +13,8 @@ buzzer = PiezoBuzzer()
 curr_time = time.time()
 prev_time = time.time()
 start_detect_time = None
-INACTIVE_TIME_THRESHOLD = 15.0
-WAIT_TIME_THRESHOLD = 10.0 # If dog waiting this long, wants to go out
+INACTIVE_TIME_THRESHOLD = 30.0
+WAIT_TIME_THRESHOLD = 10.0 # If motion detected this long, wants to go out
 
 try:
     print("Starting motion detection...")
@@ -26,7 +26,8 @@ try:
         # No motion detected for some time
         if now - prev_time > INACTIVE_TIME_THRESHOLD:
             print("No activity for some time!")
-            publish_motion("inactive")
+            publish_motion("inactive")#
+            start_detect_time = None
         
         # Basic motion detected
         if pir.motion_detected():

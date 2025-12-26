@@ -7,16 +7,30 @@
 
   <div class="row mb-4">
     <div class="col-12">
-      <div class="card shadow-lg border-start border border-secondary text-center"> 
+      <div
+        id="status-card"
+        class="card shadow-lg border-start border border-secondary text-center"
+      >
         <div class="card-body py-4">
           <img
+            id="status-image"
             src="/static/images/inactive_dog.png"
             class="img-fluid w-25 mb-3"
-            style="filter: grayscale(100%) brightness(75%);"
-            alt="Inactive Dog Status"
+            alt="Dog Status"
           />
-          <p class="fs-5 text-muted mb-0">
-            {{ dog_name }} has not been around the door for some time
+
+          <p
+            id="status-placeholder"
+            class="fs-5 text-muted mb-2"
+          >
+            Currently off. Turn on the tracker and wait for motion to be detected!
+          </p>
+
+          <p class="fs-5 mb-0">
+            <span id="dog-name" class="fs-5">{{ dog_name }}</span>
+            <span id="status-message" class="text-muted fs-5">
+              is inactive.
+            </span>
           </p>
         </div>
       </div>

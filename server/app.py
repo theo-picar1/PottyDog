@@ -37,13 +37,11 @@ def get_db_connection():
         database=DB_NAME,
         use_pure=True # Does not work without it.
     )
-
+    
 
 # Landing page
 @app.route('/', methods=['GET'])
 def index():
-    pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")
-    
     if 'user_id' in session:
         user_id = session['user_id']
         conn = None
@@ -67,7 +65,7 @@ def index():
                     'dog_name': session.get('dog_name')
                 }
 
-                return render_template('index.html', userData=userData, pubnub_sub_key=pubnub_sub_key), 200
+                return render_template('index.html', userData=userData), 200
             else:
                 # The user no longer exists in db
                 session.pop('user_id', None)
@@ -82,7 +80,7 @@ def index():
             if conn:
                 conn.close()
     
-    return render_template('index.html', pubnub_sub_key=pubnub_sub_key), 200
+    return render_template('index.html'), 200
 
 
 # Dashboard page. Only for logged-in users
@@ -91,7 +89,7 @@ def dashboard():
     if not 'user_id' in session:
         return redirect(url_for('login'))
     
-    return render_template('dashboard.html', dog_name=session.get('dog_name')), 200
+    return render_template('dashboard.html', dog_name=session.get('dog_name'), pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
 
 
 # Settings page. Logged-in users only

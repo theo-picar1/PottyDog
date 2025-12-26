@@ -9,23 +9,10 @@
     <!-- PubNub -->
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.4.0.min.js"></script>
     <script>
-        const pubnub = new PubNub({
-            subscribeKey: "{{ pubnub_sub_key }}",  
-            uuid: "pottydog-website"
-        })
-
-        pubnub.subscribe({
-            channels: ["Channel-Barcelona"]
-        })
-
-        pubnub.addListener({
-            message: function(event) {
-                const motion = event.message.motion
-                document.getElementById("status-message").innerText =
-                motion === "detected" ? "🚨 Motion Detected!" : "✅ No Motion"
-            }
-        })
+        const PUBNUB_SUB_KEY = "{{ pubnub_sub_key }}"
     </script>
+    <!-- App JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </head>
 <body>
     {% block body %}{% endblock %}
