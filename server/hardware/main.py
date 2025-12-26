@@ -13,6 +13,7 @@ buzzer = PiezoBuzzer()
 curr_time = time.time()
 prev_time = time.time()
 start_detect_time = None
+detected_potty = False
 INACTIVE_TIME_THRESHOLD = 30.0
 WAIT_TIME_THRESHOLD = 10.0 # If motion detected this long, wants to go out
 
@@ -37,11 +38,14 @@ try:
             
             if start_detect_time is None:
                 start_detect_time = now
-            elif now - start_detect_time > WAIT_TIME_THRESHOLD: # Dog waiting by door
+            elif detected_potty is False and now - start_detect_time > WAIT_TIME_THRESHOLD: # Dog waiting by door
+                detected_potty = True
                 print("Dog wants to potty!")
                 publish_motion("potty")
                 start_detect_time = now
                 buzzer.trigger_buzzer()
+                time.sleep(10) # 10s for owner to respond before back to normal tracking
+                detected_potty = False
                 
         time.sleep(1)  
 
