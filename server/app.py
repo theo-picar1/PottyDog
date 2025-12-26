@@ -37,7 +37,7 @@ def get_db_connection():
         database=DB_NAME,
         use_pure=True # Does not work without it.
     )
-
+    
 
 # Landing page
 @app.route('/', methods=['GET'])
@@ -89,7 +89,7 @@ def dashboard():
     if not 'user_id' in session:
         return redirect(url_for('login'))
     
-    return render_template('dashboard.html', dog_name=session.get('dog_name')), 200
+    return render_template('dashboard.html', dog_name=session.get('dog_name'), pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
 
 
 # Settings page. Logged-in users only
