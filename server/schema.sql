@@ -50,12 +50,8 @@ CREATE TABLE devices (
         FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE SET NULL
-)
+);
 
 -- Inserting device that I have
 INSERT INTO devices (can_read, can_write)
 VALUES (TRUE, TRUE);
-
-UPDATE devices
-SET user_id = 13 -- My own user_id for my own device
-WHERE id = 1 AND user_id IS NULL;
