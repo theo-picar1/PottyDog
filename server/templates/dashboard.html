@@ -1,6 +1,12 @@
 {% extends 'layout.html' %} 
 {% block title %} Dashboard Page {% endblock %} 
-{% block body %} {% include 'header.html' %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
+
+{% block body %} 
+{% include 'header.html' %}
 
 <div class="container mt-4">
   <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
@@ -69,4 +75,5 @@
   </div>
 </div>
 
-{% include 'footer.html' %} {% endblock %}
+{% include 'footer.html' %} 
+{% endblock %}
