@@ -183,7 +183,32 @@ def admin_dashboard():
     if not session.get('is_admin'):
         return redirect(url_for('admin_login'))
     
-    return render_template('admin-dashboard.html'), 200
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Only users that have registered a device already and are not admins        
+        cursor.execute("""
+            SELECT devices.user_id, devices.can_write, users.username, devices.can_read
+            FROM devices JOIN users ON devices.user_id = users.id
+            WHERE users.is_admin = FALSE OR users.is_admin = 0
+        """)
+        users = cursor.fetchall()
+        
+        return render_template('/admin-dashboard.html', users=users), 200
+        
+    except Exception as e:
+        print(e)
+        return render_template('/admin-dashboard.html', error="Server error! Could not retrieve all users."), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
 
 
 # Landing page
