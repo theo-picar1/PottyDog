@@ -1,6 +1,6 @@
-DROP DATABASE PottyDOG;
-CREATE DATABASE PottyDOG;
-USE PottyDOG;
+DROP DATABASE PottyDog;
+CREATE DATABASE PottyDog;
+USE PottyDog;
 
 -- Users table. 
 CREATE TABLE users (
@@ -11,6 +11,7 @@ CREATE TABLE users (
     dog_name VARCHAR(50),                    
     profile_picture VARCHAR(255),             
     google_id VARCHAR(100) UNIQUE, -- for Google OAuth login
+    is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -25,7 +26,7 @@ CREATE TABLE settings (
         FOREIGN KEY (user_id) 
         REFERENCES users(id)
         ON DELETE CASCADE
-)
+);
 
 -- Potty logs table. M:1 relationship with users.
 CREATE TABLE potty_logs (

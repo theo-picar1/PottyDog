@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
-{% block title %} Login to PottyDog {% endblock %} {% block body %}
+{% block title %} Adminstrator Login {% endblock %} {% block body %}
 <div
   class="container d-flex justify-content-center align-items-center min-vh-100"
 >
   <div class="card shadow-lg border-0" style="max-width: 420px; width: 100%">
     <div class="card-body p-4">
-      <h2 class="card-title text-center mb-4">Login to PottyDog</h2>
+      <h2 class="card-title text-center mb-4">Administrator Login</h2>
 
-      <form method="POST" action="/login">
+      <form method="POST" action="/admin-login">
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
           <input
@@ -47,14 +47,10 @@
         </div>
       </form>
 
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <p class="mb-0 text-muted">
-          New to PottyDog?
-          <a href="/register" class="text-decoration-none">Sign Up</a>
-        </p>
-        
-        <a href="/admin-login">Admin Login</a>
-      </div>
+      <p class="text-center text-muted mt-3 mb-0">
+        Not An Admin?
+        <a href="/login" class="text-decoration-none">User Login</a>
+      </p>
     </div>
   </div>
 </div>

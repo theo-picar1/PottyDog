@@ -76,7 +76,6 @@ def generate_token(channel_name, read, write, ttl=1440):  # ttl in minutes
 # Give token on login
 @app.route('/get_pubnub_token', methods=['POST'])
 def get_pubnub_token():
-    print("Check session")
     user_id = session['user_id']
     if not user_id:
         return jsonify({
@@ -91,7 +90,6 @@ def get_pubnub_token():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        print("Check device")
         # Check if they actually have a device registered to them
         cursor.execute(
             "SELECT id, can_read, can_write FROM devices WHERE user_id = %s",
@@ -104,7 +102,6 @@ def get_pubnub_token():
                 'message': "Please regiser a device to get started!"
             })
         
-        print("Create channel")
         # Create the channel for user and own device communication
         channel_name = f"device_{device_data['id']}"
         token = generate_token(channel_name, bool(device_data['can_read']), bool(device_data['can_write']))
@@ -131,7 +128,63 @@ def get_pubnub_token():
             conn.close()
         if cursor:
             cursor.close()
+                       
+
+# Admin login page and logic
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'GET':
+        return render_template('admin-login.html'), 200
     
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        if not email or not password:
+            return render_template('admin-login.html', error="Please fill in all required fields!"), 400
+        
+        cursor.execute(
+            "SELECT * FROM users WHERE email = %s",
+            (email,)
+        )
+        admin = cursor.fetchone()
+        if not admin or not bcrypt.check_password_hash(admin['password'], password):
+            return render_template('admin-login.html', error="Incorrect email or password!"), 401
+        
+        if not bool(admin['is_admin']):
+            return render_template('admin-login.html', error="You are not authorised to use this page!"), 401
+        
+        # Store necessary user details in session when successful
+        session.permanent = True
+        session['is_admin'] = True
+        
+        return redirect(url_for('admin_dashboard'))
+            
+    except Exception as e:
+        print(e)
+        return render_template('admin-login.html', error="Server error! Please try logging in again!"), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
+            
+
+# Admin dashboard page
+@app.route('/admin-dashboard', methods=['GET'])
+def admin_dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+    
+    return render_template('admin-dashboard.html'), 200
+
 
 # Landing page
 @app.route('/', methods=['GET'])
