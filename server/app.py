@@ -1,8 +1,13 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from pubnub.models.consumer.v3.channel import Channel
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.exceptions import PubNubException
+from pubnub.pubnub import PubNub
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
 import mysql.connector
+import asyncio
 import re
 import os
 
@@ -14,13 +19,20 @@ load_dotenv()
 # Session cookie setup
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 IS_PROD = os.environ.get("FLASK_ENV") == "production"
-
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=IS_PROD,      
     SESSION_COOKIE_SAMESITE="Lax",
     PERMANENT_SESSION_LIFETIME=timedelta(days=3)
 )
+
+# PubNub setup
+pnconfig = PNConfiguration()
+pnconfig.subscribe_key = os.getenv("SUBSCRIBE_KEY")
+pnconfig.publish_key = os.getenv("PUBLISH_KEY")
+pnconfig.secret_key = os.getenv("PUBNUB_SECRET_KEY")
+pnconfig.uuid = "server"
+pubnub = PubNub(pnconfig)
 
 # DB credentials
 DB_NAME = os.getenv('DB_NAME')
@@ -37,6 +49,88 @@ def get_db_connection():
         database=DB_NAME,
         use_pure=True # Does not work without it.
     )
+    
+    
+# Generate PubNub token for access manager
+def generate_token(channel_name, read, write, ttl=1440):  # ttl in minutes
+    try:
+        channel = Channel.id(channel_name)
+        if read:
+            channel.read()
+        if write:
+            channel.write()
+
+        envelope = pubnub.grant_token() \
+            .ttl(ttl) \
+            .authorized_uuid("server") \
+            .channels([channel]) \
+            .sync()
+
+        return envelope.result.token
+
+    except Exception as e:
+        print(f"Error generating token: {e}")
+        return None
+
+
+# Give token on login
+@app.route('/get_pubnub_token', methods=['POST'])
+def get_pubnub_token():
+    print("Check session")
+    user_id = session['user_id']
+    if not user_id:
+        return jsonify({
+            'token': None, 
+            'message': "Unauthorized"
+        }), 401
+    
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        print("Check device")
+        # Check if they actually have a device registered to them
+        cursor.execute(
+            "SELECT id, can_read, can_write FROM devices WHERE user_id = %s",
+            (user_id,)
+        )
+        device_data = cursor.fetchone()
+        if not device_data:
+            return jsonify({
+                'token': None,
+                'message': "Please regiser a device to get started!"
+            })
+        
+        print("Create channel")
+        # Create the channel for user and own device communication
+        channel_name = f"device_{device_data['id']}"
+        token = generate_token(channel_name, bool(device_data['can_read']), bool(device_data['can_write']))
+        if not token:
+            return jsonify({
+            'token': None, 
+            'message': "Could not generate token. Please try again."
+        }), 401
+            
+        return jsonify({
+            'token': token,
+            'user_id': user_id,
+            'device_id': device_data['id']
+        })
+    
+    except:
+        return jsonify({
+            'token': None, 
+            'message': "Could not generate token. Please try again."
+        }), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
     
 
 # Landing page
@@ -185,7 +279,7 @@ def update_preferences():
             cursor = None
             
             conn = get_db_connection()
-            cursor = conn.cursor()    
+            cursor = conn.cursor(dictionary=True)    
             
             # See if user exists to begin with
             user_id = session.get('user_id')
@@ -262,33 +356,31 @@ def login():
             conn = get_db_connection()
             cursor = conn.cursor(dictionary=True)
 
+            # Check if that user exists or has incorrect password
             cursor.execute(
                 "SELECT * FROM users WHERE email = %s",
                 (email,)
             )
-
-            # Check if that user exists or has incorrect password
             user = cursor.fetchone()
             if not user or not bcrypt.check_password_hash(user['password'], password):
                 return render_template('login.html', error="Invalid email or password."), 401
             
+            # Check if settings for them exist
             cursor.execute(
                 "SELECT light_mode, disabled_alerts FROM settings WHERE user_id = %s",
                 (user['id'],)
             )
-            
-            # Check if settings for them exist
-            userSettings = cursor.fetchone()
-            if not userSettings:
+            user_settings = cursor.fetchone()
+            if not user_settings:
                 return render_template('login.html', error="Could not get all info. Please try again!"), 404
             
-            # Store user id in session when successfull
+            # Store necessary user details in session when successful
             session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['dog_name'] = user['dog_name']
-            session['light_mode'] = userSettings['light_mode']
-            session['disabled_alerts'] = userSettings['disabled_alerts']
+            session['light_mode'] = user_settings['light_mode']
+            session['disabled_alerts'] = user_settings['disabled_alerts']
             
             return redirect(url_for('dashboard'))
         
@@ -344,7 +436,7 @@ def register():
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
             conn = get_db_connection()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
 
             # Check if email already exists
             cursor.execute(

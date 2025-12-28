@@ -51,22 +51,34 @@ function updateStatusUI(status, message, imagePath) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const pubnub = new PubNub({
-        subscribeKey: PUBNUB_SUB_KEY,
-        uuid: "pottydog-website"
-    })
+    // Get user's PubNub token based on permissions
+    fetch("/get_pubnub_token", { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+            // No registered device yet
+            if (!data.token) {
+                alert(data.message)
+                return
+            }
 
-    pubnub.subscribe({
-        channels: ["Channel-Barcelona"]
-    })
+            const pubnub = new PubNub({
+                subscribeKey: PUBNUB_SUB_KEY,
+                authKey: data.token,
+                uuid: "dashboard-" + String(data.user_id)
+            })
 
-    pubnub.addListener({
-        message: function (event) {
-            const motion = event.message.motion
-            if (!statusMap.has(motion)) return
+            pubnub.subscribe({ channels: ["device_" + data.device_id] })
 
-            const [message, imagePath] = statusMap.get(motion)
-            updateStatusUI(motion, message, imagePath)
-        }
-    })
+            // For changing mascot UI depending on PubNub motion message
+            pubnub.addListener({
+                message: function (event) {
+                    const motion = event.message.motion
+                    if (!statusMap.has(motion)) return
+
+                    const [message, imagePath] = statusMap.get(motion)
+                    updateStatusUI(motion, message, imagePath)
+                }
+            })
+        })
+        .catch(err => console.error("Error fetching token:", err))
 })
