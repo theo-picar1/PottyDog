@@ -51,22 +51,40 @@ function updateStatusUI(status, message, imagePath) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const pubnub = new PubNub({
-        subscribeKey: PUBNUB_SUB_KEY,
-        uuid: "pottydog-website"
-    })
+    // Get user's PubNub token based on permissions
+    fetch("/get_pubnub_token", { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+            // No registered device yet
+            if (!data.token) {
+                alert(data.message)
+                return
+            }
 
-    pubnub.subscribe({
-        channels: ["Channel-Barcelona"]
-    })
+            // No read access
+            if(!data.can_read) {
+                alert("You do not have the permissions to use the tracker. Please contact the admin.")
+                return
+            }
 
-    pubnub.addListener({
-        message: function (event) {
-            const motion = event.message.motion
-            if (!statusMap.has(motion)) return
+            const pubnub = new PubNub({
+                subscribeKey: PUBNUB_SUB_KEY,
+                authKey: data.token,
+                uuid: "dashboard-" + String(data.username)
+            })
 
-            const [message, imagePath] = statusMap.get(motion)
-            updateStatusUI(motion, message, imagePath)
-        }
-    })
+            pubnub.subscribe({ channels: ["Channel-Barcelona"] })
+
+            // For changing mascot UI depending on PubNub motion message
+            pubnub.addListener({
+                message: function (event) {
+                    const motion = event.message.motion
+                    if (!statusMap.has(motion)) return
+
+                    const [message, imagePath] = statusMap.get(motion)
+                    updateStatusUI(motion, message, imagePath)
+                }
+            })
+        })
+        .catch(err => console.error("Error fetching token:", err))
 })

@@ -1,8 +1,13 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from pubnub.models.consumer.v3.channel import Channel
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.exceptions import PubNubException
+from pubnub.pubnub import PubNub
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
 import mysql.connector
+import asyncio
 import re
 import os
 
@@ -14,13 +19,20 @@ load_dotenv()
 # Session cookie setup
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 IS_PROD = os.environ.get("FLASK_ENV") == "production"
-
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=IS_PROD,      
     SESSION_COOKIE_SAMESITE="Lax",
     PERMANENT_SESSION_LIFETIME=timedelta(days=3)
 )
+
+# PubNub setup
+pnconfig = PNConfiguration()
+pnconfig.subscribe_key = os.getenv("SUBSCRIBE_KEY")
+pnconfig.publish_key = os.getenv("PUBLISH_KEY")
+pnconfig.secret_key = os.getenv("PUBNUB_SECRET_KEY")
+pnconfig.uuid = "server"
+pubnub = PubNub(pnconfig)
 
 # DB credentials
 DB_NAME = os.getenv('DB_NAME')
@@ -38,6 +50,240 @@ def get_db_connection():
         use_pure=True # Does not work without it.
     )
     
+    
+# Generate PubNub token for access manager
+def generate_token(user_id, read, write, ttl=1440):  # ttl in minutes
+    try:
+        channel = Channel.id("Channel-Barcelona")
+        if read:
+            channel.read()
+        if write:
+            channel.write()
+
+        envelope = pubnub.grant_token() \
+            .ttl(ttl) \
+            .authorized_uuid(f'user_{user_id}') \
+            .channels([channel]) \
+            .sync()
+
+        return envelope.result.token
+
+    except Exception as e:
+        print(f"Error generating token: {e}")
+        return None
+
+
+# Give token on login
+@app.route('/get_pubnub_token', methods=['POST'])
+def get_pubnub_token():
+    user_id = session['user_id']
+    if not user_id:
+        return jsonify({
+            'token': None, 
+            'message': "Unauthorized"
+        }), 401
+    
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # Check if they actually have a device registered to them
+        cursor.execute(
+            "SELECT id, username, can_read, can_write FROM users WHERE id = %s",
+            (user_id,)
+        )
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({
+                'token': None,
+                'message': "Could not generate token! Please try again."
+            }), 404
+        
+        # Create the token for the user
+        token = generate_token(user_id, bool(user['can_read']), bool(user['can_write']))
+        if not token:
+            return jsonify({
+            'token': None, 
+            'message': "Could not generate token. Please try again."
+        }), 401
+            
+        return jsonify({
+            'token': token,
+            'user_id': user_id,
+            'username': user['username'],
+            'can_read': user['can_read']
+        })
+    
+    except:
+        return jsonify({
+            'token': None, 
+            'message': "Could not generate token. Please try again."
+        }), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
+                       
+
+# Admin login page and logic
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'GET':
+        return render_template('admin-login.html'), 200
+    
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        if not email or not password:
+            return render_template('admin-login.html', error="Please fill in all required fields!"), 400
+        
+        cursor.execute(
+            "SELECT * FROM users WHERE email = %s",
+            (email,)
+        )
+        admin = cursor.fetchone()
+        if not admin or not bcrypt.check_password_hash(admin['password'], password):
+            return render_template('admin-login.html', error="Incorrect email or password!"), 401
+        
+        if not bool(admin['is_admin']):
+            return render_template('admin-login.html', error="You are not authorised to use this page!"), 401
+        
+        # Store necessary user details in session when successful
+        session.permanent = True
+        session['is_admin'] = True
+        
+        return redirect(url_for('admin_dashboard'))
+            
+    except Exception as e:
+        print(e)
+        return render_template('admin-login.html', error="Server error! Please try logging in again!"), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
+            
+
+# Admin dashboard page
+@app.route('/admin-dashboard', methods=['GET'])
+def admin_dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+    
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Only users that have registered a device already and are not admins        
+        cursor.execute("""
+            SELECT id, username, can_write, can_read FROM users
+            WHERE is_admin = FALSE OR is_admin = 0
+        """)
+        users = cursor.fetchall()
+        
+        return render_template('/admin-dashboard.html', users=users), 200
+        
+    except Exception as e:
+        print(e)
+        return render_template('/admin-dashboard.html', error="Server error! Could not retrieve all users."), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
+            
+
+# Change permissions of users from admin dashboard
+@app.route('/admin-dashboard/permissions', methods=['POST'])
+def update_permissions():
+    if not session.get('is_admin'):
+        return redirect(url_for('login'))
+    
+    conn = None
+    cursor = None 
+    
+    try: 
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("""
+            SELECT id, can_read, can_write FROM users 
+            WHERE is_admin = FALSE OR is_admin = 0
+        """)
+        users = cursor.fetchall()
+
+        count = 0
+        for user in users:
+            id = user['id']
+            can_read = user['can_read']
+            can_write = user['can_write']
+            
+            # Read form data: True if checked, False if not
+            read_new = f'read_{id}' in request.form
+            write_new = f'write_{id}' in request.form
+
+            # Only update if values changed
+            if read_new != can_read or write_new != can_write:
+                count += 1
+                cursor.execute(
+                    "UPDATE users SET can_read = %s, can_write = %s WHERE id = %s",
+                    (read_new, write_new, id)
+                )
+                
+                # Send to the user's channel that their token has been updated
+                pubnub.publish() \
+                    .channel('Channel-Barcelona') \
+                    .message({
+                        "type": "update_token", 
+                        "message": "Your permissions have been changed",
+                        "can_read": read_new,
+                        "can_write": write_new
+                    }) \
+                    .sync()
+
+        conn.commit()
+        
+        # Updated users
+        cursor.execute("""
+            SELECT id, can_write, username, can_read FROM users 
+            WHERE is_admin = FALSE OR is_admin = 0
+        """)
+        users = cursor.fetchall()
+        
+        if count > 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200
+        elif count == 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", users=users), 200
+        
+        return render_template('admin-dashboard.html', success="No changes were made!", users=users), 200
+            
+    except Exception as e:
+        print(e)
+        return render_template('admin-dashboard.html', error="Server error! Could not update permissions."), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
+
 
 # Landing page
 @app.route('/', methods=['GET'])
@@ -185,7 +431,7 @@ def update_preferences():
             cursor = None
             
             conn = get_db_connection()
-            cursor = conn.cursor()    
+            cursor = conn.cursor(dictionary=True)    
             
             # See if user exists to begin with
             user_id = session.get('user_id')
@@ -262,33 +508,31 @@ def login():
             conn = get_db_connection()
             cursor = conn.cursor(dictionary=True)
 
+            # Check if that user exists or has incorrect password
             cursor.execute(
                 "SELECT * FROM users WHERE email = %s",
                 (email,)
             )
-
-            # Check if that user exists or has incorrect password
             user = cursor.fetchone()
             if not user or not bcrypt.check_password_hash(user['password'], password):
                 return render_template('login.html', error="Invalid email or password."), 401
             
+            # Check if settings for them exist
             cursor.execute(
                 "SELECT light_mode, disabled_alerts FROM settings WHERE user_id = %s",
                 (user['id'],)
             )
-            
-            # Check if settings for them exist
-            userSettings = cursor.fetchone()
-            if not userSettings:
+            user_settings = cursor.fetchone()
+            if not user_settings:
                 return render_template('login.html', error="Could not get all info. Please try again!"), 404
             
-            # Store user id in session when successfull
+            # Store necessary user details in session when successful
             session.permanent = True
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['dog_name'] = user['dog_name']
-            session['light_mode'] = userSettings['light_mode']
-            session['disabled_alerts'] = userSettings['disabled_alerts']
+            session['light_mode'] = user_settings['light_mode']
+            session['disabled_alerts'] = user_settings['disabled_alerts']
             
             return redirect(url_for('dashboard'))
         
@@ -344,7 +588,7 @@ def register():
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
             conn = get_db_connection()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
 
             # Check if email already exists
             cursor.execute(
