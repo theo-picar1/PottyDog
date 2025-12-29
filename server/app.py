@@ -192,13 +192,13 @@ def admin_dashboard():
 
         # Only users that have registered a device already and are not admins        
         cursor.execute("""
-            SELECT devices.user_id, devices.can_write, users.username, devices.can_read
+            SELECT devices.user_id, devices.can_write, devices.device_name, devices.can_read
             FROM devices JOIN users ON devices.user_id = users.id
             WHERE users.is_admin = FALSE OR users.is_admin = 0
         """)
-        users = cursor.fetchall()
+        devices = cursor.fetchall()
         
-        return render_template('/admin-dashboard.html', users=users), 200
+        return render_template('/admin-dashboard.html', devices=devices), 200
         
     except Exception as e:
         print(e)
@@ -229,30 +229,30 @@ def update_permissions():
             FROM devices JOIN users ON devices.user_id = users.id 
             WHERE users.is_admin = FALSE 
         """)
-        users = cursor.fetchall()
+        devices = cursor.fetchall()
 
         count = 0
-        for user in users:
-            user_id = user['user_id']
-            device_id = user['device_id']
+        for device in devices:
+            user_id = device['user_id']
+            device_id = device['device_id']
             
             # Read form data: True if checked, False if not
             read_new = f'read_{user_id}' in request.form
             write_new = f'write_{user_id}' in request.form
 
             # Only update if values changed
-            if read_new != user['can_read'] or write_new != user['can_write']:
+            if read_new != device['can_read'] or write_new != device['can_write']:
                 count += 1
                 cursor.execute(
                     "UPDATE devices SET can_read = %s, can_write = %s WHERE user_id = %s",
                     (read_new, write_new, user_id)
                 )
 
-                channel_name = "Channel-Barcelona"
+                channel_name = f"device_{device_id}"
                 
                 # Send to the user's channel that their token has been updated
                 pubnub.publish() \
-                    .channel("Channel-Barcelona") \
+                    .channel(channel_name) \
                     .message({
                         "type": "update_token", 
                         "message": "Your permissions have been changed",
@@ -263,20 +263,20 @@ def update_permissions():
 
         conn.commit()
         
-        # Updated users
+        # Updated devices
         cursor.execute("""
             SELECT devices.user_id, devices.can_write, users.username, devices.can_read
             FROM devices JOIN users ON devices.user_id = users.id
             WHERE users.is_admin = FALSE OR users.is_admin = 0
         """)
-        users = cursor.fetchall()
-        print(count)
-        if count > 1:
-            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200
-        elif count == 1:
-            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", users=users), 200
+        devices = cursor.fetchall()
         
-        return render_template('admin-dashboard.html', success="No changes were made!", users=users), 200
+        if count > 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", devices=devices), 200
+        elif count == 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", devices=devices), 200
+        
+        return render_template('admin-dashboard.html', success="No changes were made!", devices=devices), 200
             
     except Exception as e:
         print(e)

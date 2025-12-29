@@ -13,8 +13,11 @@ pnconfig.subscribe_key = os.getenv("SUBSCRIBE_KEY")
 pnconfig.uuid = "raspberry-pi"
 pubnub = PubNub(pnconfig)
 
+# The pi's own device ID. This NEEDS to be manually set for comms to work with PubNub
+channel_name = os.getenv("device_id")
+
 def publish_motion(state):
-    pubnub.publish().channel("Channel-Barcelona").message({
+    pubnub.publish().channel(channel_name).message({
         "motion": state,
         "timestamp": time.time()
     }).sync()

@@ -41,10 +41,10 @@ CREATE TABLE potty_logs (
         ON DELETE CASCADE
 );
 
--- Actual potty tracker device table. 1:1 relationship with users
+-- Actual potty tracker device table. 1:M relationship with users
 CREATE TABLE devices (
     id INT AUTO_INCREMENT PRIMARY KEY, -- Repesents PubNub channel
-    user_id INT NULL UNIQUE,
+    user_id INT NULL,
     can_read BOOLEAN DEFAULT TRUE,
     can_write BOOLEAN DEFAULT TRUE,
     CONSTRAINT fk_devices_user
@@ -53,6 +53,6 @@ CREATE TABLE devices (
         ON DELETE SET NULL
 );
 
--- Inserting device that I have
-INSERT INTO devices (can_read, can_write)
-VALUES (TRUE, TRUE);
+-- Inserting device that I have with my ID
+INSERT INTO devices (user_id, can_read, can_write)
+VALUES (1, TRUE, TRUE);
