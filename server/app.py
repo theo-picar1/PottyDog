@@ -52,9 +52,9 @@ def get_db_connection():
     
     
 # Generate PubNub token for access manager
-def generate_token(channel_name, read, write, ttl=1440):  # ttl in minutes
+def generate_token(read, write, ttl=1440):  # ttl in minutes
     try:
-        channel = Channel.id(channel_name)
+        channel = Channel.id("Channel-Barcelona")
         if read:
             channel.read()
         if write:
@@ -102,9 +102,8 @@ def get_pubnub_token():
                 'message': "Please regiser a device to get started!"
             })
         
-        # Create the channel for user and own device communication
-        channel_name = f"device_{device_data['id']}"
-        token = generate_token(channel_name, bool(device_data['can_read']), bool(device_data['can_write']))
+        # Create the token for the channel
+        token = generate_token(bool(device_data['can_read']), bool(device_data['can_write']))
         if not token:
             return jsonify({
             'token': None, 
@@ -192,13 +191,12 @@ def admin_dashboard():
 
         # Only users that have registered a device already and are not admins        
         cursor.execute("""
-            SELECT devices.user_id, devices.can_write, devices.device_name, devices.can_read
-            FROM devices JOIN users ON devices.user_id = users.id
-            WHERE users.is_admin = FALSE OR users.is_admin = 0
+            SELECT id, username, can_write, can_read FROM users
+            WHERE is_admin = FALSE OR is_admin = 0
         """)
-        devices = cursor.fetchall()
+        users = cursor.fetchall()
         
-        return render_template('/admin-dashboard.html', devices=devices), 200
+        return render_template('/admin-dashboard.html', users=users), 200
         
     except Exception as e:
         print(e)
@@ -225,34 +223,32 @@ def update_permissions():
         cursor = conn.cursor(dictionary=True)
         
         cursor.execute("""
-            SELECT devices.id AS device_id, devices.user_id, devices.can_read, devices.can_write
-            FROM devices JOIN users ON devices.user_id = users.id 
-            WHERE users.is_admin = FALSE 
+            SELECT id, can_read, can_write FROM users 
+            WHERE is_admin = FALSE OR is_admin = 0
         """)
-        devices = cursor.fetchall()
+        users = cursor.fetchall()
 
         count = 0
-        for device in devices:
-            user_id = device['user_id']
-            device_id = device['device_id']
+        for user in users:
+            id = user['id']
+            can_read = user['can_read']
+            can_write = user['can_write']
             
             # Read form data: True if checked, False if not
-            read_new = f'read_{user_id}' in request.form
-            write_new = f'write_{user_id}' in request.form
+            read_new = f'read_{id}' in request.form
+            write_new = f'write_{id}' in request.form
 
             # Only update if values changed
-            if read_new != device['can_read'] or write_new != device['can_write']:
+            if read_new != can_read or write_new != can_write:
                 count += 1
                 cursor.execute(
-                    "UPDATE devices SET can_read = %s, can_write = %s WHERE user_id = %s",
-                    (read_new, write_new, user_id)
+                    "UPDATE users SET can_read = %s, can_write = %s WHERE id = %s",
+                    (read_new, write_new, id)
                 )
-
-                channel_name = f"device_{device_id}"
                 
                 # Send to the user's channel that their token has been updated
                 pubnub.publish() \
-                    .channel(channel_name) \
+                    .channel('Channel-Barcelona') \
                     .message({
                         "type": "update_token", 
                         "message": "Your permissions have been changed",
@@ -263,20 +259,19 @@ def update_permissions():
 
         conn.commit()
         
-        # Updated devices
+        # Updated users
         cursor.execute("""
-            SELECT devices.user_id, devices.can_write, users.username, devices.can_read
-            FROM devices JOIN users ON devices.user_id = users.id
-            WHERE users.is_admin = FALSE OR users.is_admin = 0
+            SELECT id, can_write, username, can_read FROM users 
+            WHERE is_admin = FALSE OR is_admin = 0
         """)
-        devices = cursor.fetchall()
+        users = cursor.fetchall()
         
         if count > 1:
-            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", devices=devices), 200
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200
         elif count == 1:
-            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", devices=devices), 200
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", users=users), 200
         
-        return render_template('admin-dashboard.html', success="No changes were made!", devices=devices), 200
+        return render_template('admin-dashboard.html', success="No changes were made!", users=users), 200
             
     except Exception as e:
         print(e)

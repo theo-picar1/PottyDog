@@ -12,6 +12,8 @@ CREATE TABLE users (
     profile_picture VARCHAR(255),             
     google_id VARCHAR(100) UNIQUE, -- for Google OAuth login
     is_admin BOOLEAN DEFAULT FALSE,
+    can_read BOOLEAN DEFAULT FALSE,
+    can_write BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -40,19 +42,3 @@ CREATE TABLE potty_logs (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
-
--- Actual potty tracker device table. 1:M relationship with users
-CREATE TABLE devices (
-    id INT AUTO_INCREMENT PRIMARY KEY, -- Repesents PubNub channel
-    user_id INT NULL,
-    can_read BOOLEAN DEFAULT TRUE,
-    can_write BOOLEAN DEFAULT TRUE,
-    CONSTRAINT fk_devices_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE SET NULL
-);
-
--- Inserting device that I have with my ID
-INSERT INTO devices (user_id, can_read, can_write)
-VALUES (1, TRUE, TRUE);
