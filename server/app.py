@@ -209,6 +209,84 @@ def admin_dashboard():
             conn.close()
         if cursor:
             cursor.close()
+            
+
+# Change permissions of users from admin dashboard
+@app.route('/admin-dashboard/permissions', methods=['POST'])
+def update_permissions():
+    if not session.get('is_admin'):
+        return redirect(url_for('login'))
+    
+    conn = None
+    cursor = None 
+    
+    try: 
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("""
+            SELECT devices.id AS device_id, devices.user_id, devices.can_read, devices.can_write
+            FROM devices JOIN users ON devices.user_id = users.id 
+            WHERE users.is_admin = FALSE 
+        """)
+        users = cursor.fetchall()
+
+        count = 0
+        for user in users:
+            user_id = user['user_id']
+            device_id = user['device_id']
+            
+            # Read form data: True if checked, False if not
+            read_new = f'read_{user_id}' in request.form
+            write_new = f'write_{user_id}' in request.form
+
+            # Only update if values changed
+            if read_new != user['can_read'] or write_new != user['can_write']:
+                count += 1
+                cursor.execute(
+                    "UPDATE devices SET can_read = %s, can_write = %s WHERE user_id = %s",
+                    (read_new, write_new, user_id)
+                )
+
+                channel_name = "Channel-Barcelona"
+                
+                # Send to the user's channel that their token has been updated
+                pubnub.publish() \
+                    .channel("Channel-Barcelona") \
+                    .message({
+                        "type": "update_token", 
+                        "message": "Your permissions have been changed",
+                        "can_read": read_new,
+                        "can_write": write_new
+                    }) \
+                    .sync()
+
+        conn.commit()
+        
+        # Updated users
+        cursor.execute("""
+            SELECT devices.user_id, devices.can_write, users.username, devices.can_read
+            FROM devices JOIN users ON devices.user_id = users.id
+            WHERE users.is_admin = FALSE OR users.is_admin = 0
+        """)
+        users = cursor.fetchall()
+        print(count)
+        if count > 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200
+        elif count == 1:
+            return render_template('admin-dashboard.html', success="Successfully changed permissions of selected user!", users=users), 200
+        
+        return render_template('admin-dashboard.html', success="No changes were made!", users=users), 200
+            
+    except Exception as e:
+        print(e)
+        return render_template('admin-dashboard.html', error="Server error! Could not update permissions."), 500
+    
+    finally:
+        if conn:
+            conn.close()
+        if cursor:
+            cursor.close()
 
 
 # Landing page
