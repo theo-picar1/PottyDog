@@ -61,13 +61,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 return
             }
 
+            // No read access
+            if(!data.can_read) {
+                alert("You do not have the permissions to use the tracker. Please contact the admin.")
+                return
+            }
+
             const pubnub = new PubNub({
                 subscribeKey: PUBNUB_SUB_KEY,
                 authKey: data.token,
-                uuid: "dashboard-" + String(data.user_id)
+                uuid: "dashboard-" + String(data.username)
             })
 
-            pubnub.subscribe({ channels: ["device_" + data.device_id] })
+            pubnub.subscribe({ channels: ["Channel-Barcelona"] })
 
             // For changing mascot UI depending on PubNub motion message
             pubnub.addListener({

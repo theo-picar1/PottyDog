@@ -12,7 +12,7 @@ CREATE TABLE users (
     profile_picture VARCHAR(255),             
     google_id VARCHAR(100) UNIQUE, -- for Google OAuth login
     is_admin BOOLEAN DEFAULT FALSE,
-    can_read BOOLEAN DEFAULT FALSE,
+    can_read BOOLEAN DEFAULT TRUE,
     can_write BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

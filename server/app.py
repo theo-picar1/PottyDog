@@ -52,7 +52,7 @@ def get_db_connection():
     
     
 # Generate PubNub token for access manager
-def generate_token(read, write, ttl=1440):  # ttl in minutes
+def generate_token(user_id, read, write, ttl=1440):  # ttl in minutes
     try:
         channel = Channel.id("Channel-Barcelona")
         if read:
@@ -62,7 +62,7 @@ def generate_token(read, write, ttl=1440):  # ttl in minutes
 
         envelope = pubnub.grant_token() \
             .ttl(ttl) \
-            .authorized_uuid("server") \
+            .authorized_uuid(f'user_{user_id}') \
             .channels([channel]) \
             .sync()
 
@@ -92,18 +92,18 @@ def get_pubnub_token():
         
         # Check if they actually have a device registered to them
         cursor.execute(
-            "SELECT id, can_read, can_write FROM devices WHERE user_id = %s",
+            "SELECT id, username, can_read, can_write FROM users WHERE id = %s",
             (user_id,)
         )
-        device_data = cursor.fetchone()
-        if not device_data:
+        user = cursor.fetchone()
+        if not user:
             return jsonify({
                 'token': None,
-                'message': "Please regiser a device to get started!"
-            })
+                'message': "Could not generate token! Please try again."
+            }), 404
         
-        # Create the token for the channel
-        token = generate_token(bool(device_data['can_read']), bool(device_data['can_write']))
+        # Create the token for the user
+        token = generate_token(user_id, bool(user['can_read']), bool(user['can_write']))
         if not token:
             return jsonify({
             'token': None, 
@@ -113,7 +113,8 @@ def get_pubnub_token():
         return jsonify({
             'token': token,
             'user_id': user_id,
-            'device_id': device_data['id']
+            'username': user['username'],
+            'can_read': user['can_read']
         })
     
     except:
