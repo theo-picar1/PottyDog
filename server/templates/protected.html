@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    {{ title if title else 'Protected Page' }}
+{% endblock %}
+
+{% block body %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="error-card card text-center shadow-lg border-0" style="max-width: 420px; width: 100%;">
+        <div class="card-body px-4 py-5">
+
+            <div class="image-wrapper mb-4">
+                <img 
+                    src="/static/images/accident_dog.png"
+                    alt="Dog Status"
+                    class="img-fluid w-25 mb-3"
+                />
+            </div>
+
+            {% if status_code and error and message %}
+                <span>Error {{ status_code }}</span>
+                <h5 class="card-title mt-2">{{ error }}</h5>
+                <p class="text-muted">{{ message }}</p>
+            {% else %}
+                <span>Error 401: Unauthorised</span>
+                <h5 class="card-title mt-2">You do not have the right permissions.</h5>
+                <p class="text-muted">
+                    Please contact the admin if permissions need to be updated.
+                </p>
+            {% endif %}
+
+            <div class="mt-4 d-flex justify-content-center gap-2">
+                <a href="/" class="btn btn-primary btn-sm">Home</a>
+                <button onclick="history.back()" class="btn btn-outline-secondary btn-sm">
+                    Go back
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

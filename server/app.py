@@ -76,7 +76,7 @@ def generate_token(user_id, read, write, ttl=1440):  # ttl in minutes
 # Give token on login
 @app.route('/get_pubnub_token', methods=['POST'])
 def get_pubnub_token():
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     if not user_id:
         return jsonify({
             'token': None, 
@@ -168,7 +168,12 @@ def admin_login():
             
     except Exception as e:
         print(e)
-        return render_template('admin-login.html', error="Server error! Please try logging in again!"), 500
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
     
     finally:
         if conn:
@@ -180,8 +185,9 @@ def admin_login():
 # Admin dashboard page
 @app.route('/admin-dashboard', methods=['GET'])
 def admin_dashboard():
-    if not session.get('is_admin'):
-        return redirect(url_for('admin_login'))
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
     
     conn = None
     cursor = None
@@ -189,6 +195,21 @@ def admin_dashboard():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
+        
+        # Double check that user did not just add is_admin manually
+        cursor.execute(
+            'SELECT is_admin FROM users WHERE id = %s',
+            (user_id,)
+        )
+        user = cursor.fetchone()
+        
+        if not bool(user['is_admin']):
+            return render_template(
+                'protected.html', 
+                status_code='401',
+                error="Access denied!",
+                message="You do not have the right permissions to access this page!"
+            ), 401
 
         # Only users that have registered a device already and are not admins        
         cursor.execute("""
@@ -197,11 +218,16 @@ def admin_dashboard():
         """)
         users = cursor.fetchall()
         
-        return render_template('/admin-dashboard.html', users=users), 200
+        return render_template('admin-dashboard.html', users=users), 200
         
     except Exception as e:
         print(e)
-        return render_template('/admin-dashboard.html', error="Server error! Could not retrieve all users."), 500
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
     
     finally:
         if conn:
@@ -276,7 +302,12 @@ def update_permissions():
             
     except Exception as e:
         print(e)
-        return render_template('admin-dashboard.html', error="Server error! Could not update permissions."), 500
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
     
     finally:
         if conn:
@@ -336,6 +367,12 @@ def dashboard():
         return redirect(url_for('login'))
     
     return render_template('dashboard.html', dog_name=session.get('dog_name'), pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+
+
+# Protected page. Shows up when getting any status erros
+@app.route('/protected', methods=['GET'])
+def protected():
+    return render_template('protected.html')
 
 
 # Settings page. Logged-in users only
@@ -412,8 +449,14 @@ def update_credentials():
             
             return render_template('settings.html', profile_success="Succesfully saved changes!", userData=userData), 200
 
-        except: 
-            return render_template('settings.html', error="Error trying to update credentials. Please try again!"), 500
+        except Exception as e:
+            print(e) 
+            return render_template(
+                'protected.html', 
+                status_code="500",
+                error="Server error!",
+                message="Something went wrong. Please contact the admin if issues persist."
+            ), 500
         
         finally:
             if conn:
@@ -481,8 +524,14 @@ def update_preferences():
             
             return render_template('settings.html', preferences_success="Successfully saved preferences!", userData=userData)
             
-        except:
-            return render_template('settings.html', error="Error saving preferences. Please try again!"), 500
+        except Exception as e:
+            print(e) 
+            return render_template(
+                'protected.html', 
+                status_code="500",
+                error="Server error!",
+                message="Something went wrong. Please contact the admin if issues persist."
+            ), 500
             
         finally:
             if conn:
@@ -536,8 +585,14 @@ def login():
             
             return redirect(url_for('dashboard'))
         
-        except:
-            return render_template('login.html', error="An error occurred during login. Please try again."), 500
+        except Exception as e:
+            print(e) 
+            return render_template(
+                'protected.html', 
+                status_code="500",
+                error="Server error!",
+                message="Something went wrong. Please contact the admin if issues persist."
+            ), 500
         
         finally:
             if cursor:
@@ -618,8 +673,14 @@ def register():
             )
             conn.commit()
 
-        except:
-            return render_template('register.html', error="An error occurred during registration. Please try again."), 500
+        except Exception as e:
+            print(e) 
+            return render_template(
+                'protected.html', 
+                status_code="500",
+                error="Server error!",
+                message="Something went wrong. Please contact the admin if issues persist."
+            ), 500
 
         finally:
             if cursor:
