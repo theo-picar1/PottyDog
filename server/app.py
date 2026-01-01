@@ -187,7 +187,7 @@ def admin_login():
 def admin_dashboard():
     user_id = session.get('user_id')
     if not user_id:
-        return redirect(url_for('login'))
+        return redirect(url_for('admin_login'))
     
     conn = None
     cursor = None
