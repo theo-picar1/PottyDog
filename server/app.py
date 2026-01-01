@@ -163,6 +163,7 @@ def admin_login():
         # Store necessary user details in session when successful
         session.permanent = True
         session['is_admin'] = True
+        session['user_id'] = admin['id']
         
         return redirect(url_for('admin_dashboard'))
             
@@ -239,8 +240,9 @@ def admin_dashboard():
 # Change permissions of users from admin dashboard
 @app.route('/admin-dashboard/permissions', methods=['POST'])
 def update_permissions():
-    if not session.get('is_admin'):
-        return redirect(url_for('login'))
+    user_id = session.get('user_id')
+    if not session.get('is_admin') or not user_id:
+        return redirect(url_for('admin_login'))
     
     conn = None
     cursor = None 
@@ -249,6 +251,22 @@ def update_permissions():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
+        # Double check that user did not just add is_admin manually
+        cursor.execute(
+            'SELECT is_admin FROM users WHERE id = %s',
+            (user_id,)
+        )
+        user = cursor.fetchone()
+        
+        if not bool(user['is_admin']):
+            return render_template(
+                'protected.html', 
+                status_code='401',
+                error="Access denied!",
+                message="You do not have the right permissions to access this page!"
+            ), 401
+        
+        # Proceed with updating logic 
         cursor.execute("""
             SELECT id, can_read, can_write FROM users 
             WHERE is_admin = FALSE OR is_admin = 0
@@ -292,6 +310,8 @@ def update_permissions():
             WHERE is_admin = FALSE OR is_admin = 0
         """)
         users = cursor.fetchall()
+        
+        print(count)
         
         if count > 1:
             return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200

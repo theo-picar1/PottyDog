@@ -13,19 +13,19 @@ def client():
         yield client
         
         
-# Test to see if user tries to go into admin dashboard with expired session
+# Test to see if admin tries to do this with expired session
 def test_session_missing_user_id(client):
     with client.session_transaction() as session:
         session.clear()
     
-    response = client.get('/admin-dashboard', follow_redirects=True)
+    response = client.post('/admin-dashboard/permissions', follow_redirects=True)
     
     assert b"Administrator Login" in response.data
         
 
-# Test to see if non admin tries to go into admin dashboard
+# Test to see if non admin tries to do this
 @patch('app.get_db_connection')
-def test_get_dashboard_unauthorised(mock_get_db_connection, client):
+def test_update_permissions_unauthorised(mock_get_db_connection, client):
     mock_conn = MagicMock()
     mock_cursor = MagicMock()
     mock_get_db_connection.return_value = mock_conn
@@ -38,16 +38,17 @@ def test_get_dashboard_unauthorised(mock_get_db_connection, client):
     
     with client.session_transaction() as session:
         session['user_id'] = 1
+        session['is_admin'] = True
     
-    response = client.get('/admin-dashboard', follow_redirects=True)
+    response = client.post('/admin-dashboard/permissions')
     
-    assert response.status_code == 401
     assert b"You do not have the right permissions to access this page!" in response.data
     
     
-# Test to see if admin can log in
+# ----- BROKEN TEST -----  
+# Test to see if admin can change permissions (multiple users)
 @patch('app.get_db_connection')
-def test_get_dashboard_authorised(mock_get_db_connection, client):
+def test_update_permissions_multiple_users(mock_get_db_connection, client):
     mock_conn = MagicMock()
     mock_cursor = MagicMock()
     mock_get_db_connection.return_value = mock_conn
@@ -57,46 +58,30 @@ def test_get_dashboard_authorised(mock_get_db_connection, client):
         'email': 'theopic@email.com',
         'is_admin': True
     }
-    
-    with client.session_transaction() as session:
-        session['user_id'] = 1
-        
-    response = client.get('/admin-dashboard')
-        
-    assert response.status_code == 200
-    assert b"Manage PubNub access for your users." in response.data
-    
-
-# Test to see if users load in properly if they exist
-@patch('app.get_db_connection')
-def test_get_dashboard_users_loaded(mock_get_db_connection, client):
-    mock_conn = MagicMock()
-    mock_cursor = MagicMock()
-    mock_get_db_connection.return_value = mock_conn
-    mock_conn.cursor.return_value = mock_cursor
-    mock_cursor.fetchone.return_value = {
-        'id': 1,
-        'email': 'theopic@email.com',
-        'is_admin': True
-    }
-    mock_cursor.fetchall.return_value = [
-        {'id': 2, 'username': 'lalapic', 'can_write': 1, 'can_read': 1},
-        {'id': 3, 'username': 'piclala', 'can_write': 0, 'can_read': 1},
+    mock_cursor.fetchall.side_effect = [
+        [
+            {'id': 2, 'can_write': 1, 'can_read': 0},
+            {'id': 3, 'can_write': 0, 'can_read': 0},
+        ],
+        [
+            {'id': 2, 'can_write': 0, 'can_read': 1},
+            {'id': 3, 'can_write': 0, 'can_read': 1},
+        ]
     ]
     
     with client.session_transaction() as session:
         session['user_id'] = 1
+        session['is_admin'] = True
         
-    response = client.get('/admin-dashboard')
+    response = client.post('/admin-dashboard/permissions')
         
     assert response.status_code == 200
-    assert b"lalapic" in response.data
-    assert b"piclala" in response.data
+    assert b"Successfully changed permissions of selected users!" in response.data
     
-    
-# Test to see if appropriate message shows up with no users
+
+# Test to see if admin can change permissions (one user)
 @patch('app.get_db_connection')
-def test_get_dashboard_no_users(mock_get_db_connection, client):
+def test_update_permissions_one_user(mock_get_db_connection, client):
     mock_conn = MagicMock()
     mock_cursor = MagicMock()
     mock_get_db_connection.return_value = mock_conn
@@ -106,17 +91,62 @@ def test_get_dashboard_no_users(mock_get_db_connection, client):
         'email': 'theopic@email.com',
         'is_admin': True
     }
-    mock_cursor.fetchall.return_value = []
+    mock_cursor.fetchall.side_effect = [
+        [
+            {'id': 2, 'can_write': 1, 'can_read': 1},
+            {'id': 3, 'can_write': 0, 'can_read': 0},
+        ],
+        [
+            {'id': 2, 'can_write': 1, 'can_read': 0},
+            {'id': 3, 'can_write': 0, 'can_read': 0},
+        ]
+    ]
     
     with client.session_transaction() as session:
         session['user_id'] = 1
+        session['is_admin'] = True
         
-    response = client.get('/admin-dashboard')
+    response = client.post('/admin-dashboard/permissions')
         
     assert response.status_code == 200
-    assert b"No users available!" in response.data
+    assert b"Successfully changed permissions of selected user!" in response.data
     
 
+# ----- BROKEN TEST -----  
+# Test to see if admin saves changes but they did not make changes
+@patch('app.get_db_connection')
+def test_update_permissions_no_changes(mock_get_db_connection, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_get_db_connection.return_value = mock_conn
+    mock_conn.cursor.return_value = mock_cursor
+    mock_cursor.fetchone.return_value = {
+        'id': 1,
+        'email': 'theopic@email.com',
+        'is_admin': True
+    }
+    mock_cursor.fetchall.side_effect = [
+        [
+            {'id': 2, 'can_write': 1, 'can_read': 1},
+            {'id': 3, 'can_write': 0, 'can_read': 0},
+        ],
+        [
+            {'id': 2, 'username': 'lalapic', 'can_write': 1, 'can_read': 1},
+            {'id': 3, 'username': 'piclala', 'can_write': 0, 'can_read': 0},
+        ]
+    ]
+    
+    with client.session_transaction() as session:
+        session['user_id'] = 1
+        session['is_admin'] = True
+        
+    response = client.post('/admin-dashboard/permissions')
+        
+    assert response.status_code == 200
+    html = response.data.decode('utf-8')
+    assert b"No changes were made!" in html
+    
+    
 # Test for 500 error
 @patch('app.get_db_connection')
 def test_server_error(mock_get_db_connection, client):
