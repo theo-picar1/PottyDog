@@ -12,10 +12,10 @@
     </a>
 
     <div class="ms-auto d-flex align-items-center gap-2">
-      <a href="/login" class="btn btn-outline-light btn-sm"> Login </a>
-      <a href="/register" class="btn btn-light btn-sm text-primary">
-        Register
-      </a>
+      {% if not session.get('user_id') %}
+        <a href="/login" class="btn btn-outline-light btn-sm">Login</a>
+        <a href="/register" class="btn btn-light btn-sm text-primary">Register</a>
+      {% endif %}
 
       <div class="dropdown">
         <button
@@ -23,8 +23,11 @@
           type="button"
           data-bs-toggle="dropdown"
         >
-          <span class="me-2">👤</span>
-          {{ username or 'User' }}
+          {% if session.get('is_admin') %}
+              Admin
+          {% else %}
+              {{ username or 'User' }}
+          {% endif %}
         </button>
 
         <ul class="dropdown-menu dropdown-menu-end">
