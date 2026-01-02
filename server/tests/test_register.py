@@ -153,7 +153,7 @@ def test_successful_register(mock_db, client):
 
     data = {
         'username': 'NewUser',
-        'email': 'test@example.com',
+        'email': 'adjjhjegdIUu@example.com', # MAKE SURE UNIQUE
         'password': 'StrongPass1!'
     }
 
