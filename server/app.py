@@ -1,20 +1,24 @@
+# Imports
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from pubnub.models.consumer.v3.channel import Channel
-from pubnub.pnconfiguration import PNConfiguration
-from pubnub.exceptions import PubNubException
-from pubnub.pubnub import PubNub
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
-import mysql.connector
-import asyncio
 import re
 import os
 
+# Files
+from db import get_db_connection
+from pb import create_pubnub, pubnub_bp
+
+# Variables
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-
+app.pubnub = create_pubnub()
 load_dotenv()
+
+# Registering blueprints
+app.register_blueprint(pubnub_bp)
 
 # Session cookie setup
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -24,111 +28,7 @@ app.config.update(
     SESSION_COOKIE_SECURE=IS_PROD,      
     SESSION_COOKIE_SAMESITE="Lax",
     PERMANENT_SESSION_LIFETIME=timedelta(days=3)
-)
-
-# PubNub setup
-pnconfig = PNConfiguration()
-pnconfig.subscribe_key = os.getenv("SUBSCRIBE_KEY")
-pnconfig.publish_key = os.getenv("PUBLISH_KEY")
-pnconfig.secret_key = os.getenv("PUBNUB_SECRET_KEY")
-pnconfig.uuid = "server"
-pubnub = PubNub(pnconfig)
-
-# DB credentials
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-
-# DB helper function
-def get_db_connection():
-    return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME,
-        use_pure=True # Does not work without it.
-    )
-    
-    
-# Generate PubNub token for access manager
-def generate_token(user_id, read, write, ttl=1440):  # ttl in minutes
-    try:
-        channel = Channel.id("Channel-Barcelona")
-        if read:
-            channel.read()
-        if write:
-            channel.write()
-
-        envelope = pubnub.grant_token() \
-            .ttl(ttl) \
-            .authorized_uuid(f'user_{user_id}') \
-            .channels([channel]) \
-            .sync()
-
-        return envelope.result.token
-
-    except Exception as e:
-        print(f"Error generating token: {e}")
-        return None
-
-
-# Give token on login
-@app.route('/get_pubnub_token', methods=['POST'])
-def get_pubnub_token():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({
-            'token': None, 
-            'message': "Unauthorized"
-        }), 401
-    
-    conn = None
-    cursor = None
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        # Check if they actually have a device registered to them
-        cursor.execute(
-            "SELECT id, username, can_read, can_write FROM users WHERE id = %s",
-            (user_id,)
-        )
-        user = cursor.fetchone()
-        if not user:
-            return jsonify({
-                'token': None,
-                'message': "Could not generate token! Please try again."
-            }), 404
-        
-        # Create the token for the user
-        token = generate_token(user_id, bool(user['can_read']), bool(user['can_write']))
-        if not token:
-            return jsonify({
-            'token': None, 
-            'message': "Could not generate token. Please try again."
-        }), 401
-            
-        return jsonify({
-            'token': token,
-            'user_id': user_id,
-            'username': user['username'],
-            'can_read': user['can_read']
-        })
-    
-    except:
-        return jsonify({
-            'token': None, 
-            'message': "Could not generate token. Please try again."
-        }), 500
-    
-    finally:
-        if conn:
-            conn.close()
-        if cursor:
-            cursor.close()
-                       
+)                      
 
 # Admin login page and logic
 @app.route('/admin-login', methods=['GET', 'POST'])
@@ -292,7 +192,7 @@ def update_permissions():
                 )
                 
                 # Send to the user's channel that their token has been updated
-                pubnub.publish() \
+                app.pubnub.publish() \
                     .channel('Channel-Barcelona') \
                     .message({
                         "type": "update_token", 
