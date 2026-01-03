@@ -140,6 +140,8 @@ def login():
             session['dog_name'] = user['dog_name']
             session['light_mode'] = user_settings['light_mode']
             session['disabled_alerts'] = user_settings['disabled_alerts']
+            session['can_read'] = bool(user['can_read'])
+            session['can_write'] = bool(user['can_write'])
             
             return redirect(url_for('dashboard'))
         

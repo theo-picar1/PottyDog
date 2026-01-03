@@ -11,34 +11,58 @@
 <div class="container mt-4">
   <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
 
-  <div class="row mb-4">
-    <div class="col-12">
-      <div
-        id="status-card"
-        class="card shadow-lg border-start border border-secondary text-center"
-      >
-        <div class="card-body py-4">
+  <div class="row mb-4 justify-content-center">
+    <div
+      id="status-card"
+      class="card shadow-lg border-0 text-center py-4"
+    >
+      <div class="card-body d-flex flex-column justify-content-center" style="min-height: 300px;">
+        {% if user.can_read %}
           <img
             id="status-image"
             src="/static/images/inactive_dog.png"
-            class="img-fluid w-25 mb-3"
+            class="img-fluid w-25 mb-3 mx-auto"
             alt="Dog Status"
           />
 
           <p
             id="status-placeholder"
-            class="fs-5 text-muted mb-2"
+            class="fs-5 text-muted mb-3"
           >
             Currently off. Turn on the tracker and wait for motion to be detected!
           </p>
 
           <p class="fs-5 mb-0">
-            <span id="dog-name" class="fs-5">{{ dog_name }}</span>
+            <span id="dog-name" class="fs-5">{{ user.dog_name or 'Your dog' }}</span>
             <span id="status-message" class="text-muted fs-5">
               is inactive.
             </span>
           </p>
-        </div>
+        {% else %}
+          <div class="d-flex flex-column align-items-center justify-content-center h-100">
+            <h2 class="text-danger fw-bold mb-2">
+              Access Denied
+            </h2>
+            <p class="text-muted mb-0">You do not have permission to view the tracker.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div 
+    id="potty-log-buttons"
+    class="row mb-4 justify-content-center"
+    style="visibility: hidden;"
+  >
+    <div class="col-auto">
+      <div class="d-flex justify-content-center gap-3">
+        <button class="btn btn-success fw-semibold">
+          Log Potty
+        </button>
+        <button class="btn btn-danger fw-semibold">
+          Discard
+        </button>
       </div>
     </div>
   </div>

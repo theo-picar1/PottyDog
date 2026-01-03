@@ -16,7 +16,12 @@ from routes import routes_bp
 app = Flask(__name__)
 app.bcrypt = Bcrypt(app)
 app.pubnub = create_pubnub()
-load_dotenv()
+
+DOTENV_PATH = os.getenv('DOTENV_PATH')
+if DOTENV_PATH:
+    load_dotenv(DOTENV_PATH)  
+else:
+    load_dotenv()  
 
 # Registering blueprints
 app.register_blueprint(pubnub_bp)
@@ -137,7 +142,14 @@ def dashboard():
     if not session.get('user_id'):
         return redirect(url_for('auth.login'))
     
-    return render_template('dashboard.html', username=session.get('username'), dog_name=session.get('dog_name'), pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+    user = {
+        'username': session.get('username'),
+        'dog_name': session.get('dog_name'),
+        'can_read': session.get('can_read'),
+        'can_write': session.get('can_write')
+    }
+    
+    return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
 
 
 # Protected page. Shows up when getting any status erros
