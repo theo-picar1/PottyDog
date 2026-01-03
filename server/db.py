@@ -3,8 +3,13 @@ from dotenv import load_dotenv
 import mysql.connector
 import os
 
-load_dotenv()
+DOTENV_PATH = os.getenv('DOTENV_PATH')
 
+if DOTENV_PATH:
+    load_dotenv(DOTENV_PATH)  
+else:
+    load_dotenv()  
+    
 # DB credentials
 DB_NAME = os.getenv('DB_NAME')
 DB_USER = os.getenv('DB_USER')
