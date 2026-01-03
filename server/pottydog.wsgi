@@ -1,10 +1,12 @@
 import sys
 import logging
+from dotenv import load_dotenv
 
-# Add project path
+# Server folder path
 sys.path.insert(0, "/var/www/PottyDog/server")
 
-from app import app as application
+# Load .env 
+project_root = Path("/var/www/PottyDog")
+load_dotenv(dotenv_path=project_root / ".env")
 
-# Optional: enable logging to Apache error log
-logging.basicConfig(stream=sys.stderr)
+from app import app as application
