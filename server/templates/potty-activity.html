@@ -12,22 +12,32 @@
 	</div>
 
   <!-- Date -->
-  <div class="card mb-4 shadow-sm border-start border-1 border-info">
-    <div class="card-body">
-      <div class="row g-3 align-items-end">
-        <div class="col-md-4">
-          <label for="activityDate" class="form-label fw-semibold text-info">
-            Select date
-          </label>
-          <input type="date" class="form-control" id="activityDate" />
-        </div>
+  <form method="GET" action="{{ url_for('potty_activity') }}">
+    <div class="card mb-4 shadow-sm border-start border-1 border-info">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label for="activityDate" class="form-label fw-semibold text-info">
+              Select date
+            </label>
+            <input
+              type="date"
+              class="form-control"
+              id="activityDate"
+              name="date"
+              value="{{ request.args.get('date', '') }}"
+            />
+          </div>
 
-        <div class="col-md-3">
-          <button class="btn btn-outline-dark w-100">View activity</button>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-outline-dark w-100">
+              View activity
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 
   <!-- Activiity feed -->
   {% set type_classes = { 'pee': 'success', 'poo': 'danger', 'both': 'primary',

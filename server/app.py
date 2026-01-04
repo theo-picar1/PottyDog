@@ -4,6 +4,7 @@ from pubnub.models.consumer.v3.channel import Channel
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 
 # Files
@@ -214,10 +215,26 @@ def potty_activity():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        cursor.execute(
-            "SELECT logged_at, potty_type, notes FROM potty_logs WHERE user_id = %s",
-            (user_id,)
-        )
+        date_param = request.args.get('date')
+        date = datetime.strptime(date_param, "%Y-%m-%d").date() if date_param else None
+        
+        # Get filtered date or default current date
+        if date:
+            cursor.execute(
+                """
+                SELECT logged_at, potty_type, notes FROM potty_logs 
+                WHERE user_id = %s AND DATE(logged_at) = %s
+                """,
+                (user_id, date)
+            )
+        else:
+            cursor.execute(
+                """
+                SELECT logged_at, potty_type, notes FROM potty_logs 
+                WHERE user_id = %s AND DATE(logged_at) = CURDATE()
+                """,
+                (user_id,)
+            )
         logs = cursor.fetchall()
         
         user = {
