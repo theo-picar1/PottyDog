@@ -11,44 +11,79 @@
 <div class="container mt-4">
   <h2 class="mb-4 text-center">Dog Potty Tracker</h2>
 
-  <div class="row mb-4">
-    <div class="col-12">
-      <div
-        id="status-card"
-        class="card shadow-lg border-start border border-secondary text-center"
-      >
-        <div class="card-body py-4">
+  <div class="row mb-4 justify-content-center">
+    <div
+      id="status-card"
+      class="card shadow-lg border-0 text-center py-4"
+    >
+      <div class="card-body d-flex flex-column justify-content-center" style="min-height: 300px;">
+        {% if user.can_read %}
           <img
             id="status-image"
             src="/static/images/inactive_dog.png"
-            class="img-fluid w-25 mb-3"
+            class="img-fluid w-25 mb-3 mx-auto"
             alt="Dog Status"
           />
 
           <p
             id="status-placeholder"
-            class="fs-5 text-muted mb-2"
+            class="fs-5 text-muted mb-3"
           >
             Currently off. Turn on the tracker and wait for motion to be detected!
           </p>
 
           <p class="fs-5 mb-0">
-            <span id="dog-name" class="fs-5">{{ dog_name }}</span>
+            <span id="dog-name" class="fs-5">{{ user.dog_name or 'Your dog' }}</span>
             <span id="status-message" class="text-muted fs-5">
               is inactive.
             </span>
           </p>
-        </div>
+        {% else %}
+          <div class="d-flex flex-column align-items-center justify-content-center h-100">
+            <h2 class="text-danger fw-bold mb-2">
+              Access Denied
+            </h2>
+            <p class="text-muted mb-0">You do not have permission to view the tracker.</p>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
+
+  {% if success %}
+    <p class="text-success">{{success}}</p>
+  {% else %}
+    <div 
+      class="row mb-4 justify-content-center"
+      style="display: flex;"
+      id="potty-log-buttons"
+    >
+      <div class="col-auto">
+        <div class="d-flex justify-content-center gap-3">
+          <button 
+            class="btn btn-success fw-semibold"
+            data-bs-target="#logPottyModal"
+            data-bs-toggle="modal"
+          >
+            Log Potty
+          </button>
+          <button 
+            class="btn btn-danger fw-semibold"
+            onclick="discardPottyAlert()"
+          >
+            Discard
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <div class="row mb-4">
     <div class="col-md-6 mb-3 mb-md-0">
       <div class="card shadow-sm border-start border-1 border-info h-100">
         <div class="card-body p-4"> 
           <h5 class="card-title mb-2">Last Potty Time</h5>
-          <p class="text-muted mb-0">1 hour 20 minutes ago</p>
+          <p class="text-bold mb-0">{{ user.last_potty_time or 'No recent activity for today!' }}</p>
         </div>
       </div>
     </div>
@@ -57,23 +92,88 @@
       <div class="card shadow-sm border-start border-1 border-secondary h-100">
         <div class="card-body p-4"> 
           <h5 class="card-title mb-2">Today’s Potty Count</h5>
-          <p class="text-muted mb-0">No potty trips today</p> 
+          <p class="text-bold mb-0">{{ user.activity_count or 'Your dog has had no potty trips for today!' }}</p> 
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-12">
-      <div class="card border-primary">
-        <div class="card-body">
-          <h5 class="card-title">All Activity</h5>
-          <p class="card-text">Your dog has not gone to potty today!</p>
+  <a href="/potty-activity" class="btn btn-outline-dark btn-sm">View all activity</a>
+</div>
+
+<div
+  class="modal fade"
+  id="logPottyModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <form action="/dashboard/potty-logs" method="POST">
+        <div class="modal-header px-4">
+          <h5 class="modal-title fw-semibold">Log Potty</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-      </div>
+
+        <div class="modal-body px-4 py-3">
+          <!-- Potty type -->
+          <div class="mb-4">
+            <h6 class="fw-semibold mb-3 text-uppercase text-muted">
+              Potty Type
+            </h6>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="potty_type" id="pee" value="pee" required>
+              <label class="form-check-label" for="pee">Pee</label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="potty_type" id="poop" value="poop">
+              <label class="form-check-label" for="poop">Poop</label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="potty_type" id="both" value="both">
+              <label class="form-check-label" for="both">Both</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="potty_type" id="other" value="other">
+              <label class="form-check-label" for="other">Other</label>
+            </div>
+          </div>
+
+          <!-- Notes secton -->
+          <div>
+            <h6 class="fw-semibold mb-2 text-uppercase text-muted">
+              Notes <span class="fw-normal">(optional)</span>
+            </h6>
+
+            <textarea
+              class="form-control"
+              rows="4"
+              name="description"
+              placeholder="Write your notes here..."
+            ></textarea>
+          </div>
+
+          {% if error %}
+            <p class="text-danger">{{error}}</p>
+          {% endif %}
+        </div>
+
+        <div class="modal-footer px-4">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-success">
+            Confirm
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
-
 {% include 'footer.html' %} 
 {% endblock %}

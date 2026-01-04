@@ -4,6 +4,7 @@ from pubnub.models.consumer.v3.channel import Channel
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 
 # Files
@@ -16,7 +17,12 @@ from routes import routes_bp
 app = Flask(__name__)
 app.bcrypt = Bcrypt(app)
 app.pubnub = create_pubnub()
-load_dotenv()
+
+DOTENV_PATH = os.getenv('DOTENV_PATH')
+if DOTENV_PATH:
+    load_dotenv(DOTENV_PATH)  
+else:
+    load_dotenv()  
 
 # Registering blueprints
 app.register_blueprint(pubnub_bp)
@@ -134,10 +140,123 @@ def admin_dashboard():
 # Dashboard page. Only for logged-in users
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
-    if not session.get('user_id'):
+    user_id = session.get('user_id')
+    if not user_id:
         return redirect(url_for('auth.login'))
     
-    return render_template('dashboard.html', username=session.get('username'), dog_name=session.get('dog_name'), pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+    conn = None
+    cursor = None
+    
+    # Get most recent potty log and count for today
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute(
+            "SELECT * FROM potty_logs WHERE user_id = %s ORDER BY logged_at DESC LIMIT 1",
+            (user_id,)
+        )
+        last_potty = cursor.fetchone()
+        last_potty_time = last_potty['logged_at'].strftime("%b %d, %Y - %H:%M") if last_potty else None
+        
+        cursor.execute(
+            "SELECT COUNT(*) FROM potty_logs WHERE user_id = %s AND DATE(logged_at) = CURDATE()",
+            (user_id,)
+        )
+        activity_count = cursor.fetchone()['COUNT(*)']
+        
+        user = {
+            'username': session.get('username'),
+            'dog_name': session.get('dog_name'),
+            'can_read': session.get('can_read'),
+            'can_write': session.get('can_write'),
+            'activity_count': activity_count,
+            'last_potty_time': last_potty_time
+        }
+        
+        return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+    
+    except Exception as e:
+        print(e)
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
+
+# Activity page for potty activity
+@app.route('/potty-activity', methods=['GET'])
+def potty_activity():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+    
+    can_read = session.get('can_read')
+    if not can_read:
+        return render_template(
+            'protected.html', 
+            status_code="401",
+            error="Unauthorised!",
+            message="You do not have read access! Please contact the admin to have permissions changed!"
+        ), 401
+
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        date_param = request.args.get('date')
+        date = datetime.strptime(date_param, "%Y-%m-%d").date() if date_param else None
+        
+        # Get filtered date or default current date
+        if date:
+            cursor.execute(
+                """
+                SELECT logged_at, potty_type, notes FROM potty_logs 
+                WHERE user_id = %s AND DATE(logged_at) = %s
+                """,
+                (user_id, date)
+            )
+        else:
+            cursor.execute(
+                """
+                SELECT logged_at, potty_type, notes FROM potty_logs 
+                WHERE user_id = %s AND DATE(logged_at) = CURDATE()
+                """,
+                (user_id,)
+            )
+        logs = cursor.fetchall()
+        
+        user = {
+            'username': session.get('username'),
+        }
+        
+        return render_template('potty-activity.html', logs=logs, user=user), 200
+        
+    except Exception as e:
+        print(e)
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
+        
+    finally: 
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 # Protected page. Shows up when getting any status erros

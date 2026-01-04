@@ -4,7 +4,6 @@ import mysql.connector
 import os
 
 DOTENV_PATH = os.getenv('DOTENV_PATH')
-
 if DOTENV_PATH:
     load_dotenv(DOTENV_PATH)  
 else:

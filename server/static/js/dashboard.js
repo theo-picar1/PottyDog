@@ -44,6 +44,15 @@ function updateStatusUI(status, message, imagePath) {
     img.style.filter = style.filter
     img.src = imagePath
 
+    // Show buttons for logging if potty time
+    // const buttons = document.getElementById('potty-log-buttons')
+    // if (status === "potty") {
+    //     buttons.style.display = "flex"  
+    // } 
+    // else {
+    //     buttons.style.display = "none"
+    // }
+
     // Remove initial message when hardware not active
     const placeholder = document.getElementById("status-placeholder")
     if (placeholder) placeholder.remove()
