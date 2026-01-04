@@ -189,6 +189,57 @@ def dashboard():
             cursor.close()
         if conn:
             conn.close()
+            
+
+# Activity page for potty activity
+@app.route('/potty-activity', methods=['GET'])
+def potty_activity():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+    
+    can_read = session.get('can_read')
+    if not can_read:
+        return render_template(
+            'protected.html', 
+            status_code="401",
+            error="Unauthorised!",
+            message="You do not have read access! Please contact the admin to have permissions changed!"
+        ), 401
+
+    conn = None
+    cursor = None
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute(
+            "SELECT logged_at, potty_type, notes FROM potty_logs WHERE user_id = %s",
+            (user_id,)
+        )
+        logs = cursor.fetchall()
+        
+        user = {
+            'username': session.get('username'),
+        }
+        
+        return render_template('potty-activity.html', logs=logs, user=user), 200
+        
+    except Exception as e:
+        print(e)
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
+        
+    finally: 
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 # Protected page. Shows up when getting any status erros

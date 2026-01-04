@@ -6,6 +6,7 @@ from db import get_db_connection
 
 routes_bp = Blueprint("routes", __name__)
 
+# Activity count for the day and most recent activity for dashboard
 @routes_bp.route('/dashboard/potty-logs', methods=['POST'])
 def create_log():
     user_id = session.get('user_id')
@@ -135,8 +136,6 @@ def update_permissions():
             WHERE is_admin = FALSE OR is_admin = 0
         """)
         users = cursor.fetchall()
-        
-        print(count)
         
         if count > 1:
             return render_template('admin-dashboard.html', success="Successfully changed permissions of selected users!", users=users), 200

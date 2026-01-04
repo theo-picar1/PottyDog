@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% block title %} Potty Activity {% endblock %}
+
+{% block body %}
+{% include 'header.html' %}
+
+<div class="container mt-5">
+  <div class="mb-4">
+    <h1 class="fw-bold">Potty Activity</h1>
+    <p class="text-muted">Track recent potty-related activity</p>
+  </div>
+
+  <!-- Date -->
+  <div class="card mb-4 shadow-sm border-start border-1 border-info">
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label for="activityDate" class="form-label fw-semibold text-info">
+            Select date
+          </label>
+          <input type="date" class="form-control" id="activityDate" />
+        </div>
+
+        <div class="col-md-3">
+          <button class="btn btn-outline-dark w-100">
+            View activity
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activiity feed -->
+  <div class="d-flex flex-column gap-3">
+		<div class="card shadow-sm border-start border-1 border-success">
+			<div class="card-body py-3">
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<span class="badge bg-success mb-1">Pee</span>
+						<div class="small text-muted mt-1">
+							Today · 09:15
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card shadow-sm border-start border-1 border-danger">
+			<div class="card-body py-3">
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<span class="badge bg-danger mb-1">Poo</span>
+						<div class="small text-muted mt-1">
+							Today · 10:45
+						</div>
+					</div>
+
+					<button
+						type="button"
+						class="btn btn-outline-dark btn-sm"
+						data-bs-toggle="modal"
+						data-bs-target="#notesModal"
+					>
+						View notes
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+  class="modal fade"
+  id="notesModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold">Notes</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="mb-0 text-muted">
+          Modal tings
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'footer.html' %}
+{% endblock %}
