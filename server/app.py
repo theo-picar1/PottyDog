@@ -137,50 +137,43 @@ def admin_dashboard():
 
 
 # Dashboard page. Only for logged-in users
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('auth.login'))
     
-    user = {
-        'username': session.get('username'),
-        'dog_name': session.get('dog_name'),
-        'can_read': session.get('can_read'),
-        'can_write': session.get('can_write')
-    }
-    
-    if request.method == "GET":
-        return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
-    
-    conn = None 
+    conn = None
     cursor = None
     
-    # Logging time of potty logic
+    # Get most recent potty log and count for today
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        potty_type = request.form.get('potty_type')
-        check_notes = request.form.get('description')
-        notes = 'N/A'
-        
-        if not potty_type:
-            return render_template('dashboard.html', error="Please enter a potty type!", user=user), 400
-    
-        if check_notes:
-            notes = check_notes
-            
         cursor.execute(
-            """
-            INSERT INTO potty_logs (user_id, potty_type, notes)
-            VALUES (%s, %s, %s)
-            """,
-            (user_id, potty_type, notes)
+            "SELECT * FROM potty_logs WHERE user_id = %s ORDER BY logged_at DESC LIMIT 1",
+            (user_id,)
         )
-        conn.commit()
+        last_potty = cursor.fetchone()
+        last_potty_time = last_potty['logged_at'].strftime("%b %d, %Y - %H:%M") if last_potty else None
         
-        return render_template('dashboard.html', success="Successfully logged potty!", user=user), 200
+        cursor.execute(
+            "SELECT COUNT(*) FROM potty_logs WHERE user_id = %s AND DATE(logged_at) = CURDATE()",
+            (user_id,)
+        )
+        activity_count = cursor.fetchone()['COUNT(*)']
+        
+        user = {
+            'username': session.get('username'),
+            'dog_name': session.get('dog_name'),
+            'can_read': session.get('can_read'),
+            'can_write': session.get('can_write'),
+            'activity_count': activity_count,
+            'last_potty_time': last_potty_time
+        }
+        
+        return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
     
     except Exception as e:
         print(e)

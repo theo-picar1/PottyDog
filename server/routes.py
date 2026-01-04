@@ -6,7 +6,7 @@ from db import get_db_connection
 
 routes_bp = Blueprint("routes", __name__)
 
-@routes_bp.route('/dashboard/potty_logs', methods=['POST'])
+@routes_bp.route('/dashboard/potty-logs', methods=['POST'])
 def create_log():
     user_id = session.get('user_id')
     if not user_id:
@@ -45,7 +45,7 @@ def create_log():
         )
         conn.commit()
         
-        return render_template('dashboard.html', success="Successfully logged potty!", user=user), 200
+        return redirect(url_for('dashboard'))
     
     except Exception as e:
         print(e)

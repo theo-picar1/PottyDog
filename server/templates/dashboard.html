@@ -83,7 +83,7 @@
       <div class="card shadow-sm border-start border-1 border-info h-100">
         <div class="card-body p-4"> 
           <h5 class="card-title mb-2">Last Potty Time</h5>
-          <p class="text-muted mb-0">1 hour 20 minutes ago</p>
+          <p class="text-bold mb-0">{{ user.last_potty_time or 'No recent activity for today!' }}</p>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
       <div class="card shadow-sm border-start border-1 border-secondary h-100">
         <div class="card-body p-4"> 
           <h5 class="card-title mb-2">Today’s Potty Count</h5>
-          <p class="text-muted mb-0">No potty trips today</p> 
+          <p class="text-bold mb-0">{{ user.activity_count or 'Your dog has had no potty trips for today!' }}</p> 
         </div>
       </div>
     </div>
@@ -119,7 +119,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
-      <form action="/dashboard" method="POST">
+      <form action="/dashboard/potty-logs" method="POST">
         <div class="modal-header px-4">
           <h5 class="modal-title fw-semibold">Log Potty</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
