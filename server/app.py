@@ -137,9 +137,10 @@ def admin_dashboard():
 
 
 # Dashboard page. Only for logged-in users
-@app.route('/dashboard', methods=['GET'])
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    if not session.get('user_id'):
+    user_id = session.get('user_id')
+    if not user_id:
         return redirect(url_for('auth.login'))
     
     user = {
@@ -149,7 +150,52 @@ def dashboard():
         'can_write': session.get('can_write')
     }
     
-    return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+    if request.method == "GET":
+        return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+    
+    conn = None 
+    cursor = None
+    
+    # Logging time of potty logic
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        potty_type = request.form.get('potty_type')
+        check_notes = request.form.get('description')
+        notes = 'N/A'
+        
+        if not potty_type:
+            return render_template('dashboard.html', error="Please enter a potty type!", user=user), 400
+    
+        if check_notes:
+            notes = check_notes
+            
+        cursor.execute(
+            """
+            INSERT INTO potty_logs (user_id, potty_type, notes)
+            VALUES (%s, %s, %s)
+            """,
+            (user_id, potty_type, notes)
+        )
+        conn.commit()
+        
+        return render_template('dashboard.html', success="Successfully logged potty!", user=user), 200
+    
+    except Exception as e:
+        print(e)
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 # Protected page. Shows up when getting any status erros

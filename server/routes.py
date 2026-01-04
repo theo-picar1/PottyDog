@@ -6,6 +6,62 @@ from db import get_db_connection
 
 routes_bp = Blueprint("routes", __name__)
 
+@routes_bp.route('/dashboard/potty_logs', methods=['POST'])
+def create_log():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth.login'))
+    
+    user = {
+        'username': session.get('username'),
+        'dog_name': session.get('dog_name'),
+        'can_read': session.get('can_read'),
+        'can_write': session.get('can_write')
+    }
+    
+    conn = None 
+    cursor = None
+    
+    # Logging time of potty logic
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        potty_type = request.form.get('potty_type')
+        notes = request.form.get('description')
+        
+        if not potty_type:
+            return render_template('dashboard.html', error="Please enter a potty type!", user=user), 400
+    
+        if not notes:
+            notes = 'N/A'
+            
+        cursor.execute(
+            """
+            INSERT INTO potty_logs (user_id, potty_type, notes)
+            VALUES (%s, %s, %s)
+            """,
+            (user_id, potty_type, notes)
+        )
+        conn.commit()
+        
+        return render_template('dashboard.html', success="Successfully logged potty!", user=user), 200
+    
+    except Exception as e:
+        print(e)
+        return render_template(
+            'protected.html', 
+            status_code="500",
+            error="Server error!",
+            message="Something went wrong. Please contact the admin if issues persist."
+        ), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 # Change permissions of users from admin dashboard
 @routes_bp.route('/admin-dashboard/permissions', methods=['POST'])
 def update_permissions():
@@ -99,10 +155,10 @@ def update_permissions():
         ), 500
     
     finally:
-        if conn:
-            conn.close()
         if cursor:
             cursor.close()
+        if conn:
+            conn.close()
             
             
 # Edit username and/or dog name settings logic
@@ -175,10 +231,10 @@ def update_credentials():
             ), 500
         
         finally:
-            if conn:
-                conn.close()
             if cursor:
                 cursor.close()
+            if conn:
+                conn.close()
                 
                 
 # Update preferences for website
@@ -253,7 +309,7 @@ def update_preferences():
             ), 500
             
         finally:
-            if conn:
-                conn.close()
             if cursor:
                 cursor.close()
+            if conn:
+                conn.close()

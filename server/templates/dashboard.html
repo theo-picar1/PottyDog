@@ -50,29 +50,33 @@
     </div>
   </div>
 
-  <div 
-    class="row mb-4 justify-content-center"
-    style="display: flex;"
-    id="potty-log-buttons"
-  >
-    <div class="col-auto">
-      <div class="d-flex justify-content-center gap-3">
-        <button 
-          class="btn btn-success fw-semibold"
-          data-bs-target="#logPottyModal"
-          data-bs-toggle="modal"
-        >
-          Log Potty
-        </button>
-        <button 
-          class="btn btn-danger fw-semibold"
-          onclick="discardPottyAlert()"
-        >
-          Discard
-        </button>
+  {% if success %}
+    <p class="text-success">{{success}}</p>
+  {% else %}
+    <div 
+      class="row mb-4 justify-content-center"
+      style="display: flex;"
+      id="potty-log-buttons"
+    >
+      <div class="col-auto">
+        <div class="d-flex justify-content-center gap-3">
+          <button 
+            class="btn btn-success fw-semibold"
+            data-bs-target="#logPottyModal"
+            data-bs-toggle="modal"
+          >
+            Log Potty
+          </button>
+          <button 
+            class="btn btn-danger fw-semibold"
+            onclick="discardPottyAlert()"
+          >
+            Discard
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 
   <div class="row mb-4">
     <div class="col-md-6 mb-3 mb-md-0">
@@ -115,7 +119,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
-      <form action="/dashboard/potty-logs" method="POST">
+      <form action="/dashboard" method="POST">
         <div class="modal-header px-4">
           <h5 class="modal-title fw-semibold">Log Potty</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -129,30 +133,30 @@
             </h6>
 
             <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="potty_type" id="pee">
+              <input class="form-check-input" type="radio" name="potty_type" id="pee" value="pee" required>
               <label class="form-check-label" for="pee">Pee</label>
             </div>
 
             <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="potty_type" id="poop">
+              <input class="form-check-input" type="radio" name="potty_type" id="poop" value="poop">
               <label class="form-check-label" for="poop">Poop</label>
             </div>
 
             <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="potty_type" id="both">
+              <input class="form-check-input" type="radio" name="potty_type" id="both" value="both">
               <label class="form-check-label" for="both">Both</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="potty_type" id="other">
+              <input class="form-check-input" type="radio" name="potty_type" id="other" value="other">
               <label class="form-check-label" for="other">Other</label>
             </div>
           </div>
 
-          <!-- Description -->
+          <!-- Notes secton -->
           <div>
             <h6 class="fw-semibold mb-2 text-uppercase text-muted">
-              Description <span class="fw-normal">(optional)</span>
+              Notes <span class="fw-normal">(optional)</span>
             </h6>
 
             <textarea
@@ -162,6 +166,10 @@
               placeholder="Write your notes here..."
             ></textarea>
           </div>
+
+          {% if error %}
+            <p class="text-danger">{{error}}</p>
+          {% endif %}
         </div>
 
         <div class="modal-footer px-4">
