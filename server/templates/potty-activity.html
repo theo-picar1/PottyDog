@@ -1,14 +1,15 @@
-{% extends 'layout.html' %}
-{% block title %} Potty Activity {% endblock %}
+{% extends 'layout.html' %} 
+{% block title %} Potty Activity {% endblock %} 
 
-{% block body %}
+{% block body %} 
 {% include 'header.html' %}
 
 <div class="container mt-5">
-  <div class="mb-4">
-    <h1 class="fw-bold">Potty Activity</h1>
-    <p class="text-muted">Track recent potty-related activity</p>
-  </div>
+
+	<div class="d-flex align-items-center justify-content-between">
+		<h1 class="mb-4 fw-semibold">Potty Activity</h1>
+		<a href="/dashboard" class="btn btn-outline-dark btn-sm">Back to dashboard</a>
+	</div>
 
   <!-- Date -->
   <div class="card mb-4 shadow-sm border-start border-1 border-info">
@@ -22,87 +23,110 @@
         </div>
 
         <div class="col-md-3">
-          <button class="btn btn-outline-dark w-100">
-            View activity
-          </button>
+          <button class="btn btn-outline-dark w-100">View activity</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Activiity feed -->
+  {% set type_classes = { 'pee': 'success', 'poo': 'danger', 'both': 'primary',
+  'other': 'secondary' } %}
+
   <div class="d-flex flex-column gap-3">
-		<div class="card shadow-sm border-start border-1 border-success">
-			<div class="card-body py-3">
-				<div class="d-flex justify-content-between align-items-center">
-					<div>
-						<span class="badge bg-success mb-1">Pee</span>
-						<div class="small text-muted mt-1">
-							Today · 09:15
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+    {% if logs %} {% for log in logs %} {% set color =
+    type_classes.get(log.potty_type.lower(), 'secondary') %}
+    <div class="card shadow-sm border-start border-1 border-{{ color }}">
+      <div
+        class="card-body py-3 d-flex justify-content-between align-items-center"
+      >
+        <div class="d-flex flex-column">
+          <span class="badge bg-{{ color }} mb-1"
+            >{{ log.potty_type | capitalize }}</span
+          >
+          <div class="small text-muted">
+            {{ log.logged_at.strftime('%d %b · %H:%M') }}
+          </div>
+        </div>
 
-		<div class="card shadow-sm border-start border-1 border-danger">
-			<div class="card-body py-3">
-				<div class="d-flex justify-content-between align-items-center">
-					<div>
-						<span class="badge bg-danger mb-1">Poo</span>
-						<div class="small text-muted mt-1">
-							Today · 10:45
-						</div>
-					</div>
-
-					<button
-						type="button"
-						class="btn btn-outline-dark btn-sm"
-						data-bs-toggle="modal"
-						data-bs-target="#notesModal"
-					>
-						View notes
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div
-  class="modal fade"
-  id="notesModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold">Notes</h5>
+        {% if log.notes != 'N/A' %}
         <button
           type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-        ></button>
-      </div>
-
-      <div class="modal-body">
-        <p class="mb-0 text-muted">
-          Modal tings
-        </p>
-      </div>
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
+          class="btn btn-sm btn-outline-dark"
+          data-bs-toggle="modal"
+          data-bs-target="#notesModal-{{ loop.index }}"
         >
-          Close
+          View notes
         </button>
+
+        <div
+          class="modal fade"
+          id="notesModal-{{ loop.index }}"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title fw-semibold">Notes</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p class="mb-0 text-muted">{{ log.notes }}</p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <h2 class="fw-bold mb-2">No activity logged for this day!</h2>
+    {% endif %}
+  </div>
+
+  <div class="modal fade" id="notesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-semibold">Notes</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="mb-0 text-muted">Modal tings</p>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-{% include 'footer.html' %}
+
+{% include 'footer.html' %} 
 {% endblock %}
