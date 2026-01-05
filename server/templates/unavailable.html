@@ -1,0 +1,38 @@
+{% extends 'layout.html' %} 
+{% block title %} Under Development! {% endblock %} 
+
+{% block body %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div
+    class="card text-center shadow-lg border-0"
+    style="max-width: 420px; width: 100%"
+  >
+    <div class="card-body px-4 py-5">
+      <div class="mb-4">
+        <img
+          src="/static/images/construction_dog.png"
+          alt="Under Development"
+          class="img-fluid w-25 mb-3"
+        />
+      </div>
+
+      <span class="text-warning fw-semibold">Work in progress</span>
+      <h5 class="card-title mt-2">This feature isn’t ready yet</h5>
+      <p class="text-muted">
+        We’re still working on this part of the application. Check back soon or
+        continue exploring other features.
+      </p>
+
+      <div class="mt-4 d-flex justify-content-center gap-2">
+        <a href="/" class="btn btn-primary btn-sm">Home</a>
+        <button
+          onclick="history.back()"
+          class="btn btn-outline-secondary btn-sm"
+        >
+          Go back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

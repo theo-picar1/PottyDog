@@ -265,6 +265,12 @@ def protected():
     return render_template('protected.html')
 
 
+# Unavailable page. SHows up for features / pages not done
+@app.route('/unavailable', methods=['GET'])
+def unavailable():
+    return render_template('unavailble.html')
+
+
 # Settings page. Logged-in users only
 @app.route('/settings', methods=['GET'])
 def settings():
