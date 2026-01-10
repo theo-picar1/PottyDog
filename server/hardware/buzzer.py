@@ -10,8 +10,19 @@ class PiezoBuzzer():
         self.buzzer_pwm = GPIO.PWM(self.BUZZER_PIN, 4000) # 4000Hz 
 
     
-    # Trigger buzzer
+    # Device successful startup alert
+    def ready_sound(self):
+        for freq in [1000, 2000, 3000]:
+            self.buzzer_pwm.ChangeFrequency(freq)
+            self.buzzer_pwm.start(50)
+            time.sleep(0.2)
+            self.buzzer_pwm.stop()
+            time.sleep(0.1)
+
+
+    # Potty alert
     def trigger_buzzer(self):
+        self.buzzer_pwm.ChangeFrequency(4000)
         self.buzzer_pwm.start(50)
         time.sleep(3)
         self.buzzer_pwm.stop()
