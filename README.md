@@ -65,3 +65,9 @@ You can check out the website here: https://pottydog.online
 - Video footage if dog is by the door (may be difficult)
 - Edit and delete potty logs in the activity page
 - Add and delete users in admin dashboard 
+- Allow multiple users to use the same device
+
+## Website Preview
+<img src="./server/static/images/pottydog-dashboard.png">
+<img src="./server/static/images/pottydog-activities.png">
+<img src="./server/static/images/pottydog-admin-dashboard.png">
