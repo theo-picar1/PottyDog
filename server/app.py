@@ -174,7 +174,7 @@ def dashboard():
             'last_potty_time': last_potty_time
         }
         
-        return render_template('dashboard.html', user=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
+        return render_template('dashboard.html', userData=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
     
     except Exception as e:
         print(e)
@@ -241,7 +241,7 @@ def potty_activity():
             'username': session.get('username'),
         }
         
-        return render_template('potty-activity.html', logs=logs, user=user), 200
+        return render_template('potty-activity.html', logs=logs, userData=user), 200
         
     except Exception as e:
         print(e)
