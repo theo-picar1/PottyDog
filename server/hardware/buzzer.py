@@ -11,7 +11,7 @@ class PiezoBuzzer():
 
     
     # Device successful startup alert
-    def ready_sound(self):
+    def tigger_startup_buzzer(self):
         for freq in [1000, 2000, 3000]:
             self.buzzer_pwm.ChangeFrequency(freq)
             self.buzzer_pwm.start(50)

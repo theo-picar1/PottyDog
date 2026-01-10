@@ -20,6 +20,7 @@ WAIT_TIME_THRESHOLD = 10.0 # If motion detected this long, wants to go out
 try:
     print("Starting motion detection...")
     time.sleep(5)  # Give PIR sensor time to stabilize
+    buzzer.tigger_startup_buzzer()
 
     while True:
         now = time.time()
