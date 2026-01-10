@@ -1,30 +1,89 @@
-{% extends 'layout.html' %} {% block title %} PottyDog {% endblock %} 
+{% extends 'layout.html' %}
+{% block title %} PottyDog {% endblock %}
+
 {% block body %}
-<h1>PottyDog Application</h1>
+<div class="container py-5">
+  <div class="row justify-content-center text-center mb-5">
+    <div class="col-lg-8">
+      <h1 class="display-4 fw-bold">PottyDog</h1>
+      <img src="static/images/happy_dog.png" width="150px">
+      <p class="lead text-muted">
+        A smart door-side device that notifies you when your dog needs to go outside.
+      </p>
 
-{% if userData %}
-<p>You are logged in! You can now head over to the dashboard page!</p>
-{% else %}
-<p>Please register or login to continue.</p>
-{% endif %}
+      {% if userData %}
+        <div class="alert alert-success mt-4" role="alert">
+          You’re logged in — head to your dashboard to view your dog’s activity.
+        </div>
+      {% else %}
+        <div class="alert alert-secondary mt-4" role="alert">
+          Register or log in to start tracking your dog’s potty behavior.
+        </div>
+      {% endif %}
 
-<div class="row">
-  <form action="/register" method="get">
-    <button type="submit">Register</button>
-  </form>
+      <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+        {% if not userData %}
+          <form action="/register" method="get">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Get Started
+            </button>
+          </form>
 
-  <form action="/login" method="get">
-    <button type="submit">Login</button>
-  </form>
+          <form action="/login" method="get">
+            <button type="submit" class="btn btn-outline-secondary btn-lg">
+              Login
+            </button>
+          </form>
+        {% else %}
+          <form method="GET" action="/dashboard">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Go to Dashboard
+            </button>
+          </form>
 
-  {% if userData %}
-  <form action="/logout" method="POST">
-    <button type="submit">Logout</button>
-  </form>
+          <form action="/logout" method="POST">
+            <button type="submit" class="btn btn-outline-secondary btn-lg">
+              Logout
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
-  <form method="GET" action="/dashboard">
-    <button type="submit">Dashboard</button>
-  </form>
-  {% endif %}
+  <div class="row text-center g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Place by the Door</h5>
+          <p class="card-text text-muted">
+            Position the device near the door your dog uses to go into the garden.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Detects Waiting</h5>
+          <p class="card-text text-muted">
+            Monitors motion and identifies when your dog has been waiting for a period of time.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Website Alerts</h5>
+          <p class="card-text text-muted">
+            Instantly updates your dashboard when your dog wants to go outside.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

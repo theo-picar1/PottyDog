@@ -6,6 +6,8 @@
 
 PottyDog is a tool that combines hardware and software that will allow you to know whether or not your dog is waiting by the door to go out and potty, with the help of an easy-to-use UI and easy-to-setup device!
 
+**Note:** new features will still be implemented for this project, but development will slow down.
+
 ## Website 🌐
 <img src="./server/static/images/website-certificate.png">
 
@@ -66,8 +68,10 @@ You can check out the website here: https://pottydog.online
 - Edit and delete potty logs in the activity page
 - Add and delete users in admin dashboard 
 - Allow multiple users to use the same device
+- Create a page that gives a tutorial on how to use a device
 
 ## Website Preview
+<img src="./server/static/images/pottydog-landing.png">
 <img src="./server/static/images/pottydog-dashboard.png">
 <img src="./server/static/images/pottydog-activities.png">
 <img src="./server/static/images/pottydog-admin-dashboard.png">
