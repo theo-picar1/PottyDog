@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pubnub = new PubNub({
                 subscribeKey: PUBNUB_SUB_KEY,
                 authKey: data.token,
-                uuid: "dashboard-" + String(data.username)
+                uuid: "pottydog-website"
             })
 
             pubnub.subscribe({ channels: ["Channel-Barcelona"] })

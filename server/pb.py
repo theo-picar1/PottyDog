@@ -34,7 +34,7 @@ def generate_token(user_id, read, write, pubnub, ttl=1440):  # ttl in minutes
 
         envelope = pubnub.grant_token() \
             .ttl(ttl) \
-            .authorized_uuid(f'user_{user_id}') \
+            .authorized_uuid(f'pottydog-website') \
             .channels([channel]) \
             .sync()
 
