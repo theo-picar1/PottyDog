@@ -2,88 +2,171 @@
 {% block title %} PottyDog {% endblock %}
 
 {% block body %}
-<div class="container py-5">
-  <div class="row justify-content-center text-center mb-5">
-    <div class="col-lg-8">
-      <h1 class="display-4 fw-bold">PottyDog</h1>
-      <img src="static/images/happy_dog.png" width="150px">
-      <p class="lead text-muted">
-        A smart door-side device that notifies you when your dog needs to go outside.
-      </p>
 
-      {% if userData %}
-        <div class="alert alert-success mt-4" role="alert">
-          You’re logged in — head to your dashboard to view your dog’s activity.
-        </div>
+<section>
+  <header>
+    <h1>PottyDog</h1>
+    <p>
+      A hardware–software system that detects when a dog is waiting by the door and
+      reports activity in real time through a secure web dashboard.
+    </p>
+
+    {% if userData %}
+      <div role="alert">
+        You are logged in. Access the dashboard to view live device status and activity logs.
+      </div>
+    {% else %}
+      <div role="alert">
+        Create an account to access the dashboard and connect a PottyDog device.
+      </div>
+    {% endif %}
+
+    <div>
+      {% if not userData %}
+        <form action="/register" method="get">
+          <button type="submit">Create Account</button>
+        </form>
+
+        <form action="/login" method="get">
+          <button type="submit">Log In</button>
+        </form>
       {% else %}
-        <div class="alert alert-secondary mt-4" role="alert">
-          Register or log in to start tracking your dog’s potty behavior.
-        </div>
+        <form method="GET" action="/dashboard">
+          <button type="submit">Open Dashboard</button>
+        </form>
+
+        <form action="/logout" method="POST">
+          <button type="submit">Log Out</button>
+        </form>
       {% endif %}
-
-      <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
-        {% if not userData %}
-          <form action="/register" method="get">
-            <button type="submit" class="btn btn-primary btn-lg">
-              Get Started
-            </button>
-          </form>
-
-          <form action="/login" method="get">
-            <button type="submit" class="btn btn-outline-secondary btn-lg">
-              Login
-            </button>
-          </form>
-        {% else %}
-          <form method="GET" action="/dashboard">
-            <button type="submit" class="btn btn-primary btn-lg">
-              Go to Dashboard
-            </button>
-          </form>
-
-          <form action="/logout" method="POST">
-            <button type="submit" class="btn btn-outline-secondary btn-lg">
-              Logout
-            </button>
-          </form>
-        {% endif %}
-      </div>
     </div>
+  </header>
+</section>
+
+<section>
+  <h2>System Overview</h2>
+
+  <div>
+    <article>
+      <div></div>
+      <h3>Motion Detection</h3>
+      <p>
+        A PIR sensor detects heat-based motion near the door and categorizes activity
+        in real time.
+      </p>
+    </article>
+
+    <article>
+      <div></div>
+      <h3>Edge Processing</h3>
+      <p>
+        A Raspberry Pi processes sensor input locally and transmits events securely.
+      </p>
+    </article>
+
+    <article>
+      <div></div>
+      <h3>Live Web Interface</h3>
+      <p>
+        The dashboard updates instantly to reflect current motion state and activity.
+      </p>
+    </article>
+
+    <article>
+      <div></div>
+      <h3>Cloud Messaging</h3>
+      <p>
+        PubNub enables low-latency communication between the device and the web client.
+      </p>
+    </article>
   </div>
+</section>
 
-  <div class="row text-center g-4">
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Place by the Door</h5>
-          <p class="card-text text-muted">
-            Position the device near the door your dog uses to go into the garden.
-          </p>
-        </div>
-      </div>
-    </div>
+<section>
+  <h2>Implemented Features</h2>
 
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Detects Waiting</h5>
-          <p class="card-text text-muted">
-            Monitors motion and identifies when your dog has been waiting for a period of time.
-          </p>
-        </div>
-      </div>
-    </div>
+  <div>
+    <article>
+      <h4>Real-Time Motion Status</h4>
+      <p>
+        Displays basic motion, no motion, or sustained waiting behavior.
+      </p>
+    </article>
 
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Website Alerts</h5>
-          <p class="card-text text-muted">
-            Instantly updates your dashboard when your dog wants to go outside.
-          </p>
-        </div>
-      </div>
-    </div>
+    <article>
+      <h4>Potty Activity Logging</h4>
+      <p>
+        Log potty events with type selection and optional notes.
+      </p>
+    </article>
+
+    <article>
+      <h4>User Authentication</h4>
+      <p>
+        Secure login and registration with hashed password storage.
+      </p>
+    </article>
+
+    <article>
+      <h4>Daily Activity Summary</h4>
+      <p>
+        Dashboard shows daily counts and most recent activity.
+      </p>
+    </article>
+
+    <article>
+      <h4>Profile Management</h4>
+      <p>
+        Edit username and associated dog name.
+      </p>
+    </article>
+
+    <article>
+      <h4>Device Status Feedback</h4>
+      <p>
+        Auditory signal confirms device readiness.
+      </p>
+    </article>
   </div>
-</div>
+</section>
+
+<section>
+  <h2>Planned Enhancements</h2>
+
+  <ul>
+    <li>OAuth-based login (Google)</li>
+    <li>Support for multiple devices and owners</li>
+    <li>Administrative user management</li>
+    <li>Editable activity logs</li>
+    <li>Device setup and usage tutorials</li>
+    <li>Optional video integration</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Technology Stack</h2>
+
+  <div>
+    <article>
+      <h4>Backend</h4>
+      <p>Flask, Python, MySQL</p>
+    </article>
+
+    <article>
+      <h4>Frontend</h4>
+      <p>HTML, CSS, JavaScript</p>
+    </article>
+
+    <article>
+      <h4>Infrastructure</h4>
+      <p>AWS, PubNub</p>
+    </article>
+
+    <article>
+      <h4>Hardware</h4>
+      <p>PIR Sensor, Raspberry Pi, Buzzer</p>
+    </article>
+  </div>
+</section>
+
 {% endblock %}
