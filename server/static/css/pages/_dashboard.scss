@@ -78,10 +78,6 @@ h1 {
     color: #fff;
     cursor: pointer;
     transition: background 0.2s ease;
-
-    &:hover {
-      background: darken($accent, 6%);
-    }
   }
 }
 
@@ -155,10 +151,6 @@ h1 {
     border: 1px solid $border;
     padding: 0.75rem 1rem;
     text-align: left;
-  }
-
-  th {
-    background: lighten($panel, 5%);
   }
 }
 

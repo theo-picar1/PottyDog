@@ -24,9 +24,6 @@ section {
   padding: 4rem 1.5rem;
 }
 
-// --------------------
-// HERO
-// --------------------
 header {
   text-align: center;
 
@@ -60,9 +57,6 @@ header {
   }
 }
 
-// --------------------
-// BUTTONS
-// --------------------
 button {
   background: $accent;
   color: #ffffff;
@@ -72,24 +66,14 @@ button {
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-
-  &:hover {
-    background: darken($accent, 6%);
-  }
 }
 
-// --------------------
-// SECTION HEADERS
-// --------------------
 section > h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
   letter-spacing: -0.01em;
 }
 
-// --------------------
-// GRID SECTIONS
-// --------------------
 section:nth-of-type(2) div,
 section:nth-of-type(3) div,
 section:nth-of-type(6) div {
@@ -98,9 +82,6 @@ section:nth-of-type(6) div {
   gap: 1.5rem;
 }
 
-// --------------------
-// CARDS
-// --------------------
 article {
   background: $panel;
   border: 1px solid $border;
@@ -119,19 +100,14 @@ article {
     font-size: 0.95rem;
   }
 
-  // black placeholder blocks
   div {
     width: 100%;
     height: 140px;
-    background: #111;
     border-radius: 4px;
     margin-bottom: 1rem;
   }
 }
 
-// --------------------
-// LISTS (PLANNED FEATURES)
-// --------------------
 ul {
   list-style: none;
   max-width: 720px;

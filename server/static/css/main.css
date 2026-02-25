@@ -56,9 +56,6 @@ button {
   font-weight: 500;
   cursor: pointer;
 }
-button:hover {
-  background: rgb(25.5931034483, 72.5137931034, 221.8068965517);
-}
 
 section > h2 {
   font-size: 2rem;
@@ -93,7 +90,6 @@ article p {
 article div {
   width: 100%;
   height: 140px;
-  background: #111;
   border-radius: 4px;
   margin-bottom: 1rem;
 }
@@ -173,9 +169,6 @@ h1 {
   cursor: pointer;
   transition: background 0.2s ease;
 }
-#potty-actions button:hover {
-  background: rgb(25.5931034483, 72.5137931034, 221.8068965517);
-}
 
 .summary-grid {
   display: grid;
@@ -245,9 +238,6 @@ h1 {
   padding: 0.75rem 1rem;
   text-align: left;
 }
-#activity-section table th {
-  background: white;
-}
 
 #activity-section a {
   display: inline-block;
@@ -295,4 +285,206 @@ textarea {
   border: 1px solid #d9dde3;
   border-radius: 4px;
   font-family: inherit;
+}
+
+.potty-activity-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+.potty-activity-page input[type=date],
+.potty-activity-page input[type=text],
+.potty-activity-page select,
+.potty-activity-page textarea {
+  width: 225px;
+  background: #ffffff;
+  color: #1f2933;
+  border: 1px solid #d9dde3;
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.potty-activity-page input[type=date]:focus,
+.potty-activity-page input[type=text]:focus,
+.potty-activity-page select:focus,
+.potty-activity-page textarea:focus {
+  outline: none;
+  border-color: #2f5be7;
+  box-shadow: 0 0 0 2px rgba(47, 91, 231, 0.12);
+}
+.potty-activity-page textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+.potty-activity-page label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #5f6b7a;
+  margin-bottom: 0.35rem;
+  display: block;
+}
+.potty-activity-page .potty-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.potty-activity-page .potty-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.potty-activity-page .potty-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.potty-activity-page .modal-content {
+  background: #ffffff;
+  border: 1px solid #d9dde3;
+  border-radius: 10px;
+}
+.potty-activity-page .modal-header,
+.potty-activity-page .modal-footer {
+  border: none;
+  padding-bottom: 0.5rem;
+}
+.potty-activity-page .modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.potty-activity-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.potty-activity-page .page-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+}
+.potty-activity-page .page-header p {
+  margin: 0.3rem 0 0;
+  color: #5f6b7a;
+}
+.potty-activity-page .page-header .page-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.potty-activity-page .filters-card {
+  background: #ffffff;
+  border: 1px solid #d9dde3;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.potty-activity-page .filters-card .filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+.potty-activity-page .filters-card .filters-grid label {
+  font-size: 0.8rem;
+  color: #5f6b7a;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+.potty-activity-page .filters-card .filters-grid input,
+.potty-activity-page .filters-card .filters-grid select {
+  padding: 0.45rem;
+  border: 1px solid #d9dde3;
+  border-radius: 6px;
+}
+.potty-activity-page .activity-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.potty-activity-page .activity-summary .summary-item {
+  background: #ffffff;
+  border: 1px solid #d9dde3;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+.potty-activity-page .activity-summary .summary-item span {
+  font-size: 0.8rem;
+  color: #5f6b7a;
+}
+.potty-activity-page .activity-summary .summary-item strong {
+  display: block;
+  font-size: 1.2rem;
+}
+.potty-activity-page .activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.potty-activity-page .activity-row {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d9dde3;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+.potty-activity-page .activity-row .activity-type {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.potty-activity-page .activity-row .activity-type.pee {
+  color: #2f855a;
+}
+.potty-activity-page .activity-row .activity-type.poop {
+  color: #c53030;
+}
+.potty-activity-page .activity-row .activity-type.both {
+  color: #2f5be7;
+}
+.potty-activity-page .activity-row .activity-type.other {
+  color: #5f6b7a;
+}
+.potty-activity-page .activity-row .activity-time {
+  font-size: 0.85rem;
+  color: #5f6b7a;
+}
+.potty-activity-page .activity-row .activity-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.potty-activity-page .btn-primary {
+  background: #2f5be7;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.potty-activity-page .btn-secondary {
+  background: transparent;
+  border: 1px solid #d9dde3;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  color: #1f2933;
+  text-decoration: none;
+}
+.potty-activity-page .btn-outline {
+  background: transparent;
+  border: 1px solid #d9dde3;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.potty-activity-page .btn-outline.danger {
+  color: #c53030;
+  border-color: rgba(197, 48, 48, 0.3);
+}
+.potty-activity-page .empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #5f6b7a;
 }/*# sourceMappingURL=main.css.map */

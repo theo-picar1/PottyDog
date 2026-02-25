@@ -1,48 +1,62 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="#">
-      <div class="d-flex align-items-center gap-2">
-        <img
-          src="/static/images/happy_dog.png"
-          alt="PottyDog logo"
-          style="height: 32px"
-        />
-        <span class="fw-bold fs-4">PottyDog</span>
-      </div>
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/dashboard">
+      <img
+        src="/static/images/happy_dog.png"
+        alt="PottyDog logo"
+        height="32"
+      />
+      <span class="fw-bold fs-4">PottyDog</span>
     </a>
 
+    <!-- Right side -->
     <div class="ms-auto d-flex align-items-center gap-2">
+
       {% if not session.get('user_id') %}
         <a href="/login" class="btn btn-outline-light btn-sm">Login</a>
         <a href="/register" class="btn btn-light btn-sm text-primary">Register</a>
-      {% endif %}
+      {% else %}
 
+      <!-- Dropdown -->
       <div class="dropdown">
         <button
-          class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center"
+          class="btn btn-outline-light btn-sm dropdown-toggle"
+          id="userDropdown"
           type="button"
           data-bs-toggle="dropdown"
+          aria-expanded="false"
         >
           {% if session.get('is_admin') %}
-              Admin
+            Admin
           {% else %}
-              {{ userData.username or 'User' }}
+            {{ userData.username or 'User' }}
           {% endif %}
         </button>
 
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><a class="dropdown-item" href="/settings">Settings</a></li>
-          <li><hr class="dropdown-divider" /></li>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li>
+            <a class="dropdown-item" href="#">Profile</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="/settings">Settings</a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
           <li>
             <form method="POST" action="/logout">
-              <button type="submit" class="dropdown-item w-100 text-start text-danger">
+              <button
+                type="submit"
+                class="dropdown-item text-danger"
+              >
                 Logout
               </button>
             </form>
           </li>
         </ul>
       </div>
+
+      {% endif %}
     </div>
   </div>
 </nav>
