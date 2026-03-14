@@ -1,0 +1,15 @@
+@mixin responsive-padding {
+  padding: 1.5rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 2rem 8rem;
+  }
+
+  @media (min-width: 1400px) {
+    padding: 2.5rem 10rem;
+  }
+}

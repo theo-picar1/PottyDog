@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+@use './styles/variables' as *;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: $color-bg-main;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pd-mat-icon {
+    color: $color-primary;
+
+    &:hover {
+      color: $color-primary-hover;
+      cursor: pointer;
+    }
+  }

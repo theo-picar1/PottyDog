@@ -1,0 +1,27 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #0f1720;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pd-mat-icon {
+  color: #3b82f6;
+}
+.pd-mat-icon:hover {
+  color: #2563eb;
+  cursor: pointer;
+}/*# sourceMappingURL=styles.css.map */
