@@ -1,0 +1,44 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+@media screen and (min-width: 0px) {
+  .devices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+}
+@media screen and (min-width: 600px) {
+  .devices-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+main {
+  padding: 1.5rem 1rem;
+}
+@media (min-width: 640px) {
+  main {
+    padding: 1.5rem 4rem;
+  }
+}
+@media (min-width: 1024px) {
+  main {
+    padding: 2rem 8rem;
+  }
+}
+@media (min-width: 1400px) {
+  main {
+    padding: 2.5rem 10rem;
+  }
+}
+main {
+  color: #e5e7eb;
+}/*# sourceMappingURL=dashboard.component.css.map */

@@ -1,0 +1,11 @@
+<main>
+  <h1>Your devices</h1>
+
+  <section class="devices-container">
+    @for(device of this.devices(); track device.id) {
+      <device-card [device]="device"/>
+    }
+  </section>
+
+  <button>Add new device</button>
+</main>

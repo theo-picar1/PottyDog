@@ -1,0 +1,23 @@
+@use '../../styles/mixins' as *;
+@use '../../styles/variables' as *;
+
+@media screen AND (min-width: 0px) {
+  .devices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+}
+
+@media screen AND (min-width: 600px) {
+  .devices-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+main {
+  @include responsive-padding();
+  color: $text-primary;
+}

@@ -1,0 +1,31 @@
+@use '../../../styles/variables' as *;
+
+.device-card {
+  background-color: $color-bg-elevated;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .placeholder-image {
+    background-color: black;
+    width: 100%;
+    height: 150px;
+  }
+
+  button {
+    appearance: none;
+    background-color: $button-bg-primary;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 0;
+    color: $button-text;
+
+    &:hover {
+      background-color: $button-bg-primary-hover;
+      cursor: pointer;
+    }
+  }
+}
