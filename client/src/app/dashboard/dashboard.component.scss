@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    margin-top: 3rem;
+    width: 100%;
   }
 }
 
@@ -20,4 +20,24 @@
 main {
   @include responsive-padding();
   color: $text-primary;
+  width: 100%;
+
+  button {
+    appearance: none;
+    border: none;
+    background-color: $button-bg-primary;
+    color: $button-text;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 2rem;
+
+    &:hover {
+      background-color: $button-bg-primary-hover
+    }
+  }
+}
+
+.devices-container {
+  margin-top: 2rem;
 }

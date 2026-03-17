@@ -2,5 +2,7 @@
   <h3>{{ device.name }}</h3>
   <div class="placeholder-image"></div>
   <p>Location: {{ device.location }}</p>
-  <button>Go to device</button>
+  <button [routerLink]="['/device', device.id]">
+    Go to device
+  </button>
 </div>

@@ -2,42 +2,48 @@ export interface Device {
   id: number;
   name: string;
   location: string;
+  status: 'Off' | 'Inactive' | 'Movement'
 }
 
 export interface DashboardData {
   noDevices: Device[];
-  hasDevices: Device[];
+  devices: Device[];
 };;
 
 export const dashboardData: DashboardData = {
   noDevices: [
 
   ],
-  hasDevices: [
+  devices: [
     {
       id: 1,
       name: "Backgarden device",
-      location: "Kitchen"
+      location: "Kitchen",
+      status: "Inactive"
     },
     {
       id: 2,
       name: "Living room device",
-      location: "Living Room"
+      location: "Living Room",
+      status: "Off"
     },
     {
       id: 3,
       name: "Bedroom device",
-      location: "Bedroom"
+      location: "Bedroom",
+      status: "Inactive"
     },
     {
       id: 4,
       name: "Kitchen device",
-      location: "Kitchen"
+      location: "Kitchen",
+      status: "Off"
     },
     {
       id: 5,
       name: "Bedroom 2 device",
-      location: "Bedroom"
+      location: "Bedroom",
+      status: "Movement"
     },
   ]
 }

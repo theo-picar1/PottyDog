@@ -1,0 +1,25 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+/*
+Source - https://stackoverflow.com/a/54535305
+Posted by ewulff
+Retrieved 2026-03-17, License - CC BY-SA 4.0
+*/
+.pd-spinner-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+}
+.pd-spinner-container .pd-spinner-text {
+  color: #e5e7eb;
+}/*# sourceMappingURL=pd-spinner.component.css.map */
