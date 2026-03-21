@@ -1,13 +1,8 @@
 @use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .device-card {
-  background-color: $color-bg-elevated;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: $shadow-soft;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  @include device-card();
 
   .placeholder-image {
     background-color: black;

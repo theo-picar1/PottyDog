@@ -1,0 +1,53 @@
+<main>
+  @if (this.isLoading()) {
+    <pd-spinner loadTitle="device"></pd-spinner>
+  } @else {
+    <div class="container">
+      <div class="video-container">
+        <div class="camera"></div>
+        <div class="camera-tools">
+          <div class="tool-slide-toggle">
+            <p>
+              <mat-slide-toggle labelPosition="before">
+                <mat-icon>videocam</mat-icon>
+              </mat-slide-toggle>
+            </p>
+          </div>
+
+          <div class="tool-slide-toggle">
+            <p>
+              <mat-slide-toggle labelPosition="before">
+                <mat-icon>mic</mat-icon>
+              </mat-slide-toggle>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tools-container">
+        <div class="tools-bars">
+          <div class="tool-bar">
+            <p>1</p>
+          </div>
+
+          <div class="tool-bar">
+            <p>2</p>
+          </div>
+
+          <div class="tool-bar">
+            <p>3</p>
+          </div>
+
+          <div class="tool-bar">
+            <p>4</p>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button [routerLink]="['/dashboard']">Go back</button>
+          <button class="shut-off">Shut off</button>
+        </div>
+      </div>
+    </div>
+  }
+</main>
