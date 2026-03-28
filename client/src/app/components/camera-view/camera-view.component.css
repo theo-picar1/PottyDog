@@ -1,0 +1,27 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+div mat-icon {
+  transform: scale(1.5);
+}
+
+.offline-camera, .online-camera {
+  background-color: black;
+}
+
+.offline-camera {
+  color: #f59e0b;
+}/*# sourceMappingURL=camera-view.component.css.map */

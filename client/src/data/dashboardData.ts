@@ -23,7 +23,7 @@ export const dashboardData: DashboardData = {
       location: "Kitchen",
       status: "Inactive",
       isOffline: true,
-      hasCamera: false
+      hasCamera: true
     },
     {
       id: 2,
@@ -39,7 +39,7 @@ export const dashboardData: DashboardData = {
       location: "Bedroom",
       status: "Inactive",
       isOffline: true,
-      hasCamera: false
+      hasCamera: true
     },
     {
       id: 4,

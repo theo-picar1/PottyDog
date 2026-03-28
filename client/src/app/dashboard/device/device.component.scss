@@ -1,33 +1,41 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-main {
-  @include responsive-padding();
-  height: 100vh;
-  width: 100%;
+@media screen AND (min-width: 0) {
+  .video-container {
+    height: 30%;
+  }
 }
 
-.container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  height: 70vh;
-  width: inherit;
+@media screen AND (min-width: 600px) {
+  .video-container {
+    height: 50%;
+  }
+}
+
+@media screen AND (min-width: 1400px) {
+  .video-container {
+    height: 75%;
+  }
+}
+
+main {
+  @include responsive-padding();
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-  margin-top: 4rem;
+  justify-content: center;
+  height: 100vh;
 }
 
 .video-container {
-  display: flex;
-  flex-direction: column;
-
-  .camera {
-    background-color: black;
-    height: 100%;
-  }
+  width: 100%;
+  align-items: flex-end;
 
   .camera-tools {
     background-color: $color-bg-elevated;
     display: flex;
+    flex: 1;
     flex-direction: row;
     align-items: center;
     padding: 1rem 2rem;
@@ -37,43 +45,6 @@ main {
       margin-right: 8px;
       transform: scale(1.1);
       color: $text-primary;
-    }
-  }
-}
-
-.tools-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  .tools-bars {
-    display: grid;
-    grid-template-rows: repeat(4, 1fr);
-    gap: 1rem;
-    height: 60%;
-  }
-  
-  .tool-bar {
-    background-color: $color-bg-elevated;
-  }
-
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 4rem;
-
-    button {
-      width: 100px;
-      padding: 6px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .shut-off {
-      color: $text-primary;
-      background-color: $status-danger;
     }
   }
 }

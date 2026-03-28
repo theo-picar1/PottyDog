@@ -17,6 +17,12 @@
   }
 }
 
+@media screen AND (min-width: 1400px) {
+  .devices-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 main {
   @include responsive-padding();
   color: $text-primary;

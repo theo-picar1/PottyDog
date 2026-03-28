@@ -1,11 +1,12 @@
-import { Component, signal } from "@angular/core";
-import { Device } from "../../../data/dashboardData";
+import { Component, signal, OnInit } from "@angular/core";
+import { Device, dashboardData } from "../../../data/dashboardData";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { dashboardData } from "../../../data/dashboardData";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { PdSpinner } from "../../components/pd-spinner/pd-spinner.component";
+import { CameraView } from "../../components/camera-view/camera-view.component";
+import { PdButton } from "../../components/pd-button/pd-button.component";
 
 @Component({
   selector: 'device',
@@ -16,22 +17,36 @@ import { PdSpinner } from "../../components/pd-spinner/pd-spinner.component";
     MatIconModule,
     MatSlideToggleModule,
     PdSpinner,
-    RouterLink
-]
+    RouterLink,
+    CameraView,
+    PdButton
+  ]
 })
 
-export class DevicePage {
-  device = signal<Device | null>(null);
+export class DevicePage implements OnInit {
   isLoading = signal<boolean>(true);
+  foundDevice = signal<boolean>(false);
+  device = signal<Device>({
+    id: -1,
+    name: "",
+    location: "",
+    status: "Off",
+    isOffline: true,
+    hasCamera: false
+  });
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private readonly route: ActivatedRoute) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      const id = Number(this.route.snapshot.paramMap.get('id') ?? '0');
-      const found = dashboardData.devices.find(d => d.id === id) || null;
+    const id = Number(this.route.snapshot.paramMap.get('id') ?? '0');
+    const found = dashboardData.devices.find(d => d.id === id);
+    if (found) {
       this.device.set(found);
+      this.foundDevice.set(true);
+    };
+
+    setTimeout(() => {
       this.isLoading.set(false);
-    }, 1500);
+    }, 1000);
   }
 }

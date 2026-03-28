@@ -1,0 +1,21 @@
+@use '../../../styles/variables' as *;
+
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    mat-icon {
+        transform: scale(1.5);
+    }
+}
+
+.offline-camera, .online-camera {
+    background-color: black;
+}
+
+.offline-camera {
+    color: $status-warning;
+}

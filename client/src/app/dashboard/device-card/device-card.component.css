@@ -16,11 +16,6 @@
   flex-direction: column;
   gap: 12px;
 }
-.device-card .placeholder-image {
-  background-color: black;
-  width: 100%;
-  height: 150px;
-}
 .device-card button {
   -webkit-appearance: none;
      -moz-appearance: none;

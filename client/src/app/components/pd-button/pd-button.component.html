@@ -1,0 +1,7 @@
+@if(this.icon === "") {
+    <button>{{ this.text }}</button>
+} @else {
+    <button>
+        <mat-icon>{{ this.icon }}</mat-icon> {{ this.text }}
+    </button>
+}
