@@ -30,6 +30,11 @@ main {
     padding: 2.5rem 10rem;
   }
 }
+@media (min-width: 1800px) {
+  .container {
+    padding: 3rem 14rem;
+  }
+}
 
 section {
   padding: 80px 0;

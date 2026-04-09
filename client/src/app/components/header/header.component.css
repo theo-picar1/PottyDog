@@ -25,6 +25,11 @@
     padding: 2.5rem 10rem;
   }
 }
+@media (min-width: 1800px) {
+  .pd-header {
+    padding: 3rem 14rem;
+  }
+}
 .pd-header {
   background-color: #1a2430;
   width: 100%;

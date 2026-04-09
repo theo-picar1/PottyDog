@@ -13,6 +13,6 @@
       }
     </section>
 
-    <button>Add new device</button>
+    <button (click)="openDialog()" id="add-device-button" [disabled]="this.isLoadingAddDialog()">Add new device</button>
   }
 </main>

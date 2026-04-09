@@ -44,6 +44,11 @@ main {
     padding: 2.5rem 10rem;
   }
 }
+@media (min-width: 1800px) {
+  main {
+    padding: 3rem 14rem;
+  }
+}
 main {
   color: #e5e7eb;
   width: 100%;
@@ -58,10 +63,12 @@ main button {
   padding: 12px;
   cursor: pointer;
   border-radius: 4px;
-  margin-top: 2rem;
 }
 main button:hover {
   background-color: #2563eb;
+}
+main button {
+  margin-top: 2rem;
 }
 
 .devices-container {

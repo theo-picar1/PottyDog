@@ -24,23 +24,13 @@
 }
 
 main {
-  @include responsive-padding();
+  @include responsive-padding;
   color: $text-primary;
   width: 100%;
 
   button {
-    appearance: none;
-    border: none;
-    background-color: $button-bg-primary;
-    color: $button-text;
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 4px;
+    @include pd-button-primary;
     margin-top: 2rem;
-
-    &:hover {
-      background-color: $button-bg-primary-hover
-    }
   }
 }
 

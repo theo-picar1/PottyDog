@@ -10,5 +10,5 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 export class PdSpinner { 
   @Input() height: string = '90vh';
-  @Input() loadTitle: string = ''
+  @Input() loadTitle?: string;
 }

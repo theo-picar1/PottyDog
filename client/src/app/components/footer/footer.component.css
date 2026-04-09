@@ -25,6 +25,11 @@
     padding: 2.5rem 10rem;
   }
 }
+@media (min-width: 1800px) {
+  .footer {
+    padding: 3rem 14rem;
+  }
+}
 .footer {
   background: #1a2430;
   border-top: 1px solid #2f3d4d;
