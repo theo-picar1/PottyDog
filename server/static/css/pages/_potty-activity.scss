@@ -1,0 +1,231 @@
+$bg: #f6f7f9;
+$panel: #ffffff;
+$border: #d9dde3;
+$text: #1f2933;
+$muted: #5f6b7a;
+$accent: #2f5be7;
+$danger: #c53030;
+
+.potty-activity-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  input[type="date"],
+  input[type="text"],
+  select,
+  textarea {
+    width: 225px;
+    background: $panel;
+    color: $text;
+    border: 1px solid $border;
+    border-radius: 6px;
+    padding: 0.45rem 0.55rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.4;
+
+    &:focus {
+      outline: none;
+      border-color: $accent;
+      box-shadow: 0 0 0 2px rgba(47, 91, 231, 0.12);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $muted;
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+
+  .potty-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .modal-content {
+    background: $panel;
+    border: 1px solid $border;
+    border-radius: 10px;
+  }
+
+  .modal-header,
+  .modal-footer {
+    border: none;
+    padding-bottom: 0.5rem;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0;
+      font-size: 1.9rem;
+    }
+
+    p {
+      margin: 0.3rem 0 0;
+      color: $muted;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
+
+  .filters-card {
+    background: $panel;
+    border: 1px solid $border;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      align-items: end;
+
+      label {
+        font-size: 0.8rem;
+        color: $muted;
+        margin-bottom: 0.25rem;
+        display: block;
+      }
+
+      input,
+      select {
+        padding: 0.45rem;
+        border: 1px solid $border;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .activity-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .summary-item {
+      background: $panel;
+      border: 1px solid $border;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+
+      span {
+        font-size: 0.8rem;
+        color: $muted;
+      }
+
+      strong {
+        display: block;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .activity-row {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    align-items: center;
+    background: $panel;
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+
+    .activity-type {
+      font-weight: 600;
+      text-transform: capitalize;
+
+      &.pee { color: #2f855a; }
+      &.poop { color: #c53030; }
+      &.both { color: #2f5be7; }
+      &.other { color: $muted; }
+    }
+
+    .activity-time {
+      font-size: 0.85rem;
+      color: $muted;
+    }
+
+    .activity-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+
+  .btn-primary {
+    background: $accent;
+    color: #fff;
+    border: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid $border;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    color: $text;
+    text-decoration: none;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid $border;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &.danger {
+      color: $danger;
+      border-color: rgba(197,48,48,0.3);
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: $muted;
+  }
+}

@@ -1,0 +1,44 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.footer {
+  @include responsive-padding();
+  background: $color-bg-surface;
+  border-top: 1px solid $color-border-subtle;
+  color: $text-secondary;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-brand h2 {
+  color: $text-primary;
+  margin-bottom: 10px;
+}
+
+.footer-links h3 {
+  color: $text-primary;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.footer-links a {
+  display: block;
+  color: $text-secondary;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.footer-links a:hover {
+  color: $color-primary;
+}
+
+.footer-bottom {
+  border-top: 1px solid $color-border-subtle;
+  margin-top: 50px;
+  text-align: center;
+  color: $text-muted;
+}

@@ -1,0 +1,18 @@
+<main>
+  <h1>Your devices</h1>
+  @if (isLoading()) {
+    <pd-spinner height="75vh" loadTitle="devices"></pd-spinner>
+  } @else {
+    <section class="devices-container">  
+      @if (devices().length <= 0) {
+        <p>No devices found. Set one up now!</p>
+      } @else {
+        @for (device of devices(); track device.id) {
+          <device-card [device]="device"></device-card>
+        }
+      }
+    </section>
+
+    <button (click)="openDialog()" id="add-device-button" [disabled]="this.isLoadingAddDialog()">Add new device</button>
+  }
+</main>

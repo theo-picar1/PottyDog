@@ -1,0 +1,109 @@
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
+
+@media screen AND (min-width: 0) {
+  form {
+    padding: 2rem;
+  }
+
+  .login-footer {
+    display: none;
+  }
+
+  .form-buttons {
+    button {
+      font-size: 12px;
+    }
+  }
+}
+
+@media screen AND (min-width: 400px) {
+  .login-footer {
+    @include responsive-padding;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    justify-content: center;
+    width: 100vw;
+    text-align: center;
+  }
+}
+
+@media screen AND (min-width: 600px) {
+  form {
+    padding: 3rem;
+  }
+
+  .form-buttons {
+    button {
+      font-size: 16px;
+    }
+  }
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  margin-bottom: 10px;
+}
+
+main {
+  @include responsive-padding;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  background-color: $color-bg-elevated;
+  width: 600px;
+  margin: auto;
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+h1 {
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.form-field-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  span {
+    margin-top: 2px;
+  }
+
+  mat-icon {
+    transform: scale(0.95);
+  }
+}
+
+mat-error {
+  margin-top: 2px;
+  margin-left: -12px;
+}
+
+.form-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 1rem;
+
+  button {
+    width: 100%;
+  }
+
+  .login {
+    @include pd-button-primary;
+  }
+
+  .clear {
+    @include pd-button-neutral;
+  }
+}

@@ -1,0 +1,57 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+@media screen and (min-width: 0) {
+  form {
+    width: 300px;
+  }
+}
+@media screen and (min-width: 600px) {
+  form {
+    width: 400px;
+  }
+}
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.save-button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.save-button:hover {
+  background-color: #2563eb;
+}
+.save-button {
+  margin-right: 8px;
+}
+
+.close-button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  background-color: #e5e7eb;
+  color: #3b82f6;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.close-button:hover {
+  background-color: #9ca3af;
+}/*# sourceMappingURL=edit-device.component.css.map */

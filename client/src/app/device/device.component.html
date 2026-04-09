@@ -1,0 +1,45 @@
+@if(device()) {
+<main>
+  @if (this.isLoading()) {
+  <pd-spinner loadTitle="device"></pd-spinner>
+  } @else {
+  <div class="video-container">
+    <camera-view [hasCamera]="device().hasCamera" [isOffline]="device().isOffline" [height]="'90%'"></camera-view>
+
+    <div class="camera-tools">
+      <div class="left">
+        <div class="tool-slide-toggle">
+          <p>
+            <mat-slide-toggle labelPosition="before" [disabled]="device().hasCamera ? false : true">
+              <mat-icon>videocam</mat-icon>
+            </mat-slide-toggle>
+          </p>
+        </div>
+
+        <div class="tool-slide-toggle">
+          <p>
+            <mat-slide-toggle labelPosition="before">
+              <mat-icon>microphone</mat-icon>
+            </mat-slide-toggle>
+          </p>
+        </div>
+      </div>
+
+      <div class="right">
+        <mat-icon [matMenuTriggerFor]="menu" #menuTrigger>settings</mat-icon>
+        <mat-menu class="pd-mat-menu" #menu="matMenu">
+          <button mat-menu-item (click)="openDialog('edit')">Edit device</button>
+          <button mat-menu-item class="delete-device" (click)="openDialog('delete')">
+            <span>Delete device</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-button" [routerLink]="['/dashboard']">Back to dashboard</button>
+  }
+</main>
+} @else {
+<h1>No device</h1>
+}

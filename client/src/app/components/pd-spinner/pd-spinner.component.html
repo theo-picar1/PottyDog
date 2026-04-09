@@ -1,0 +1,9 @@
+<div class="pd-spinner-container" [style.height]="height">
+  <mat-spinner class="pd-mat-spinner"></mat-spinner>
+
+  @if(this.loadTitle) {
+    <p class="pd-spinner-text">Loading {{ this.loadTitle }}...</p>
+  } @else {
+    <p class="pd-spinner-text">Loading...</p>
+  }
+</div>

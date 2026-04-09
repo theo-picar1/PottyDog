@@ -1,0 +1,10 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.device-card {
+  @include device-card;
+
+  button {
+    @include pd-button-primary;
+  }
+}

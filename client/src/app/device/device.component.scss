@@ -1,0 +1,100 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+@media screen AND (min-width: 0) {
+  main {
+    width: 100%;
+    gap: 4rem;
+  }
+
+  .video-container {
+    height: 30%;
+
+    .camera-tools {
+      padding: 1rem;
+    }
+  }
+}
+
+@media screen AND (min-width: 600px) {
+  main {
+    gap: 3rem;
+  }
+
+  .video-container {
+    height: 50%;
+  }
+}
+
+@media screen AND (min-width: 800px) {
+  main {
+    width: 80%;
+    gap: 2rem;
+  }
+
+  .video-container {
+    .camera-tools {
+      padding: 1rem 1.5rem;
+    }
+  }
+}
+
+@media screen AND (min-width: 1400px) {
+  .video-container {
+    height: 75%;
+  }
+}
+
+::ng-deep .pd-mat-menu .delete-device span {
+  color: $status-danger;
+}
+
+mat-icon {
+  margin-right: 4px;
+  margin-top: 4px;
+  transform: scale(1.1);
+  color: $text-primary;
+}
+
+main {
+  @include responsive-padding;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  margin: auto;
+}
+
+.video-container {
+  width: 100%;
+
+  .camera-tools {
+    background-color: $color-bg-elevated;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .right {
+      mat-icon {
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1);
+        }
+      }
+    }
+  }
+}
+
+.back-button {
+  @include pd-button-primary;
+  width: 175px;
+}

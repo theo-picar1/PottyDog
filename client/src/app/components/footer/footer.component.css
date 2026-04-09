@@ -1,0 +1,72 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+.footer {
+  padding: 1.5rem 1rem;
+}
+@media (min-width: 640px) {
+  .footer {
+    padding: 1.5rem 4rem;
+  }
+}
+@media (min-width: 1024px) {
+  .footer {
+    padding: 2rem 8rem;
+  }
+}
+@media (min-width: 1400px) {
+  .footer {
+    padding: 2.5rem 10rem;
+  }
+}
+@media (min-width: 1800px) {
+  .footer {
+    padding: 3rem 14rem;
+  }
+}
+.footer {
+  background: #1a2430;
+  border-top: 1px solid #2f3d4d;
+  color: #9ca3af;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-brand h2 {
+  color: #e5e7eb;
+  margin-bottom: 10px;
+}
+
+.footer-links h3 {
+  color: #e5e7eb;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.footer-links a {
+  display: block;
+  color: #9ca3af;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.footer-links a:hover {
+  color: #3b82f6;
+}
+
+.footer-bottom {
+  border-top: 1px solid #2f3d4d;
+  margin-top: 50px;
+  text-align: center;
+  color: #6b7280;
+}/*# sourceMappingURL=footer.component.css.map */

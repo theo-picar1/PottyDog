@@ -1,0 +1,73 @@
+@use './variables' as *;
+
+@mixin responsive-padding {
+  padding: 1.5rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 2rem 8rem;
+  }
+
+  @media (min-width: 1400px) {
+    padding: 2.5rem 10rem;
+  }
+
+  @media (min-width: 1800px) {
+    padding: 3rem 14rem;
+  }
+}
+
+@mixin device-card {
+  background-color: $color-bg-elevated;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@mixin pd-button-primary {
+  appearance: none;
+  border: none;
+  background-color: $button-bg-primary;
+  color: $button-text;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: $button-bg-primary-hover;
+  }
+}
+
+@mixin pd-button-neutral {
+  appearance: none;
+  border: none;
+  background-color: $text-primary;
+  color: $color-primary;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: $text-secondary;
+  }
+}
+
+@mixin pd-button-danger {
+  appearance: none;
+  border: none;
+  background-color: $status-danger;
+  color: $text-primary;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    filter: brightness(75%);
+  }
+}

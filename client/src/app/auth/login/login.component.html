@@ -1,0 +1,38 @@
+<main>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h1>PottyDog</h1>
+    <div class="form-field-name">
+      <mat-icon>email</mat-icon><span>Email address</span>
+    </div>
+    <mat-form-field>
+        <mat-label>Email address</mat-label>
+        <input type="email" formControlName="email" matInput placeholder="Enter your email address" required />
+        @if (formControls['email'].hasError('email') && !formControls['email'].hasError('required')) {
+          <mat-error>Please enter a valid email address</mat-error>
+        }
+        @if (formControls['email'].hasError('required')) {
+          <mat-error>Email is required</mat-error>
+        }
+    </mat-form-field>
+
+    <div class="form-field-name">
+      <mat-icon>lock</mat-icon><span>Password</span>
+    </div>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+        <input type="password" formControlName="password" matInput placeholder="Enter your password" required />
+         @if (formControls['password'].hasError('minLength')) {
+          <mat-error>Your password does not meet the requirements</mat-error>
+        }
+    </mat-form-field>
+
+    <div class="form-buttons">
+      <button type="submit" class="login">Login</button>
+      <button type="reset" class="clear" (click)="onReset()">Clear</button>
+    </div>
+  </form>
+</main>
+
+<div class="login-footer">
+  <p>Please contact firstsecond@example.com if you are having any issues logging in.</p>
+</div>
