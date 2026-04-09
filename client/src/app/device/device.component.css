@@ -1,0 +1,125 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+@media screen and (min-width: 0) {
+  main {
+    width: 100%;
+    gap: 4rem;
+  }
+  .video-container {
+    height: 30%;
+  }
+  .video-container .camera-tools {
+    padding: 1rem;
+  }
+}
+@media screen and (min-width: 600px) {
+  main {
+    gap: 3rem;
+  }
+  .video-container {
+    height: 50%;
+  }
+}
+@media screen and (min-width: 800px) {
+  main {
+    width: 80%;
+    gap: 2rem;
+  }
+  .video-container .camera-tools {
+    padding: 1rem 1.5rem;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .video-container {
+    height: 75%;
+  }
+}
+::ng-deep .pd-mat-menu .delete-device span {
+  color: #ef4444;
+}
+
+mat-icon {
+  margin-right: 4px;
+  margin-top: 4px;
+  transform: scale(1.1);
+  color: #e5e7eb;
+}
+
+main {
+  padding: 1.5rem 1rem;
+}
+@media (min-width: 640px) {
+  main {
+    padding: 1.5rem 4rem;
+  }
+}
+@media (min-width: 1024px) {
+  main {
+    padding: 2rem 8rem;
+  }
+}
+@media (min-width: 1400px) {
+  main {
+    padding: 2.5rem 10rem;
+  }
+}
+@media (min-width: 1800px) {
+  main {
+    padding: 3rem 14rem;
+  }
+}
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  margin: auto;
+}
+
+.video-container {
+  width: 100%;
+}
+.video-container .camera-tools {
+  background-color: #243140;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.video-container .camera-tools .left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.video-container .camera-tools .right mat-icon {
+  cursor: pointer;
+}
+.video-container .camera-tools .right mat-icon:hover {
+  transform: scale(1);
+}
+
+.back-button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.back-button:hover {
+  background-color: #2563eb;
+}
+.back-button {
+  width: 175px;
+}/*# sourceMappingURL=device.component.css.map */

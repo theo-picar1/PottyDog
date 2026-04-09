@@ -1,0 +1,17 @@
+@use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
+@use '@angular/material' as mat;
+
+mat-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .confirm-button {
+        @include pd-button-danger;
+    }
+
+    .close-button {
+        @include pd-button-neutral;
+    }
+}

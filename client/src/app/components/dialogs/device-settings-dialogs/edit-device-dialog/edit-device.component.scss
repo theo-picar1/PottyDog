@@ -1,0 +1,28 @@
+@use '../../../../../styles/mixins' as *;
+
+@media screen AND (min-width: 0) {
+  form {
+    width: 300px;
+  }
+}
+
+@media screen AND (min-width: 600px) {
+	form {
+		width: 400px;
+	}
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.save-button {
+  @include pd-button-primary;
+  margin-right: 8px;
+}
+
+.close-button {
+  @include pd-button-neutral;
+}

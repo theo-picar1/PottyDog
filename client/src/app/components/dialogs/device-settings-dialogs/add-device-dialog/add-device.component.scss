@@ -1,0 +1,42 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+@use '@angular/material' as mat;
+
+@media screen AND (min-width: 0) {
+  form {
+    width: 300px;
+  }
+}
+
+@media screen AND (min-width: 600px) {
+  form {
+    width: 400px;
+  }
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  button {
+    width: 100px;
+  }
+
+  .add {
+    @include pd-button-primary;
+    border-radius: 0;
+  }
+
+  .close {
+    @include pd-button-neutral;
+    border-radius: 0;
+    margin-left: 12px;
+  }
+}
