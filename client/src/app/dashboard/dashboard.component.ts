@@ -7,6 +7,7 @@ import { PdSpinner } from "../components/pd-spinner/pd-spinner.component";
 import { CommonModule } from "@angular/common";
 import { AddDeviceDialog } from "../components/dialogs/device-settings-dialogs/add-device-dialog/add-device.component";
 import { MatDialog } from "@angular/material/dialog";
+import { MatMenuModule } from "@angular/material/menu";
 
 @Component({
   selector: 'dashboard',
@@ -17,7 +18,8 @@ import { MatDialog } from "@angular/material/dialog";
     DeviceCard,
     MatProgressSpinnerModule,
     PdSpinner,
-    CommonModule
+    CommonModule,
+    MatMenuModule
   ]
 })
 

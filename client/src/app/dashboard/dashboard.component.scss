@@ -23,10 +23,26 @@
   }
 }
 
+.log-out.mat-mdc-menu-item, .mat-mdc-menu-item:visited, .mat-mdc-menu-item:link {
+  color: red;
+}
+
 main {
   @include responsive-padding;
   color: $text-primary;
   width: 100%;
+
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    mat-icon {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
 
   button {
     @include pd-button-primary;
