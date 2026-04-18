@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from dotenv import load_dotenv
 from datetime import datetime
+from flask_cors import CORS
 import os
 
 # Files
@@ -17,6 +18,7 @@ from routes import routes_bp
 app = Flask(__name__)
 app.bcrypt = Bcrypt(app)
 app.pubnub = create_pubnub()
+CORS(app, origins="http://localhost:4200")
 
 DOTENV_PATH = os.getenv('DOTENV_PATH')
 if DOTENV_PATH:

@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit, signal } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon"
+import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 
 @Component({
@@ -21,6 +22,7 @@ import { Router } from "@angular/router";
 
 export class LoginPage implements OnInit {
 	submitted: boolean = false;
+	serverError = signal<string>("");
 	loginForm: FormGroup = new FormGroup({
 		email: new FormControl(''),
 		password: new FormControl('')
@@ -28,7 +30,8 @@ export class LoginPage implements OnInit {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly router: Router
+		private readonly router: Router,
+		private readonly http: HttpClient
 	) {};
 
 	ngOnInit() {
@@ -38,9 +41,7 @@ export class LoginPage implements OnInit {
 				Validators.email
 			]],
 			password: ['', [
-				Validators.required,
-				Validators.minLength(6),
-				Validators.maxLength(20)
+				Validators.required
 			]]
 		});
 	}
@@ -53,9 +54,25 @@ export class LoginPage implements OnInit {
 
 	onSubmit() {
 		this.submitted = true;
-		if(this.loginForm.invalid) return;
-		
-		this.router.navigate(['/dashboard']);
+		if (this.loginForm.invalid) return;
+
+		console.log(this.loginForm.value);
+
+		this.http.post('http://localhost:5000/login', this.loginForm.value)
+			.subscribe({
+				next: (res: any) => {
+					if(res.status_code === 200) {
+						this.router.navigate(['/dashboard']);
+					} else {
+						console.log(res.message);
+						this.serverError.set(res.message || "Something went wrong. Please try again later");
+					}
+				},
+				error: (err) => {
+					console.log(err);
+					this.serverError.set(err.error?.message || "Something went wrong. Please try again later");
+				}
+			})
 	}
 
 	onReset() {
