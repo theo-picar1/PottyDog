@@ -56,20 +56,17 @@ export class LoginPage implements OnInit {
 		this.submitted = true;
 		if (this.loginForm.invalid) return;
 
-		console.log(this.loginForm.value);
-
 		this.http.post('http://localhost:5000/login', this.loginForm.value)
 			.subscribe({
 				next: (res: any) => {
 					if(res.status_code === 200) {
+						localStorage.setItem("token", res.token);
 						this.router.navigate(['/dashboard']);
 					} else {
-						console.log(res.message);
 						this.serverError.set(res.message || "Something went wrong. Please try again later");
 					}
 				},
 				error: (err) => {
-					console.log(err);
 					this.serverError.set(err.error?.message || "Something went wrong. Please try again later");
 				}
 			})

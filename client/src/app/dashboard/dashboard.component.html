@@ -4,7 +4,7 @@
     <mat-icon [matMenuTriggerFor]="menu">menu</mat-icon>
     <mat-menu #menu="matMenu">
       <button mat-menu-item>Your account</button>
-      <button mat-menu-item class="log-out">Log out</button>
+      <button mat-menu-item class="log-out" (click)="logout()">Log out</button>
     </mat-menu>
   </div>
 

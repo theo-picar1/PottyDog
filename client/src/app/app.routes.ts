@@ -1,8 +1,10 @@
-import { Routes } from '@angular/router';
 import { LandingPage } from './landing-page/landing-page.component';
 import { Dashboard } from './dashboard/dashboard.component';
 import { DevicePage } from './device/device.component';
 import { LoginPage } from './auth/login/login.component';
+
+import { Routes } from '@angular/router';
+import { authGuard } from './auth-guard';
 
 export const routes: Routes = [
   {
@@ -11,10 +13,12 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
+    canActivate: [authGuard]
   },
   {
     path: 'device/:id',
-    component: DevicePage
+    component: DevicePage,
+    canActivate: [authGuard]
   }
 ];
