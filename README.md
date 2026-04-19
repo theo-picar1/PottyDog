@@ -1,7 +1,7 @@
 # PottyDog 
 ## What is PottyDog❔
 <div align="center">
-    <img src="./server/static/images/happy_dog.png" width="200">
+    <img src="./client/public/images/happy_dog.png" width="200">
 </div>
 
 PottyDog is a tool that combines hardware and software that will allow you to know whether or not your dog is waiting by the door to go out and potty, with the help of an easy-to-use UI and easy-to-setup device!
@@ -9,7 +9,7 @@ PottyDog is a tool that combines hardware and software that will allow you to kn
 **Note:** new features will still be implemented for this project, but development will slow down.
 
 ## Website 🌐
-<img src="./server/static/images/website-certificate.png">
+<img src="./client/public/images/website-certificate.png">
 
 You can check out the website here: https://pottydog.online
 
@@ -25,7 +25,7 @@ You can check out the website here: https://pottydog.online
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" width="60"/>
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" width="50"/>
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flask/flask-original.svg" width="60"/>
-    <img src="./server/static/images/pubnub-logo.png" width="100">
+    <img src="./client/public/images/pubnub-logo.png" width="100">
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" width="55"/>
 </div>
 <br>
@@ -37,22 +37,22 @@ You can check out the website here: https://pottydog.online
 ## Hardware Setup 👷
 - **PIR Sensor** for motion detection from heat emitting objects, like pets and people
 
-<img src="./server/static/images/pir-sensor.png" width="350" />
+<img src="./client/public/images/pir-sensor.png" width="350" />
 
 - **Raspberry Pi 400 Model B** for processing sensor input and managing device behaviour
 
-<img src="./server/static/images/raspberry-pi4.png" width="350" />
+<img src="./client/public/images/raspberry-pi4.png" width="350" />
 
 - **Buzzer** as an auditory cue that the device is on and ready to go
 
-<img src="./server/static/images/piezo-buzzer.png" width="350"/>
+<img src="./client/public/images/piezo-buzzer.png" width="350"/>
 
 - **Fritzing diagram** of hardware connections
 
-<img src="./server/static/images/PottyDog Fritz Diagram.jpg">
+<img src="./client/public/images/PottyDog Fritz Diagram.jpg">
 
 ## System Architecture 🌉
-<img src="./server/static/images/pottydog-architecture.png">
+<img src="./client/public/images/pottydog-architecture.png">
 
 ## Features Implemented ✅
 - Live motion detection that updates the UI immediately based on motion type (basic motion, no motion, staying motion)
@@ -71,7 +71,7 @@ You can check out the website here: https://pottydog.online
 - Create a page that gives a tutorial on how to use a device
 
 ## Website Preview
-<img src="./server/static/images/pottydog-landing.png">
-<img src="./server/static/images/pottydog-dashboard.png">
-<img src="./server/static/images/pottydog-activities.png">
-<img src="./server/static/images/pottydog-admin-dashboard.png">
+<img src="./client/public/images/pottydog-landing.png">
+<img src="./client/public/images/pottydog-dashboard.png">
+<img src="./client/public/images/pottydog-activities.png">
+<img src="./client/public/images/pottydog-admin-dashboard.png">
