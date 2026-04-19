@@ -47,6 +47,10 @@ input::-ms-clear {
   margin-bottom: 10px;
 }
 
+body {
+  overflow: hidden;
+}
+
 main {
   @include responsive-padding;
   display: flex;

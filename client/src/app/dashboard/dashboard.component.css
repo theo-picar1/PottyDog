@@ -26,6 +26,10 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+.log-out.mat-mdc-menu-item, .mat-mdc-menu-item:visited, .mat-mdc-menu-item:link {
+  color: red;
+}
+
 main {
   padding: 1.5rem 1rem;
 }
@@ -52,6 +56,16 @@ main {
 main {
   color: #e5e7eb;
   width: 100%;
+}
+main .top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+main .top mat-icon {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 main button {
   -webkit-appearance: none;

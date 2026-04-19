@@ -1,5 +1,7 @@
 # Imports
-from flask import Blueprint, current_app, render_template, request, session, redirect, url_for
+from flask import Blueprint, current_app, render_template, request, session, redirect, url_for, jsonify
+import datetime
+import jwt
 import re
 
 # Files
@@ -99,68 +101,65 @@ def register():
 
 
 # Login page and logic
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        conn = None
-        cursor = None
+    conn = None
+    cursor = None
+    try:
+        print(request.get_json())
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        if not email or not password:
+            return jsonify({ 
+                "message": "All fields are required",
+                "status_code": 401
+            })
 
-        try:
-            email = request.form.get('email')
-            password = request.form.get('password')
-
-            if not email or not password:
-                return render_template('login.html', error="Please fill in all required fields!"), 400
-
-            conn = get_db_connection()
-            cursor = conn.cursor(dictionary=True)
-
-            # Check if that user exists or has incorrect password
-            cursor.execute(
-                "SELECT * FROM users WHERE email = %s",
-                (email,)
-            )
-            user = cursor.fetchone()
-            if not user or not current_app.bcrypt.check_password_hash(user['password'], password):
-                return render_template('login.html', error="Invalid email or password."), 401
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT * FROM users WHERE email = %s",
+            (email,)
+        )
+        user = cursor.fetchone()
+        if not user or not user['password'] == password:
+            return jsonify({ 
+                "message": "Invalid username or password" ,
+                "status_code": 401
+            })
             
-            # Check if settings for them exist
-            cursor.execute(
-                "SELECT light_mode, disabled_alerts FROM settings WHERE user_id = %s",
-                (user['id'],)
-            )
-            user_settings = cursor.fetchone()
-            if not user_settings:
-                return render_template('login.html', error="Could not get all info. Please try again!"), 404
-            
-            # Store necessary user details in session when successful
-            session.permanent = True
-            session['user_id'] = user['id']
-            session['username'] = user['username']
-            session['dog_name'] = user['dog_name']
-            session['light_mode'] = user_settings['light_mode']
-            session['disabled_alerts'] = user_settings['disabled_alerts']
-            session['can_read'] = bool(user['can_read'])
-            session['can_write'] = bool(user['can_write'])
-            
-            return redirect(url_for('dashboard'))
+        payload = {
+            'id': user['id'],
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=2)  # expiry
+        }
         
-        except Exception as e:
-            print(e) 
-            return render_template(
-                'protected.html', 
-                status_code="500",
-                error="Server error!",
-                message="Something went wrong. Please contact the admin if issues persist."
-            ), 500
+        token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm='HS256')
         
-        finally:
-            if cursor:
-                cursor.close()
-            if conn:
-                conn.close()
-
-    return render_template('login.html'), 200
+        print("Success!")
+        return jsonify({
+            "message": "Success",
+            "status_code": 200,
+            "user": {
+                "id": user["id"],
+                "username": user["username"],
+                "dog_name": user["dog_name"]
+            },
+            "token": token
+        })
+        
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "message": "Server error",
+            "status_code": 500
+        })
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 
 # Admin login page and logic
@@ -219,5 +218,4 @@ def admin_login():
 # Logging out logic
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
-    session.clear()
     return redirect(url_for('index'))

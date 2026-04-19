@@ -63,6 +63,10 @@ input::-ms-clear {
   margin-bottom: 10px;
 }
 
+body {
+  overflow: hidden;
+}
+
 main {
   padding: 1.5rem 1rem;
 }

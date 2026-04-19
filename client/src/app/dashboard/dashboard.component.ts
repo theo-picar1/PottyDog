@@ -7,6 +7,8 @@ import { PdSpinner } from "../components/pd-spinner/pd-spinner.component";
 import { CommonModule } from "@angular/common";
 import { AddDeviceDialog } from "../components/dialogs/device-settings-dialogs/add-device-dialog/add-device.component";
 import { MatDialog } from "@angular/material/dialog";
+import { MatMenuModule } from "@angular/material/menu";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'dashboard',
@@ -17,11 +19,14 @@ import { MatDialog } from "@angular/material/dialog";
     DeviceCard,
     MatProgressSpinnerModule,
     PdSpinner,
-    CommonModule
+    CommonModule,
+    MatMenuModule
   ]
 })
 
 export class Dashboard implements OnInit {
+  constructor(private readonly router: Router) {}
+
   devices = signal<Device[]>([]);
   isLoading = signal<boolean>(true);
   isLoadingAddDialog = signal<boolean>(false);
@@ -51,5 +56,10 @@ export class Dashboard implements OnInit {
 
   trackById(index: number, device: Device) {
     return device.id;
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/']);
   }
 }
