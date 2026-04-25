@@ -33,14 +33,9 @@ export class Dashboard implements OnInit {
 
   readonly dialog = inject(MatDialog);
 
-  timeout(ms: number) {
-    return new Promise(res => setTimeout(res, ms));
-  }
-
-  async openDialog() {
+  openDialog() {
     this.isLoadingAddDialog.set(true);
     document.getElementById("add-device-button")?.classList.add("loading");
-    await this.timeout(1000);
 
     document.getElementById("add-device-button")?.classList.remove("loading");
     this.isLoadingAddDialog.set(false);
