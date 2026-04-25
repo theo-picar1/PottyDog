@@ -9,6 +9,7 @@ import { AddDeviceDialog } from "../components/dialogs/device-settings-dialogs/a
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule } from "@angular/material/menu";
 import { Router } from "@angular/router";
+import { PdDialog } from "../components/dialogs/pd-dialog/pd-dialog.component";
 
 @Component({
   selector: 'dashboard',
@@ -29,17 +30,16 @@ export class Dashboard implements OnInit {
 
   devices = signal<Device[]>([]);
   isLoading = signal<boolean>(true);
-  isLoadingAddDialog = signal<boolean>(false);
 
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    this.isLoadingAddDialog.set(true);
-    document.getElementById("add-device-button")?.classList.add("loading");
-
-    document.getElementById("add-device-button")?.classList.remove("loading");
-    this.isLoadingAddDialog.set(false);
-    this.dialog.open(AddDeviceDialog);
+    // this.dialog.open(AddDeviceDialog);
+    this.dialog.open(PdDialog, {
+      data: {
+        type: "not-available"
+      }
+    });
   }
 
   ngOnInit() {

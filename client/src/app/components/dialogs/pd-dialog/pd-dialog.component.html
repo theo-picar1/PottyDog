@@ -1,0 +1,16 @@
+@if (data.type === 'not-available') {
+  <h2 mat-dialog-title>Currently not available</h2>
+  <mat-dialog-content>
+    <p>
+      This feature is currently under development. Please try another time!
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-dialog-close class="close-button">Close</button>
+  </mat-dialog-actions>
+} @else {
+  <h2 mat-dialog-title>Error</h2>
+  <mat-dialog-actions>
+    <button mat-dialog-close class="close-button">Close</button>
+  </mat-dialog-actions>
+}

@@ -1,0 +1,23 @@
+/* Base colors */
+/* Borders */
+/* Primary brand color */
+/* Accent highlight */
+/* Text */
+/* Status colors */
+/* Buttons */
+/* Inputs */
+/* Shadows */
+.close-button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.close-button:hover {
+  background-color: #2563eb;
+}/*# sourceMappingURL=pd-dialog.component.css.map */
