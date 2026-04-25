@@ -129,6 +129,10 @@ mat-error {
   margin-left: -12px;
 }
 
+.server-error {
+  margin-left: 1px;
+}
+
 .form-buttons {
   display: flex;
   flex-direction: row;
