@@ -4,12 +4,12 @@
 	<mat-dialog-content>
 		<mat-form-field>
 			<mat-label>Device name</mat-label>
-			<input matInput formControlName="deviceName" type="text" placeholder="Enter a new device name" required />
+			<input matInput formControlName="deviceName" type="text" placeholder="Enter new device name" required [value]="data.deviceName" />
 		</mat-form-field>
 
 		<mat-form-field>
 			<mat-label>Location</mat-label>
-			<input matInput formControlName="location" type="text" placeholder="Enter location for this device" required />
+			<input matInput formControlName="location" type="text" placeholder="Enter location for this device" required [value]="data.deviceLocation" />
 		</mat-form-field>
 	</mat-dialog-content>
 

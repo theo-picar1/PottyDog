@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { MatDialogContent, MatDialogActions, MatDialogTitle, MatDialogClose } from "@angular/material/dialog";
+import { Component, OnInit, Inject } from "@angular/core";
+import { MatDialogContent, MatDialogActions, MatDialogTitle, MatDialogClose, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -28,7 +28,10 @@ export class EditDeviceDialog implements OnInit {
 		location: new FormControl('')
 	});
 
-	constructor(private readonly formBuilder: FormBuilder) { }
+	constructor(
+		private readonly formBuilder: FormBuilder,
+		@Inject(MAT_DIALOG_DATA) public data: any
+	) { }
 
 	ngOnInit() {
 		this.editDeviceForm = this.formBuilder.group({

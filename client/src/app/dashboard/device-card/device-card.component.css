@@ -16,6 +16,9 @@
   flex-direction: column;
   gap: 12px;
 }
+.device-card .camera {
+  height: 200px;
+}
 .device-card button {
   -webkit-appearance: none;
      -moz-appearance: none;

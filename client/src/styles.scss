@@ -33,6 +33,10 @@
   ))
 }
 
+.pd-mat-menu .delete-device span {
+  color: $status-danger;
+}
+
 html {
   height: 100%;
   @include mat.theme(

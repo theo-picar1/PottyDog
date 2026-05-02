@@ -4,6 +4,10 @@
 .device-card {
   @include device-card;
 
+  .camera {
+    height: 200px;
+  }
+
   button {
     @include pd-button-primary;
   }
