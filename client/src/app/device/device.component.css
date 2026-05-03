@@ -65,6 +65,18 @@ main .device-container .video-container .camera-tools .left {
 main .device-container .video-container .camera-tools .left mat-icon {
   color: #e5e7eb;
 }
+main .device-container .video-container .camera-tools .right {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+main .device-container .video-container .camera-tools .right mat-icon {
+  cursor: pointer;
+}
+main .device-container .video-container .camera-tools .right mat-icon:hover {
+  opacity: 0.8;
+}
 main .device-container .device-footer button {
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -76,8 +88,12 @@ main .device-container .device-footer button {
   cursor: pointer;
   border-radius: 4px;
 }
-main .device-container .device-footer button:hover {
+main .device-container .device-footer button:hover:not(:disabled) {
   background-color: #2563eb;
+}
+main .device-container .device-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media screen and (min-width: 0px) {

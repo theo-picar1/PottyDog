@@ -39,8 +39,13 @@
   cursor: pointer;
   border-radius: 4px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: $button-bg-primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -53,8 +58,13 @@
   cursor: pointer;
   border-radius: 4px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: $text-secondary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -67,7 +77,12 @@
   cursor: pointer;
   border-radius: 4px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     filter: brightness(75%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }

@@ -18,6 +18,10 @@
   cursor: pointer;
   border-radius: 4px;
 }
-.close-button:hover {
+.close-button:hover:not(:disabled) {
   background-color: #2563eb;
+}
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }/*# sourceMappingURL=pd-dialog.component.css.map */

@@ -1,20 +1,28 @@
-<form>
+<form [formGroup]="editDeviceForm" (ngSubmit)="onSubmit()">
 	<h2 mat-dialog-title>Edit device</h2>
 
 	<mat-dialog-content>
 		<mat-form-field>
 			<mat-label>Device name</mat-label>
-			<input matInput formControlName="deviceName" type="text" placeholder="Enter new device name" required [value]="data.deviceName" />
+			<input matInput formControlName="deviceName" type="text" placeholder="Enter new device name" required />
+			@if (formControls['deviceName'].hasError('required')) {
+				<mat-error class="error">Device name is required</mat-error>
+			} @else if (formControls['deviceName'].hasError('minlength') || formControls['deviceName'].hasError('maxlength')) {
+				<mat-error class="error">Name must be between 2 and 30 characters</mat-error>
+			}
 		</mat-form-field>
 
 		<mat-form-field>
 			<mat-label>Location</mat-label>
-			<input matInput formControlName="location" type="text" placeholder="Enter location for this device" required [value]="data.deviceLocation" />
+			<input matInput formControlName="deviceLocation" type="text" placeholder="Enter location for this device" required />
+			@if (formControls['deviceLocation'].hasError('required')) {
+				<mat-error>Device location is required</mat-error>
+			}
 		</mat-form-field>
 	</mat-dialog-content>
 
 	<mat-dialog-actions>
-		<button class="save-button" type="submit">Save changes</button>
+		<button class="save-button" type="submit" [disabled]="editDeviceForm.pristine">Save change</button>
 		<button class="close-button" mat-dialog-close type="button">Cancel</button>
 	</mat-dialog-actions>
 </form>

@@ -40,6 +40,21 @@ main {
             color: $text-primary;
           }
         }
+
+        .right {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+
+          mat-icon {
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+        }
       }
     }
 
