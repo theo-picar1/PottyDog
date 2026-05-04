@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
-import { Device } from "../../../data/dashboardData";
 import { RouterLink } from "@angular/router";
 import { CameraView } from "../../components/camera-view/camera-view.component";
+import { Device } from "../../../models/Device";
 
 @Component({
   selector: 'device-card',

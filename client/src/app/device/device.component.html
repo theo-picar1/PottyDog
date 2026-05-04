@@ -5,13 +5,13 @@
     } @else {
       <div class="device-container">
         <div class="device-header">
-          <h2>{{ device().name }}</h2>
+          <h2>{{ device().device_name }}</h2>
         </div>
 
         <div class="video-container">
           <camera-view
             [hasCamera]="device().hasCamera"
-            [isOffline]="device().isOffline"
+            [isOffline]="device().status === 'offline'"
             class="camera"
           ></camera-view>
           <div class="camera-tools">

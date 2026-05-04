@@ -3,7 +3,7 @@
 mat-dialog-content {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 28px;
 }
 
 mat-error {
@@ -27,6 +27,10 @@ mat-error {
 }
 
 @media screen AND (min-width: 600px) {
+  mat-dialog-content {
+    gap: 12px;
+  }
+
 	form {
 		width: 400px;
 	}

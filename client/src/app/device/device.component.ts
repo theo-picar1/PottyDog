@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal, OnInit, viewChild, inject } from "@angular/core";
-import { Device, dashboardData } from "../../data/dashboardData";
+import { dashboardData } from "../../data/dashboardData";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
@@ -10,6 +10,7 @@ import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
 import { MatDialog } from "@angular/material/dialog";
 import { EditDeviceDialog } from "../components/dialogs/device-settings-dialogs/edit-device-dialog/edit-device.component";
 import { DeleteDeviceDialog } from "../components/dialogs/device-settings-dialogs/delete-device-dialog/delete-device.component";
+import { Device } from "../../models/Device";
 
 @Component({
   selector: 'device',
@@ -32,10 +33,10 @@ export class DevicePage implements OnInit {
   foundDevice = signal<boolean>(false);
   device = signal<Device>({
     id: -1,
-    name: "",
-    location: "",
-    status: "Inactive",
-    isOffline: true,
+    user_id: 1,
+    device_name: "",
+    device_location: "",
+    status: "offline",
     hasCamera: false
   });
 
@@ -61,8 +62,8 @@ export class DevicePage implements OnInit {
     if(type === "edit") {
       this.dialog.open(EditDeviceDialog, {
         data: { 
-          deviceName: this.device().name,
-          deviceLocation: this.device().location
+          deviceName: this.device().device_name,
+          deviceLocation: this.device().device_location
         }
       });
     } else {
