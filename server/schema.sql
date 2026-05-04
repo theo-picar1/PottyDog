@@ -2,6 +2,11 @@ DROP DATABASE PottyDog;
 CREATE DATABASE PottyDog;
 USE PottyDog;
 
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS settings;
+DROP TABLE IF EXISTS potty_logs;
+DROP TABLE IF EXISTS devices;
+
 -- Users table. 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,3 +47,17 @@ CREATE TABLE potty_logs (
         REFERENCES users(id)
         ON DELETE CASCADE
 );
+
+-- M:1 relationship with users table
+CREATE TABLE devices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    device_name VARCHAR(25) NOT NULL,
+    device_location VARCHAR(30) NOT NULL,
+    status VARCHAR(10) CHECK (status IN ('idle', 'active', 'offline')) NOT NULL DEFAULT 'offline',
+    has_camera BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT fk_device_user 
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+)
