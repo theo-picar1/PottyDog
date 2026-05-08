@@ -59,13 +59,24 @@ export class DevicePage implements OnInit {
   readonly dialog = inject(MatDialog);
 
   openDialog(type: 'edit' | 'delete') {
-    if(type === "edit") {
-      this.dialog.open(EditDeviceDialog, {
-        data: { 
+    if (type === "edit") {
+      const dialogRef = this.dialog.open(EditDeviceDialog, {
+        data: {
+          id: this.device().id,
           deviceName: this.device().device_name,
           deviceLocation: this.device().device_location
         }
       });
+
+      dialogRef.afterClosed().subscribe(res => {
+        if (res?.updated) {
+          this.device.update(device => ({
+            ...device,
+            device_name: res.device.deviceName,
+            device_location: res.device.deviceLocation
+          }));
+        }
+      })
     } else {
       this.dialog.open(DeleteDeviceDialog, {
         width: '400px',

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, signal } from "@angular/core";
-import { MatDialogContent, MatDialogActions, MatDialogTitle, MatDialogClose, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogContent, MatDialogActions, MatDialogTitle, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -25,10 +25,12 @@ export class EditDeviceDialog implements OnInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		@Inject(MAT_DIALOG_DATA) public data: any,
-		private readonly http: HttpClient
+		private readonly http: HttpClient,
+		private readonly dialogRef: MatDialogRef<EditDeviceDialog>
 	) { }
 
-	submitted: boolean = false;
+	submitted = signal<boolean>(false);
+	serverError = signal<string>("");
 	editDeviceForm: FormGroup = new FormGroup({
 		deviceName: new FormControl(''),
 		deviceLocation: new FormControl('')
@@ -52,6 +54,25 @@ export class EditDeviceDialog implements OnInit {
 	}
 
 	onSubmit() {
-		console.log("Submit test");
+		if (this.editDeviceForm.invalid) return;
+
+		this.submitted.set(true);
+		this.http.put(`http://localhost:5000/devices/${this.data.id}`, this.editDeviceForm.value)
+			.subscribe({
+				next: (res: any) => {
+					if (res.status_code == 200) {
+						this.dialogRef.close({
+							updated: true,
+							device: {
+								id: this.data.id,
+								...this.editDeviceForm.value
+							}
+						})
+					}
+				},
+				error: (err) => {
+					this.serverError.set(err ?? "Something went wrong. Please try again.");
+				}
+			})
 	}
 }
