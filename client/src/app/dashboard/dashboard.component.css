@@ -78,8 +78,12 @@ main button {
   cursor: pointer;
   border-radius: 4px;
 }
-main button:hover {
+main button:hover:not(:disabled) {
   background-color: #2563eb;
+}
+main button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 main button {
   margin-top: 2rem;

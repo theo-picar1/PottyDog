@@ -7,48 +7,7 @@
 /* Buttons */
 /* Inputs */
 /* Shadows */
-@media screen and (min-width: 0) {
-  main {
-    width: 100%;
-    gap: 4rem;
-  }
-  .video-container {
-    height: 30%;
-  }
-  .video-container .camera-tools {
-    padding: 1rem;
-  }
-}
-@media screen and (min-width: 600px) {
-  main {
-    gap: 3rem;
-  }
-  .video-container {
-    height: 50%;
-  }
-}
-@media screen and (min-width: 800px) {
-  main {
-    width: 80%;
-    gap: 2rem;
-  }
-  .video-container .camera-tools {
-    padding: 1rem 1.5rem;
-  }
-}
-@media screen and (min-width: 1400px) {
-  .video-container {
-    height: 75%;
-  }
-}
-::ng-deep .pd-mat-menu .delete-device span {
-  color: #ef4444;
-}
-
-mat-icon {
-  margin-right: 4px;
-  margin-top: 4px;
-  transform: scale(1.1);
+.slide-toggle-icon {
   color: #e5e7eb;
 }
 
@@ -79,34 +38,46 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
-  margin: auto;
+  align-items: center;
 }
-
-.video-container {
+main .device-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  max-width: 840px;
 }
-.video-container .camera-tools {
+main .device-container .video-container .camera {
+  display: block;
+}
+main .device-container .video-container .camera-tools {
   background-color: #243140;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
 }
-.video-container .camera-tools .left {
+main .device-container .video-container .camera-tools .left {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 1rem;
+  gap: 8px;
 }
-.video-container .camera-tools .right mat-icon {
+main .device-container .video-container .camera-tools .left mat-icon {
+  color: #e5e7eb;
+}
+main .device-container .video-container .camera-tools .right {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+main .device-container .video-container .camera-tools .right mat-icon {
   cursor: pointer;
 }
-.video-container .camera-tools .right mat-icon:hover {
-  transform: scale(1);
+main .device-container .video-container .camera-tools .right mat-icon:hover {
+  opacity: 0.8;
 }
-
-.back-button {
+main .device-container .device-footer button {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -117,9 +88,33 @@ main {
   cursor: pointer;
   border-radius: 4px;
 }
-.back-button:hover {
+main .device-container .device-footer button:hover:not(:disabled) {
   background-color: #2563eb;
 }
-.back-button {
-  width: 175px;
+main .device-container .device-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (min-width: 0px) {
+  main {
+    height: 100vh;
+  }
+  main .device-container {
+    gap: 2rem;
+  }
+  main .device-container .video-container .camera {
+    height: 320px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  main {
+    height: 100vh;
+  }
+  main .device-container {
+    gap: 2rem;
+  }
+  main .device-container .video-container .camera {
+    height: 400px;
+  }
 }/*# sourceMappingURL=device.component.css.map */

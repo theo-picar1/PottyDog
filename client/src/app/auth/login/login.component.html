@@ -26,7 +26,7 @@
     </mat-form-field>
 
     @if (serverError()) {
-      <mat-error>{{ serverError() }}</mat-error>
+      <mat-error class="server-error">{{ serverError() }}</mat-error>
     }
 
     <div class="form-buttons">

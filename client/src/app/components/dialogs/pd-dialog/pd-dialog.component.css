@@ -7,19 +7,7 @@
 /* Buttons */
 /* Inputs */
 /* Shadows */
-.device-card {
-  background-color: #243140;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.device-card .camera {
-  height: 200px;
-}
-.device-card button {
+.close-button {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -30,10 +18,10 @@
   cursor: pointer;
   border-radius: 4px;
 }
-.device-card button:hover:not(:disabled) {
+.close-button:hover:not(:disabled) {
   background-color: #2563eb;
 }
-.device-card button:disabled {
+.close-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}/*# sourceMappingURL=device-card.component.css.map */
+}/*# sourceMappingURL=pd-dialog.component.css.map */

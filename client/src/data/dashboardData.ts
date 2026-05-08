@@ -1,11 +1,4 @@
-export interface Device {
-  id: number;
-  name: string;
-  location: string;
-  status: 'Off' | 'Inactive' | 'Movement';
-  isOffline: boolean;
-  hasCamera: boolean;
-}
+import { Device } from "../models/Device";
 
 export interface DashboardData {
   noDevices: Device[];
@@ -19,42 +12,42 @@ export const dashboardData: DashboardData = {
   devices: [
     {
       id: 1,
-      name: "Backgarden device",
-      location: "Kitchen",
-      status: "Inactive",
-      isOffline: true,
+      user_id: 1,
+      device_name: "Backgarden device",
+      device_location: "Kitchen",
+      status: "idle",
       hasCamera: true
     },
     {
       id: 2,
-      name: "Living room device",
-      location: "Living Room",
-      status: "Off",
-      isOffline: true,
+      user_id: 1,
+      device_name: "Living room device",
+      device_location: "Living Room",
+      status: "idle",
       hasCamera: false
     },
     {
       id: 3,
-      name: "Bedroom device",
-      location: "Bedroom",
-      status: "Inactive",
-      isOffline: true,
+      user_id: 1,
+      device_name: "Bedroom device",
+      device_location: "Bedroom",
+      status: "idle",
       hasCamera: true
     },
     {
       id: 4,
-      name: "Kitchen device",
-      location: "Kitchen",
-      status: "Off",
-      isOffline: true,
+      user_id: 1,
+      device_name: "Kitchen device",
+      device_location: "Kitchen",
+      status: "offline",
       hasCamera: false
     },
     {
       id: 5,
-      name: "Bedroom 2 device",
-      location: "Bedroom",
-      status: "Movement",
-      isOffline: true,
+      user_id: 1,
+      device_name: "Bedroom 2 device",
+      device_location: "Bedroom",
+      status: "active",
       hasCamera: false
     },
   ]

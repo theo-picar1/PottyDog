@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Device } from "../../data/dashboardData";
+import { Device } from "../../models/Device";
 
 @Injectable() 
 export class DeviceService {

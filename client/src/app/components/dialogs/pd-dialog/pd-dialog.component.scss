@@ -1,0 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
+.close-button {
+  @include pd-button-primary;
+}

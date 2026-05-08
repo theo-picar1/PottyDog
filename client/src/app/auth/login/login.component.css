@@ -129,6 +129,10 @@ mat-error {
   margin-left: -12px;
 }
 
+.server-error {
+  margin-left: 1px;
+}
+
 .form-buttons {
   display: flex;
   flex-direction: row;
@@ -149,8 +153,12 @@ mat-error {
   cursor: pointer;
   border-radius: 4px;
 }
-.form-buttons .login:hover {
+.form-buttons .login:hover:not(:disabled) {
   background-color: #2563eb;
+}
+.form-buttons .login:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .form-buttons .clear {
   -webkit-appearance: none;
@@ -163,6 +171,10 @@ mat-error {
   cursor: pointer;
   border-radius: 4px;
 }
-.form-buttons .clear:hover {
+.form-buttons .clear:hover:not(:disabled) {
   background-color: #9ca3af;
+}
+.form-buttons .clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }/*# sourceMappingURL=login.component.css.map */

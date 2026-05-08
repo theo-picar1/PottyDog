@@ -106,7 +106,6 @@ def login():
     conn = None
     cursor = None
     try:
-        print(request.get_json())
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')

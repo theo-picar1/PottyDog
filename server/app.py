@@ -13,6 +13,7 @@ from db import get_db_connection
 from pb import create_pubnub, pubnub_bp
 from auth import auth_bp
 from routes import routes_bp
+from device import device_bp
 
 # Variables
 app = Flask(__name__)
@@ -30,6 +31,7 @@ else:
 app.register_blueprint(pubnub_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(routes_bp)
+app.register_blueprint(device_bp)
 
 # Session cookie setup
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')

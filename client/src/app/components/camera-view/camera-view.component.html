@@ -1,17 +1,17 @@
-@if(!this.hasCamera) {
-  <div class="no-camera" [style.height]="this.height" [style.width]="this.width">
-      <mat-icon>videocam_off</mat-icon>
-      <p>This device has no camera</p>
+@if (!this.hasCamera) {
+  <div class="no-camera">
+    <mat-icon>videocam_off</mat-icon>
+    <p>This device has no camera</p>
   </div>
 } @else {
-  @if(this.isOffline) {
-    <div class="offline-camera" [style.height]="this.height" [style.width]="this.width">
+  @if (this.isOffline) {
+    <div class="offline-camera">
       <mat-icon>warning</mat-icon>
       <p>Camera is offline</p>
     </div>
   } @else {
-    <div class="online-camera" [style.height]="this.height" [style.width]="this.width">
-        <mat-icon>photo_camera</mat-icon>
+    <div class="online-camera">
+      <mat-icon>photo_camera</mat-icon>
     </div>
   }
 }
