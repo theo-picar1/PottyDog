@@ -60,15 +60,13 @@ export class EditDeviceDialog implements OnInit {
 		this.http.put(`http://localhost:5000/devices/${this.data.id}`, this.editDeviceForm.value)
 			.subscribe({
 				next: (res: any) => {
-					if (res.status_code == 200) {
-						this.dialogRef.close({
-							updated: true,
-							device: {
-								id: this.data.id,
-								...this.editDeviceForm.value
-							}
-						})
-					}
+					this.dialogRef.close({
+						updated: true,
+						device: {
+							id: this.data.id,
+							...this.editDeviceForm.value
+						}
+					})
 				},
 				error: (err) => {
 					this.serverError.set(err ?? "Something went wrong. Please try again.");

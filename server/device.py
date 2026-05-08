@@ -37,6 +37,47 @@ def devices():
   finally:
     if conn: conn.close()
     if cursor: cursor.close()
+  
+    
+# Get device by id
+@device_bp.route('/devices/<int:id>', methods=["GET"])
+def device(id):
+  conn = None
+  cursor = None
+  try:
+    if not id or id is None:
+      return jsonify({
+        "message": "Device id must be provided"
+      }), 400
+      
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+      "SELECT * FROM devices WHERE id = %s",
+      (id,)
+    )
+    
+    device = cursor.fetchone()
+    if not device or device is None:
+      return jsonify({
+        "message": "No device has been found with ID {id}"
+      }), 404
+      
+    return jsonify({
+      "message": "Successfully retrieved device with ID {id}",
+      "device": device
+    }), 200
+    
+  except Exception as e:
+    print(e)
+    jsonify({
+      "message": "Something went wrong. Please try again."
+    }), 500
+    
+  finally:
+    if conn: conn.close()
+    if cursor: cursor.close()
+    
     
 # Edit device
 @device_bp.route('/devices/<int:id>', methods=["PUT"])

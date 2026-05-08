@@ -11,6 +11,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { EditDeviceDialog } from "../components/dialogs/device-settings-dialogs/edit-device-dialog/edit-device.component";
 import { DeleteDeviceDialog } from "../components/dialogs/device-settings-dialogs/delete-device-dialog/delete-device.component";
 import { Device } from "../../models/Device";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'device',
@@ -40,19 +41,26 @@ export class DevicePage implements OnInit {
     hasCamera: false
   });
 
-  constructor(private readonly route: ActivatedRoute) { }
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly http: HttpClient
+  ) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id') ?? '0');
-    const found = dashboardData.devices.find(d => d.id === id);
-    if (found) {
-      this.device.set(found);
-      this.foundDevice.set(true);
-    };
-
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 1000);
+    this.http.get(`http://localhost:5000/devices/${id}`)
+      .subscribe({
+        next: (res: any) => {
+          this.device.set(res.device);
+          this.foundDevice.set(true);
+          setTimeout(() => {
+            this.isLoading.set(false);
+          }, 1000);
+        },
+        error: (err) => {
+          console.log("Error: ", err);
+        }
+      });
   }
 
   readonly menuTrigger = viewChild.required(MatMenuTrigger);
@@ -62,14 +70,19 @@ export class DevicePage implements OnInit {
     if (type === "edit") {
       const dialogRef = this.dialog.open(EditDeviceDialog, {
         data: {
-          id: this.device().id,
-          deviceName: this.device().device_name,
-          deviceLocation: this.device().device_location
+          id: this.device()?.id,
+          deviceName: this.device()?.device_name,
+          deviceLocation: this.device()?.device_location
         }
       });
 
       dialogRef.afterClosed().subscribe(res => {
         if (res?.updated) {
+          this.isLoading.set(true);
+          setTimeout(() => {
+            this.isLoading.set(false);
+          }, 1000);
+
           this.device.update(device => ({
             ...device,
             device_name: res.device.deviceName,
@@ -81,7 +94,7 @@ export class DevicePage implements OnInit {
       this.dialog.open(DeleteDeviceDialog, {
         width: '400px',
         data: {
-          deviceId: this.device().id
+          deviceId: this.device()?.id
         }
       });
     }
