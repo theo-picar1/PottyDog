@@ -1,6 +1,6 @@
 <div class="device-card">
   <h3>{{ device.device_name }}</h3>
-  <camera-view class="camera" [hasCamera]="device.hasCamera" [isOffline]="device.status === 'offline'"></camera-view>
+  <camera-view class="camera" [hasCamera]="device.has_camera" [isOffline]="device.status === 'offline'"></camera-view>
   <p>Location: {{ device.device_location }}</p>
   <button [routerLink]="['/device', device.id]">
     Go to device

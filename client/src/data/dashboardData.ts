@@ -16,7 +16,7 @@ export const dashboardData: DashboardData = {
       device_name: "Backgarden device",
       device_location: "Kitchen",
       status: "idle",
-      hasCamera: true
+      has_camera: true
     },
     {
       id: 2,
@@ -24,7 +24,7 @@ export const dashboardData: DashboardData = {
       device_name: "Living room device",
       device_location: "Living Room",
       status: "idle",
-      hasCamera: false
+      has_camera: false
     },
     {
       id: 3,
@@ -32,7 +32,7 @@ export const dashboardData: DashboardData = {
       device_name: "Bedroom device",
       device_location: "Bedroom",
       status: "idle",
-      hasCamera: true
+      has_camera: true
     },
     {
       id: 4,
@@ -40,7 +40,7 @@ export const dashboardData: DashboardData = {
       device_name: "Kitchen device",
       device_location: "Kitchen",
       status: "offline",
-      hasCamera: false
+      has_camera: false
     },
     {
       id: 5,
@@ -48,7 +48,7 @@ export const dashboardData: DashboardData = {
       device_name: "Bedroom 2 device",
       device_location: "Bedroom",
       status: "active",
-      hasCamera: false
+      has_camera: false
     },
   ]
 }

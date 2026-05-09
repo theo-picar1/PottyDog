@@ -38,7 +38,7 @@ export class DevicePage implements OnInit {
     device_name: "",
     device_location: "",
     status: "offline",
-    hasCamera: false
+    has_camera: false
   });
 
   constructor(
