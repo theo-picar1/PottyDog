@@ -37,6 +37,10 @@ export class LoginPage implements OnInit {
 	) {};
 
 	ngOnInit() {
+		if(this.authService.isAuthenticated()) {
+			this.router.navigate(['/dashboard'])
+		}
+
 		this.loginForm = this.formBuilder.group({
 			email: ['', [
 				Validators.required,

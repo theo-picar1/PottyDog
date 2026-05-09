@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { PdDialog } from "../components/dialogs/pd-dialog/pd-dialog.component";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Device } from "../../models/Device";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: 'dashboard',
@@ -28,7 +29,8 @@ import { Device } from "../../models/Device";
 export class Dashboard implements OnInit {
   constructor(
     private readonly router: Router,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly authService: AuthService
   ) { }
 
   devices = signal<Device[]>([]);
@@ -46,21 +48,26 @@ export class Dashboard implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const userId = payload.id;
-        const params = new HttpParams().set('user_id', userId);
+    const userId = this.authService.getUserId();
+    if (!this.authService.isAuthenticated() || userId === null) {
+      this.isLoading.set(false);
+      this.authService.logout();
+      return;
+    }
 
-        this.http.get<{ devices: Device[] }>('http://localhost:5000/devices', { params })
-          .subscribe((res) => {
-            this.devices.set(res.devices);
-            this.isLoading.set(false);
-            console.log(this.devices());
-          });
-      }
-    }, 1000);
+    const params = new HttpParams().set('user_id', userId);
+    this.http.get<{ devices: Device[] }>('http://localhost:5000/devices', { params })
+      .subscribe({
+        next: (res) => {
+          this.devices.set(res.devices);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          console.log(err);
+          return;
+        }
+      });
   }
 
   trackById(index: number, device: Device) {
