@@ -4,7 +4,7 @@ import { DevicePage } from './device/device.component';
 import { LoginPage } from './auth/login/login.component';
 
 import { Routes } from '@angular/router';
-import { authGuard } from './auth-guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {

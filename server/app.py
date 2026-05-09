@@ -141,61 +141,6 @@ def admin_dashboard():
             cursor.close()
 
 
-# Dashboard page. Only for logged-in users
-@app.route('/dashboard', methods=['GET'])
-def dashboard():
-    user_id = session.get('user_id')
-    if not user_id:
-        return redirect(url_for('auth.login'))
-    
-    conn = None
-    cursor = None
-    
-    # Get most recent potty log and count for today
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        cursor.execute(
-            "SELECT * FROM potty_logs WHERE user_id = %s ORDER BY logged_at DESC LIMIT 1",
-            (user_id,)
-        )
-        last_potty = cursor.fetchone()
-        last_potty_time = last_potty['logged_at'].strftime("%b %d, %Y - %H:%M") if last_potty else None
-        
-        cursor.execute(
-            "SELECT COUNT(*) FROM potty_logs WHERE user_id = %s AND DATE(logged_at) = CURDATE()",
-            (user_id,)
-        )
-        activity_count = cursor.fetchone()['COUNT(*)']
-        
-        user = {
-            'username': session.get('username'),
-            'dog_name': session.get('dog_name'),
-            'can_read': session.get('can_read'),
-            'can_write': session.get('can_write'),
-            'activity_count': activity_count,
-            'last_potty_time': last_potty_time
-        }
-        
-        return render_template('dashboard.html', userData=user, pubnub_sub_key = os.getenv("SUBSCRIBE_KEY")), 200
-    
-    except Exception as e:
-        print(e)
-        return render_template(
-            'protected.html', 
-            status_code="500",
-            error="Server error!",
-            message="Something went wrong. Please contact the admin if issues persist."
-        ), 500
-    
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
-            
-
 # Activity page for potty activity
 @app.route('/potty-activity', methods=['GET'])
 def potty_activity():

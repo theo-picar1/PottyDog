@@ -5,6 +5,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon"
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
 	selector: 'login',
@@ -31,7 +32,8 @@ export class LoginPage implements OnInit {
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly router: Router,
-		private readonly http: HttpClient
+		private readonly http: HttpClient,
+		private readonly authService: AuthService
 	) {};
 
 	ngOnInit() {
@@ -59,12 +61,8 @@ export class LoginPage implements OnInit {
 		this.http.post('http://localhost:5000/login', this.loginForm.value)
 			.subscribe({
 				next: (res: any) => {
-					if(res.status_code === 200) {
-						localStorage.setItem("token", res.token);
-						this.router.navigate(['/dashboard']);
-					} else {
-						this.serverError.set(res.message || "Something went wrong. Please try again later");
-					}
+					this.authService.login(res.token)
+					this.router.navigate(['/dashboard']);
 				},
 				error: (err) => {
 					this.serverError.set(err.error?.message || "Something went wrong. Please try again later");
