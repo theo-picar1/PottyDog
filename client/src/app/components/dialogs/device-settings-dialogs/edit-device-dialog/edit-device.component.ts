@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Reac
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { HttpClient } from "@angular/common/http";
+import { NotificationService } from "../../../../services/notification.service";
 
 @Component({
 	selector: 'edit-device-dialog',
@@ -26,7 +27,8 @@ export class EditDeviceDialog implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly http: HttpClient,
-		private readonly dialogRef: MatDialogRef<EditDeviceDialog>
+		private readonly dialogRef: MatDialogRef<EditDeviceDialog>,
+		private readonly notificationService: NotificationService
 	) { }
 
 	submitted = signal<boolean>(false);
@@ -66,10 +68,13 @@ export class EditDeviceDialog implements OnInit {
 							id: this.data.id,
 							...this.editDeviceForm.value
 						}
-					})
+					});
+
+					this.notificationService.setMessage("Changes have been saved!");
 				},
 				error: (err) => {
 					this.serverError.set(err ?? "Something went wrong. Please try again.");
+					this.notificationService.setMessage("Error while trying to save changes!");
 				}
 			})
 	}

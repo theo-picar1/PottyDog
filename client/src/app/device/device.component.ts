@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, signal, OnInit, viewChild, inject } from "@angular/core";
-import { dashboardData } from "../../data/dashboardData";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
@@ -12,6 +11,8 @@ import { EditDeviceDialog } from "../components/dialogs/device-settings-dialogs/
 import { DeleteDeviceDialog } from "../components/dialogs/device-settings-dialogs/delete-device-dialog/delete-device.component";
 import { Device } from "../../models/Device";
 import { HttpClient } from "@angular/common/http";
+import { NotificationService } from "../services/notification.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'device',
@@ -43,8 +44,11 @@ export class DevicePage implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly notificationService: NotificationService
   ) { }
+
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id') ?? '0');
@@ -53,9 +57,7 @@ export class DevicePage implements OnInit {
         next: (res: any) => {
           this.device.set(res.device);
           this.foundDevice.set(true);
-          setTimeout(() => {
-            this.isLoading.set(false);
-          }, 1000);
+          this.isLoading.set(false);
         },
         error: (err) => {
           console.log("Error: ", err);
@@ -79,15 +81,33 @@ export class DevicePage implements OnInit {
       dialogRef.afterClosed().subscribe(res => {
         if (res?.updated) {
           this.isLoading.set(true);
-          setTimeout(() => {
-            this.isLoading.set(false);
-          }, 1000);
-
           this.device.update(device => ({
             ...device,
             device_name: res.device.deviceName,
             device_location: res.device.deviceLocation
           }));
+
+          setTimeout(() => {
+            this.isLoading.set(false);
+
+            const message = this.notificationService.getMessage();
+            if (message === null) return;
+
+            this.snackBar.open(message, 'Dismiss', {
+              duration: 3000
+            });
+
+            this.notificationService.clearMessage();
+          }, 1000);
+        } else {
+          const message = this.notificationService.getMessage();
+          if (message === null) return;
+
+          this.snackBar.open(message, 'Dismiss', {
+            duration: 3000
+          });
+
+          this.notificationService.clearMessage();
         }
       })
     } else {
