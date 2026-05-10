@@ -11,6 +11,8 @@ import { PdDialog } from "../components/dialogs/pd-dialog/pd-dialog.component";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Device } from "../../models/Device";
 import { AuthService } from "../services/auth.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { NotificationService } from "../services/notification.service";
 
 @Component({
   selector: 'dashboard',
@@ -30,13 +32,15 @@ export class Dashboard implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly http: HttpClient,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly notificationService: NotificationService
   ) { }
 
   devices = signal<Device[]>([]);
   isLoading = signal<boolean>(true);
 
   readonly dialog = inject(MatDialog);
+  readonly snackBar = inject(MatSnackBar)
 
   openDialog() {
     // this.dialog.open(AddDeviceDialog);
@@ -61,6 +65,16 @@ export class Dashboard implements OnInit {
         next: (res) => {
           this.devices.set(res.devices);
           this.isLoading.set(false);
+
+          // After deletion of a device, show a snackbar
+          const message = this.notificationService.getMessage();
+          if (message === null) return;
+
+          this.snackBar.open(message, 'Close', {
+            duration: 3000
+          });
+
+          this.notificationService.clearMessage();
         },
         error: (err) => {
           this.isLoading.set(false);
@@ -68,19 +82,6 @@ export class Dashboard implements OnInit {
           return;
         }
       });
-
-
-    // After deletion of a device, show mesage
-    const isDeleted = history.state.isDeleted;
-    if(isDeleted === null || isDeleted === undefined) return;
-    
-    if(isDeleted) {
-      alert(`Successfully deleted device with ID ${history.state.deviceId}`);
-    } else {
-      alert(`Unable to delete device with ID ${history.state.deviceId}`)
-    }
-
-    history.replaceState({}, '');
   }
 
   trackById(index: number, device: Device) {
