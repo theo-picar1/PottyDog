@@ -1,8 +1,10 @@
-import { Component, Inject, signal } from "@angular/core";
+import { Component, Inject, inject } from "@angular/core";
 import { MatDialogContent, MatDialogActions, MatDialogTitle, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../../../../services/auth.service";
 import { Router } from "@angular/router";
+import { NotificationService } from "../../../../services/notification.service";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'delete-device',
@@ -22,32 +24,41 @@ export class DeleteDeviceDialog {
         private readonly authService: AuthService,
         private readonly router: Router,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private readonly dialogRef: MatDialogRef<DeleteDeviceDialog>
+        private readonly dialogRef: MatDialogRef<DeleteDeviceDialog>,
+        private readonly notificationService: NotificationService
     ) { }
 
-    isDeleted = signal<boolean>(false);
+    private snackBar = inject(MatSnackBar);
 
     onDelete() {
         const userId = this.authService.getUserId();
-        if(userId === null || !this.authService.isAuthenticated()) {
+        if (userId === null || !this.authService.isAuthenticated()) {
             this.authService.logout();
         }
 
         const deviceId = this.data.deviceId;
+        const deviceName = this.data.deviceName;
         this.http.delete(`http://localhost:5000/devices/${deviceId}`)
             .subscribe({
                 next: () => {
-                    this.isDeleted.set(true);
+                    this.notificationService.setMessage(`'${deviceName}' successfully deleted!`);
                     this.dialogRef.close();
-                    this.router.navigate(['/dashboard'], {
-                        state: {
-                            isDeleted: this.isDeleted(),
-                            deviceId: deviceId
-                        }
-                    })
+                    this.router.navigate(['/dashboard']);
                 },
                 error: (err) => {
-                    console.log(err.message);
+                    this.notificationService.setMessage(`Device could not be deleted!`);
+                    this.dialogRef.close();
+                    const message = this.notificationService.getMessage();
+                    if(message === null) {
+                        console.log(err);
+                        return;
+                    };
+
+                    this.snackBar.open(message, 'Close', {
+                        duration: 3000
+                    });
+
+                    this.notificationService.clearMessage();
                 }
             })
     }
