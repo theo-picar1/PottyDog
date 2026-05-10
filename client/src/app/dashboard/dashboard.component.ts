@@ -68,6 +68,19 @@ export class Dashboard implements OnInit {
           return;
         }
       });
+
+
+    // After deletion of a device, show mesage
+    const isDeleted = history.state.isDeleted;
+    if(isDeleted === null || isDeleted === undefined) return;
+    
+    if(isDeleted) {
+      alert(`Successfully deleted device with ID ${history.state.deviceId}`);
+    } else {
+      alert(`Unable to delete device with ID ${history.state.deviceId}`)
+    }
+
+    history.replaceState({}, '');
   }
 
   trackById(index: number, device: Device) {

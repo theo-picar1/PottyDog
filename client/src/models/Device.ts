@@ -4,5 +4,5 @@ export interface Device {
   device_name: string;
   device_location: string;
   status: 'idle' | 'active' | 'offline';
-  hasCamera: boolean;
+  has_camera: boolean;
 }

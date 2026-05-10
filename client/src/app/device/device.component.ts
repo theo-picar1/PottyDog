@@ -38,7 +38,7 @@ export class DevicePage implements OnInit {
     device_name: "",
     device_location: "",
     status: "offline",
-    hasCamera: false
+    has_camera: false
   });
 
   constructor(
@@ -92,7 +92,7 @@ export class DevicePage implements OnInit {
       })
     } else {
       this.dialog.open(DeleteDeviceDialog, {
-        width: '400px',
+        width: '350px',
         data: {
           deviceId: this.device()?.id
         }

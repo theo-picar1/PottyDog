@@ -10,7 +10,7 @@
 
         <div class="video-container">
           <camera-view
-            [hasCamera]="device().hasCamera"
+            [hasCamera]="device().has_camera"
             [isOffline]="device().status === 'offline'"
             class="camera"
           ></camera-view>
@@ -20,7 +20,7 @@
                 <p>
                   <mat-slide-toggle
                     labelPosition="before"
-                    [disabled]="device().hasCamera ? false : true"
+                    [disabled]="device().has_camera ? false : true"
                   >
                     <mat-icon class="slide-toggle-icon">videocam</mat-icon>
                   </mat-slide-toggle>

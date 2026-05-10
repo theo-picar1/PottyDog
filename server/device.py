@@ -130,3 +130,49 @@ def edit_device(id):
   finally:
     if conn: conn.close()
     if cursor: cursor.close()
+    
+    
+# Delete device by id
+@device_bp.route('/devices/<int:id>', methods=["DELETE"])
+def delete_device(id):
+  conn = None
+  cursor = None
+  try:
+    if not id or id is None:
+      return jsonify({
+        "message": "A device ID must be provided for deletion"
+      }), 400
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute(
+      "SELECT * FROM devices WHERE id = %s",
+      (id,)
+    )
+    
+    device = cursor.fetchone()
+    if not device or device is None:
+      return jsonify({
+        "message": "No matching device found with ID {id}"
+      }), 404
+    
+    cursor.execute(
+      "DELETE FROM devices WHERE id = %s",
+      (id,)
+    )
+    
+    conn.commit()
+    return jsonify({
+      "message": "Successfully deleted device with ID {id}"
+    }), 200
+    
+  except Exception as e:
+    print(e)
+    return jsonify({
+      "message": "Something went wrong. Please try again."
+    }), 500
+    
+  finally:
+    if conn: conn.close()
+    if cursor: cursor.close()
