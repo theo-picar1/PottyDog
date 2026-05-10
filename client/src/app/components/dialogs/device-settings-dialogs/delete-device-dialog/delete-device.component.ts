@@ -37,10 +37,11 @@ export class DeleteDeviceDialog {
         }
 
         const deviceId = this.data.deviceId;
+        const deviceName = this.data.deviceName;
         this.http.delete(`http://localhost:5000/devices/${deviceId}`)
             .subscribe({
                 next: () => {
-                    this.notificationService.setMessage(`Device with ID ${deviceId} successfully deleted!`);
+                    this.notificationService.setMessage(`'${deviceName}' successfully deleted!`);
                     this.dialogRef.close();
                     this.router.navigate(['/dashboard']);
                 },
@@ -52,7 +53,7 @@ export class DeleteDeviceDialog {
                         console.log(err);
                         return;
                     };
-                    
+
                     this.snackBar.open(message, 'Close', {
                         duration: 3000
                     });

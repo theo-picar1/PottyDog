@@ -94,7 +94,8 @@ export class DevicePage implements OnInit {
       this.dialog.open(DeleteDeviceDialog, {
         width: '350px',
         data: {
-          deviceId: this.device()?.id
+          deviceId: this.device()?.id,
+          deviceName: this.device()?.device_name
         }
       });
     }
