@@ -92,7 +92,7 @@ export class DevicePage implements OnInit {
       })
     } else {
       this.dialog.open(DeleteDeviceDialog, {
-        width: '400px',
+        width: '350px',
         data: {
           deviceId: this.device()?.id
         }
