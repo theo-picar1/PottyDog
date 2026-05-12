@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon"
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
+import { MESSAGES } from "../../shared/constants/messages";
 
 @Component({
 	selector: 'login',
@@ -22,19 +23,20 @@ import { AuthService } from "../../services/auth.service";
 })
 
 export class LoginPage implements OnInit {
-	submitted: boolean = false;
-	serverError = signal<string>("");
-	loginForm: FormGroup = new FormGroup({
-		email: new FormControl(''),
-		password: new FormControl('')
-	});
-
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly router: Router,
 		private readonly http: HttpClient,
 		private readonly authService: AuthService
 	) {};
+
+	MESSAGES = MESSAGES
+	submitted: boolean = false;
+	serverError = signal<string>("");
+	loginForm: FormGroup = new FormGroup({
+		email: new FormControl(''),
+		password: new FormControl('')
+	});
 
 	ngOnInit() {
 		if(this.authService.isAuthenticated()) {
