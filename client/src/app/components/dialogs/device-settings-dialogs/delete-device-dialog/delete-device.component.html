@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Delete device</h2>
+<h2 mat-dialog-title>{{ MESSAGES.BUTTON.DELETE_DEVICE_TEXT }}</h2>
 <mat-dialog-content>
-    <p>All data from this device will be deleted and cannot be restored. Would you like to proceed?</p>
+    <p>{{ MESSAGES.DEVICE.CONFIRM_DELETE_TEXT }}</p>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button class="confirm-button" (click)="onDelete()">Confirm</button>
-    <button mat-dialog-close class="close-button">Cancel</button>
+    <button class="confirm-button" (click)="onDelete()">{{ MESSAGES.BUTTON.CONFIRM_TEXT }}</button>
+    <button mat-dialog-close class="close-button">{{ MESSAGES.BUTTON.CLOSE_TEXT }}</button>
 </mat-dialog-actions>

@@ -2,15 +2,15 @@
   <h2 mat-dialog-title>Currently not available</h2>
   <mat-dialog-content>
     <p>
-      This feature is currently under development. Please try another time!
+      {{ MESSAGES.COMMON.UNDER_DEV_TEXT }}
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-dialog-close class="close-button">Close</button>
+    <button mat-dialog-close class="close-button">{{ MESSAGES.BUTTON.CLOSE_TEXT }}</button>
   </mat-dialog-actions>
 } @else {
-  <h2 mat-dialog-title>Error</h2>
+  <h2 mat-dialog-title>{{ MESSAGES.TITLE.ERROR_TITLE }}</h2>
   <mat-dialog-actions>
-    <button mat-dialog-close class="close-button">Close</button>
+    <button mat-dialog-close class="close-button">{{ MESSAGES.BUTTON.CLOSE_TEXT }}</button>
   </mat-dialog-actions>
 }

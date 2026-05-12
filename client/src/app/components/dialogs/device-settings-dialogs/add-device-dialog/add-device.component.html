@@ -1,20 +1,20 @@
 <form>
-	<h2 mat-dialog-title>Add device</h2>
+	<h2 mat-dialog-title>{{ MESSAGES.BUTTON.ADD_DEVICE_TEXT }}</h2>
 
 	<mat-dialog-content>
 		<mat-form-field>
-			<mat-label>Device name</mat-label>
-			<input matInput formControlName="deviceName" type="text" placeholder="Enter a new device name" required />
+			<mat-label>{{ MESSAGES.LABEL.DEVICE_NAME_LABEL}}</mat-label>
+			<input matInput formControlName="deviceName" type="text" [placeholder]="MESSAGES.PLACEHOLDERS.DEVICE_NAME_PLACEHOLDER" required />
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-label>Location</mat-label>
-			<input matInput formControlName="location" type="text" placeholder="Enter location for this device" required />
+			<mat-label>{{ MESSAGES.LABEL.DEVICE_LOCATION_LABEL }}</mat-label>
+			<input matInput formControlName="location" type="text" [placeholder]="MESSAGES.PLACEHOLDERS.DEVICE_LOCATION_PLACEHOLDER" required />
 		</mat-form-field>
 	</mat-dialog-content>
 
 	<mat-dialog-actions>
-		<button class="add" type="submit">Add device</button>
-		<button class="close" mat-dialog-close type="button">Close</button>
+		<button class="add" type="submit">{{ MESSAGES.BUTTON.ADD_DEVICE_TEXT }}</button>
+		<button class="close" mat-dialog-close type="button">{{ MESSAGES.BUTTON.CLOSE_TEXT }}</button>
 	</mat-dialog-actions>
 </form>

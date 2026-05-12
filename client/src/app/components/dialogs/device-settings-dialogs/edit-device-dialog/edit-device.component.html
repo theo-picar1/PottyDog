@@ -1,28 +1,28 @@
 <form [formGroup]="editDeviceForm" (ngSubmit)="onSubmit()">
-	<h2 mat-dialog-title>Edit device</h2>
+	<h2 mat-dialog-title>{{ MESSAGES.BUTTON.EDIT_DEVICE_TEXT}}</h2>
 
 	<mat-dialog-content>
 		<mat-form-field>
-			<mat-label>Device name</mat-label>
-			<input matInput formControlName="deviceName" type="text" placeholder="Enter new device name" required />
+			<mat-label>{{ MESSAGES.LABEL.DEVICE_NAME_LABEL }}</mat-label>
+			<input matInput formControlName="deviceName" type="text" [placeholder]="MESSAGES.PLACEHOLDERS.DEVICE_NAME_PLACEHOLDER" required />
 			@if (formControls['deviceName'].hasError('required')) {
-				<mat-error class="error">Device name is required</mat-error>
+			<mat-error class="error">{{ MESSAGES.ERRORS.DEVICE_NAME_REQUIRED_ERROR }}</mat-error>
 			} @else if (formControls['deviceName'].hasError('minlength') || formControls['deviceName'].hasError('maxlength')) {
-				<mat-error class="error">Name must be between 2 and 30 characters</mat-error>
+				<mat-error class="error">{{ MESSAGES.ERRORS.INVALID_DEVICE_NAME_LENGTH_ERROR }}</mat-error>
 			}
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-label>Location</mat-label>
-			<input matInput formControlName="deviceLocation" type="text" placeholder="Enter location for this device" required />
+			<mat-label>{{ MESSAGES.LABEL.DEVICE_LOCATION_LABEL }}</mat-label>
+			<input matInput formControlName="deviceLocation" type="text" [placeholder]="MESSAGES.PLACEHOLDERS.DEVICE_LOCATION_PLACEHOLDER" required />
 			@if (formControls['deviceLocation'].hasError('required')) {
-				<mat-error>Device location is required</mat-error>
+				<mat-error>{{ MESSAGES.ERRORS.DEVICE_LOCATION_REQUIRED_ERROR }}</mat-error>
 			}
 		</mat-form-field>
 	</mat-dialog-content>
 
 	<mat-dialog-actions>
-		<button class="save-button" type="submit" [disabled]="editDeviceForm.pristine">Save changes</button>
-		<button class="close-button" mat-dialog-close type="button">Cancel</button>
+		<button class="save-button" type="submit" [disabled]="editDeviceForm.pristine">{{ MESSAGES.BUTTON.SAVE_CHANGES_TEXT }}</button>
+		<button class="close-button" mat-dialog-close type="button">{{ MESSAGES.BUTTON.CANCEL_TEXT }}</button>
 	</mat-dialog-actions>
 </form>

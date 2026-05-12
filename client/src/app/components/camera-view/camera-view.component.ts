@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { MESSAGES } from "../../shared/constants/messages";
 
 @Component({
     selector: 'camera-view',
@@ -11,4 +12,6 @@ import { MatIconModule } from "@angular/material/icon";
 export class CameraView {
     @Input() hasCamera!: boolean;
     @Input() isOffline!: boolean;
+
+    MESSAGES = MESSAGES;
 }

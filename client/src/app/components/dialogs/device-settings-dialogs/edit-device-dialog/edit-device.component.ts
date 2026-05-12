@@ -5,6 +5,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { HttpClient } from "@angular/common/http";
 import { NotificationService } from "../../../../services/notification.service";
+import { MESSAGES } from "../../../../shared/constants/messages";
 
 @Component({
 	selector: 'edit-device-dialog',
@@ -31,6 +32,7 @@ export class EditDeviceDialog implements OnInit {
 		private readonly notificationService: NotificationService
 	) { }
 
+	MESSAGES = MESSAGES;
 	submitted = signal<boolean>(false);
 	serverError = signal<string>("");
 	editDeviceForm: FormGroup = new FormGroup({

@@ -5,6 +5,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Reac
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { Router } from "@angular/router";
 import { MatInputModule } from "@angular/material/input";
+import { MESSAGES } from "../../../../shared/constants/messages";
 
 @Component({
 	selector: 'add-device-dialog',
@@ -25,6 +26,7 @@ import { MatInputModule } from "@angular/material/input";
 })
 
 export class AddDeviceDialog implements OnInit {
+	MESSAGES = MESSAGES;
 	submitted: boolean = false;
 	addDeviceForm: FormGroup = new FormGroup({
 		deviceName: new FormControl(''),

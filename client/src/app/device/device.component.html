@@ -39,9 +39,9 @@
             <div class="right">
               <mat-icon [matMenuTriggerFor]="menu" #menuTrigger>settings</mat-icon>
               <mat-menu class="pd-mat-menu" #menu="matMenu">
-                <button mat-menu-item (click)="openDialog('edit')">Edit device</button>
+                <button mat-menu-item (click)="openDialog('edit')">{{ MESSAGES.BUTTON.EDIT_DEVICE_TEXT }}</button>
                 <button mat-menu-item class="delete-device" (click)="openDialog('delete')">
-                  <span>Delete device</span>
+                  <span>{{ MESSAGES.BUTTON.DELETE_DEVICE_TEXT }}</span>
                 </button>
               </mat-menu>
             </div>
@@ -49,11 +49,11 @@
         </div>
 
         <div class="device-footer">
-          <button class="back-button" [routerLink]="['/dashboard']">Back to dashboard</button>
+          <button class="back-button" [routerLink]="['/dashboard']">{{ MESSAGES.BUTTON.BACK_TO_DASHBOARD_TEXT }}</button>
         </div>
       </div>
     }
   </main>
 } @else {
-  <h2>No device</h2>
+  <h2>{{ MESSAGES.DEVICE.NO_DEVICE_TEXT }}</h2>
 }

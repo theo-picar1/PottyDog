@@ -1,5 +1,6 @@
 import { Component, Input, Inject } from "@angular/core";
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MESSAGES } from "../../../shared/constants/messages";
 
 @Component({
   selector: 'pd-dialog',
@@ -15,4 +16,6 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MAT
 
 export class PdDialog {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  MESSAGES = MESSAGES;
 }
