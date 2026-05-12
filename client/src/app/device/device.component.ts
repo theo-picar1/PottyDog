@@ -13,6 +13,7 @@ import { Device } from "../../models/Device";
 import { HttpClient } from "@angular/common/http";
 import { NotificationService } from "../services/notification.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { MESSAGES } from "../shared/constants/messages";
 
 @Component({
   selector: 'device',
@@ -31,6 +32,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 
 export class DevicePage implements OnInit {
+  MESSAGES = MESSAGES;
   isLoading = signal<boolean>(true);
   foundDevice = signal<boolean>(false);
   device = signal<Device>({

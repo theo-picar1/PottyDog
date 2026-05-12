@@ -1,10 +1,10 @@
 <main>
   <div class="top">
-    <h1>Your devices</h1>
+    <h1>{{ MESSAGES.TITLE.DEVICES_DASHBOARD_TITLE }}</h1>
     <mat-icon [matMenuTriggerFor]="menu">menu</mat-icon>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>Your account</button>
-      <button mat-menu-item class="log-out" (click)="logout()">Log out</button>
+      <button mat-menu-item>{{ MESSAGES.BUTTON.YOUR_ACCOUNT_TEXT }}</button>
+      <button mat-menu-item class="log-out" (click)="logout()">{{ MESSAGES.BUTTON.LOGOUT_TEXT }}</button>
     </mat-menu>
   </div>
 
@@ -13,7 +13,7 @@
   } @else {
     <section class="devices-container">  
       @if (devices().length <= 0) {
-        <p>No devices found. Set one up now!</p>
+        <p>{{ MESSAGES.DEVICE.NO_DEVICES_TEXT }}</p>
       } @else {
         @for (device of devices(); track device.id) {
           <device-card [device]="device"></device-card>
@@ -21,6 +21,6 @@
       }
     </section>
 
-    <button (click)="openDialog()" id="add-device-button">Add new device</button>
+    <button (click)="openDialog()" id="add-device-button">{{ MESSAGES.BUTTON.ADD_DEVICE_TEXT }}</button>
   }
 </main>

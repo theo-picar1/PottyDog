@@ -13,6 +13,7 @@ import { Device } from "../../models/Device";
 import { AuthService } from "../services/auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { NotificationService } from "../services/notification.service";
+import { MESSAGES } from "../shared/constants/messages";
 
 @Component({
   selector: 'dashboard',
@@ -38,6 +39,7 @@ export class Dashboard implements OnInit {
 
   devices = signal<Device[]>([]);
   isLoading = signal<boolean>(true);
+  MESSAGES = MESSAGES;
 
   readonly dialog = inject(MatDialog);
   readonly snackBar = inject(MatSnackBar)

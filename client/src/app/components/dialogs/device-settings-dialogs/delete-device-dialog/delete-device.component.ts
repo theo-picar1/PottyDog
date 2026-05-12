@@ -5,6 +5,7 @@ import { AuthService } from "../../../../services/auth.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../../../../services/notification.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MESSAGES } from "../../../../shared/constants/messages";
 
 @Component({
     selector: 'delete-device',
@@ -29,6 +30,7 @@ export class DeleteDeviceDialog {
     ) { }
 
     private snackBar = inject(MatSnackBar);
+    MESSAGES = MESSAGES;
 
     onDelete() {
         const userId = this.authService.getUserId();

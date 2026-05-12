@@ -3,7 +3,9 @@ export const MESSAGES = {
     DEVICE_LOCATION_TEXT: (location: string) => `Location: ${location}`,
     NO_CAMERA_TEXT: "This device has no camera",
     CAMERA_OFFLINE_TEXT: "Camera is currently offline",
-    CONFIRM_DELETE_TEXT: "All device data will be permanently removed. Would you like to proceed?"
+    CONFIRM_DELETE_TEXT: "All device data will be permanently removed. Would you like to proceed?",
+    NO_DEVICES_TEXT: "No devices found. Set one up now!",
+    NO_DEVICE_TEXT: "No device found."
   },
   BUTTON: {
     LOGIN_TEXT: "Login",
@@ -30,16 +32,24 @@ export const MESSAGES = {
     WEBSITE_TITLE: "PottyDog",
     DEVICES_DASHBOARD_TITLE: "Your devices",
     NOT_AVAILABLE_TITLE: "Currently not available",
-    EDIT_DEVICE_TITLE: "Edit device",
-    DELETE_DEVICE_TITLE: "Delete device"
+    ERROR_TITLE: "An error has occured"
+  },
+  PLACEHOLDERS: {
+    DEVICE_NAME_PLACEHOLDER: "Enter new device name",
+    DEVICE_LOCATION_PLACEHOLDER: "Enter new device location"
   },
   ERRORS: {
     INVALID_EMAIL_ERROR: "Please enter a valid email address",
     EMAIL_REQUIRED_ERROR: "Email is required",
     PASSWORD_REQUIRED_ERROR: "Password is required",
-  }
+    DEVICE_NAME_REQUIRED_ERROR: "Device name is required",
+    INVALID_DEVICE_NAME_LENGTH_ERROR: "Name must be between 2 and 30 characters",
+    DEVICE_LOCATION_REQUIRED_ERROR: "Device location is required"
+  },
   COMMON: {
     UNDER_DEV_TEXT: "This feature is currently not available. Please try another time!",
-    LOGIN_CONTACT_TEXT: "Please contact theopicar@example.com if you are having any issues logging in."
+    LOGIN_CONTACT_TEXT: "Please contact theopicar@example.com if you are having any issues logging in.",
+    LOADING_TEXT: "Loading...",
+    DYNAMIC_LOADING_TEXT: (text: string) => `Loading ${text}...`
   }
 }

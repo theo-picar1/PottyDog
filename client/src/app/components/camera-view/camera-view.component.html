@@ -1,13 +1,13 @@
 @if (!this.hasCamera) {
   <div class="no-camera">
     <mat-icon>videocam_off</mat-icon>
-    <p>This device has no camera</p>
+    <p>{{ MESSAGES.DEVICE.NO_CAMERA_TEXT }}</p>
   </div>
 } @else {
   @if (this.isOffline) {
     <div class="offline-camera">
       <mat-icon>warning</mat-icon>
-      <p>Camera is offline</p>
+      <p>{{ MESSAGES.DEVICE.CAMERA_OFFLINE_TEXT }}</p>
     </div>
   } @else {
     <div class="online-camera">

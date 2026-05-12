@@ -1,8 +1,0 @@
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
-
-.pd-header {
-  @include responsive-padding();
-  background-color: $color-bg-surface;
-  width: 100%;
-}
