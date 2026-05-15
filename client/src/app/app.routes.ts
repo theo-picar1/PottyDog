@@ -1,6 +1,7 @@
 import { Dashboard } from './dashboard/dashboard.component';
 import { DevicePage } from './device/device.component';
 import { LoginPage } from './auth/login/login.component';
+import { ErrorPage } from './components/error-page/error-page.component';
 
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
@@ -19,5 +20,9 @@ export const routes: Routes = [
     path: 'device/:id',
     component: DevicePage,
     canActivate: [authGuard]
+  },
+  {
+    path: 'error-page',
+    component: ErrorPage
   }
 ];

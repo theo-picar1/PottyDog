@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
 
 	ngOnInit() {
 		if(this.authService.isAuthenticated()) {
-			this.router.navigate(['/dashboard'])
+			this.router.navigate(['/dashboard']);
 		}
 
 		this.loginForm = this.formBuilder.group({
@@ -71,7 +71,11 @@ export class LoginPage implements OnInit {
 					this.router.navigate(['/dashboard']);
 				},
 				error: (err) => {
-					this.serverError.set(err.error?.message || "Something went wrong. Please try again later");
+					this.router.navigate(['/error-page'], {
+						state: {
+							message: "Unable to login"
+						}
+					});
 				}
 			})
 	}
