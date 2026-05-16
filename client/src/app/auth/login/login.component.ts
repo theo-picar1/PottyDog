@@ -71,11 +71,7 @@ export class LoginPage implements OnInit {
 					this.router.navigate(['/dashboard']);
 				},
 				error: (err) => {
-					this.router.navigate(['/error-page'], {
-						state: {
-							message: "Unable to login"
-						}
-					});
+					console.error(err);
 				}
 			})
 	}

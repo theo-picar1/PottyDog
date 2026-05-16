@@ -8,10 +8,28 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
-      if(err.status === 500) {
-        router.navigate(['some-page'], {
+      if(err.status === 0) {
+        router.navigate(['/error-page'], {
           state: {
-            message: 'Unable to load devices.'
+            code: 0
+          }
+        });
+      } else if(err.status === 403) {
+        router.navigate(['/error=page']), {
+          state: {
+            code: 403
+          }
+        } 
+      } else if(err.status === 500) {
+        router.navigate(['/error-page'], {
+          state: {
+            code: 500
+          }
+        });
+      } else if(err.status === 503) {
+        router.navigate(['/error-page'], {
+          state: {
+            code: 503
           }
         });
       }

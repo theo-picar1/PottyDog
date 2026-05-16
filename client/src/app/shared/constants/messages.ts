@@ -44,7 +44,11 @@ export const MESSAGES = {
     PASSWORD_REQUIRED_ERROR: "Password is required",
     DEVICE_NAME_REQUIRED_ERROR: "Device name is required",
     INVALID_DEVICE_NAME_LENGTH_ERROR: "Name must be between 2 and 30 characters",
-    DEVICE_LOCATION_REQUIRED_ERROR: "Device location is required"
+    DEVICE_LOCATION_REQUIRED_ERROR: "Device location is required",
+    STATUS_0_ERROR: "Unable to connect to the server.",
+    STATUS_403_ERROR: "You do not have permission to access this resource.",
+    STATUS_500_ERROR: "An unexpected server error has occured.",
+    STATUS_503_ERROR: "This service is temporarily unavailable."
   },
   COMMON: {
     UNDER_DEV_TEXT: "This feature is currently not available. Please try another time!",

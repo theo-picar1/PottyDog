@@ -2,6 +2,9 @@
   @if(isLoading()) {
     <pd-spinner></pd-spinner>
   } @else {
-    {{ message() }}
+    <div>
+      <h1>{{ this.statusCode }}</h1>
+      <p>{{ this.errorMessage }}</p>
+    </div>
   }
 </main>
