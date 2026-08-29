@@ -1,0 +1,17 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.dashboard-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: $color-bg-elevated;
+  border-radius: 0.25rem;
+
+  button {
+    all: unset;
+    @include pd-button-primary;
+    text-align: center;
+  }
+}
