@@ -1,0 +1,22 @@
+<main>
+  <div class="potty-dog-container">
+    <h1>{{ MESSAGES.ADMIN_DASHBOARD.TITLE }}</h1>
+
+    <ul class="dashboard-cards-container">
+      @for (card of dashboardCards; track card) {
+      <li>
+        <app-dashboard-card
+          [title]="card.title"
+          [description]="card.description"
+          [buttonText]="card.buttonText"
+        ></app-dashboard-card>
+      </li>
+      }
+    </ul>
+
+    <div class="inline-notification-container">
+      <h2>{{ MESSAGES.ADMIN_DASHBOARD.NOTIFICATION_TITLE }}</h2>
+      <p>{{ MESSAGES.ADMIN_DASHBOARD.NOTIFICATION_DESC }}</p>
+    </div>
+  </div>
+</main>

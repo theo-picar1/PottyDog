@@ -50,6 +50,24 @@ export class AuthService {
     }
   }
 
+  isAdmin(): boolean {
+    const token = this.getToken();
+    if(!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const admin = payload.is_admin;
+      if(!admin) {
+        return false;
+      }
+
+      return true;
+    } catch{
+      this.logout();
+      return false;
+    }
+  }
+
   login(token: string) {
     localStorage.setItem('token', token);
   }

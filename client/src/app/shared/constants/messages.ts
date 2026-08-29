@@ -27,6 +27,8 @@ export const MESSAGES = {
     PASSWORD_LABEL: "Password",
     DEVICE_LOCATION_LABEL: "Location",
     DEVICE_NAME_LABEL: "Device name",
+    ADMIN_EMAIL: "Admin email",
+    ADMIN_PASSWORD: "Admin password"
   },
   TITLE: {
     WEBSITE_TITLE: "PottyDog",
@@ -51,5 +53,20 @@ export const MESSAGES = {
     LOGIN_CONTACT_TEXT: "Please contact theopicar@example.com if you are having any issues logging in.",
     LOADING_TEXT: "Loading...",
     DYNAMIC_LOADING_TEXT: (text: string) => `Loading ${text}...`
+  },
+  LINK: {
+    GUEST_LOGIN: "Guest login",
+    ADMIN_LOGIN: "Administrator login"
+  },
+  ADMIN_DASHBOARD: {
+    TITLE: "Admin Dashboard",
+    USER_CARD_TITLE: "Users table",
+    USER_CARD_DESC: "View and manage all users here",
+    USER_CARD_BUTTON_TEXT: "Go to users",
+    DEVICE_CARD_TITLE: "Devices table",
+    DEVICE_CARD_DESC: "Manage all available devices here",
+    DEVICE_CARD_BUTTON_TEXT: "Go to devices",
+    NOTIFICATION_TITLE: "Note",
+    NOTIFICATION_DESC: "This page is subject to constant changing as more features develop for PottyDog"
   }
 }

@@ -10,21 +10,20 @@ import { MESSAGES } from "../../shared/constants/messages";
 import { RouterLink } from "@angular/router";
 
 @Component({
-	selector: 'login',
-	templateUrl: './login.component.html',
-	styleUrl: './login.component.scss',
-	imports: [
+  selector: 'app-admin-login',
+  imports: [
 		MatFormFieldModule,
 		MatInputModule,
 		FormsModule,
 		ReactiveFormsModule,
 		MatIconModule,
 		RouterLink
-	]
+	],
+  templateUrl: './admin-login.html',
+  styleUrl: './admin-login.scss',
 })
-
-export class LoginPage implements OnInit {
-	constructor(
+export class AdminLogin implements OnInit {
+  constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly router: Router,
 		private readonly http: HttpClient,
@@ -67,11 +66,11 @@ export class LoginPage implements OnInit {
 		this.submitted = true;
 		if (this.loginForm.invalid) return;
 
-		this.http.post('http://localhost:5000/login', this.loginForm.value)
+		this.http.post('http://localhost:5000/admin-login', this.loginForm.value)
 			.subscribe({
 				next: (res: any) => {
 					this.authService.login(res.token);
-					this.router.navigate(['/dashboard']);
+					this.router.navigate(['/admin-dashboard']);
 				},
 				error: (err) => {
 					this.serverError.set(err.error?.message || "Something went wrong. Please try again later");
@@ -83,4 +82,4 @@ export class LoginPage implements OnInit {
 		this.submitted = false;
 		this.loginForm.reset();
 	}
-} 
+}

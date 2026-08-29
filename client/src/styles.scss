@@ -13,24 +13,30 @@
 }
 
 :root {
-  @include mat.dialog-overrides((
-    container-color: $color-bg-elevated,
-    subhead-color: $text-primary,
-    supporting-text-color: $text-primary,
-    container-shape: 1rem
-  ));
-  @include mat.menu-overrides((
-    container-color: $color-bg-surface,
-    container-shape: 0,
-    item-label-text-color: $text-primary,
-    container-elevation-shadow: $shadow-soft,
-    item-icon-color: $text-primary,
-    item-hover-state-layer-color: $color-bg-elevated
-  ));
-  @include mat.slide-toggle-overrides((
-    selected-track-color: $color-primary,
-    selected-focus-track-color: $color-primary-muted
-  ))
+  @include mat.dialog-overrides(
+    (
+      container-color: $color-bg-elevated,
+      subhead-color: $text-primary,
+      supporting-text-color: $text-primary,
+      container-shape: 1rem,
+    )
+  );
+  @include mat.menu-overrides(
+    (
+      container-color: $color-bg-surface,
+      container-shape: 0,
+      item-label-text-color: $text-primary,
+      container-elevation-shadow: $shadow-soft,
+      item-icon-color: $text-primary,
+      item-hover-state-layer-color: $color-bg-elevated,
+    )
+  );
+  @include mat.slide-toggle-overrides(
+    (
+      selected-track-color: $color-primary,
+      selected-focus-track-color: $color-primary-muted,
+    )
+  );
 }
 
 .pd-mat-menu .delete-device span {
@@ -66,6 +72,50 @@ body {
   }
 }
 
+p {
+  font-size: 1rem;
+}
+
 .loading {
   cursor: wait !important;
+}
+
+.pd-link {
+  color: $color-primary;
+  text-decoration: underline;
+  font-weight: 500;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: $color-accent;
+    text-decoration: none;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+  }
+
+  &:active {
+    color: $color-primary-muted;
+  }
+
+  &:visited {
+    color: lighten($color-primary-muted, 12%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba($color-accent, 0.4);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.potty-dog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 2rem;
+  max-width: 1060px;
+  margin: auto;
 }

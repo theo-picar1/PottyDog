@@ -100,7 +100,7 @@ def register():
     return render_template('register.html'), 200
 
 
-# Login page and logic
+# Login logic
 @auth_bp.route('/login', methods=['POST'])
 def login():
     conn = None
@@ -113,7 +113,7 @@ def login():
             return jsonify({ 
                 "message": "All fields are required",
                 "status_code": 401
-            })
+            }), 401
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -122,11 +122,11 @@ def login():
             (email,)
         )
         user = cursor.fetchone()
-        if not user or not user['password'] == password:
+        if not user or not user['password'] == password or user['is_admin'] == True:
             return jsonify({ 
                 "message": "Invalid username or password" ,
                 "status_code": 401
-            })
+            }), 401
             
         payload = {
             'id': user['id'],
@@ -134,8 +134,6 @@ def login():
         }
         
         token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm='HS256')
-        
-        print("Success!")
         return jsonify({
             "message": "Success",
             "status_code": 200,
@@ -145,14 +143,14 @@ def login():
                 "dog_name": user["dog_name"]
             },
             "token": token
-        })
+        }), 200
         
     except Exception as e:
         print(e)
         return jsonify({
             "message": "Server error",
             "status_code": 500
-        })
+        }), 500
         
     finally:
         if cursor:
@@ -161,57 +159,63 @@ def login():
             conn.close()
 
 
-# Admin login page and logic
-@auth_bp.route('/admin-login', methods=['GET', 'POST'])
+# Admin login logic
+@auth_bp.route('/admin-login', methods=['POST'])
 def admin_login():
-    if request.method == 'GET':
-        return render_template('admin-login.html'), 200
-    
     conn = None
     cursor = None
-    
     try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        if not email or not password:
+            return jsonify({
+                "message": "Please fill in all required fields!"
+            }), 400
+
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
-        if not email or not password:
-            return render_template('admin-login.html', error="Please fill in all required fields!"), 400
-        
         cursor.execute(
             "SELECT * FROM users WHERE email = %s",
             (email,)
         )
+
         admin = cursor.fetchone()
-        if not admin or not current_app.bcrypt.check_password_hash(admin['password'], password):
-            return render_template('admin-login.html', error="Incorrect email or password!"), 401
-        
-        if not bool(admin['is_admin']):
-            return render_template('admin-login.html', error="You are not authorised to use this page!"), 401
-        
-        # Store necessary user details in session when successful
-        session.permanent = True
-        session['is_admin'] = True
-        session['user_id'] = admin['id']
-        
-        return redirect(url_for('admin_dashboard'))
+        if not admin or not admin['password'] == password or not bool(admin['is_admin']):
+            return jsonify({
+                "message": "Incorrect email or password!"
+            }), 401
             
+        payload = {
+            'id': admin['id'],
+            'is_admin': True,
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=2)  # expiry
+        }
+        
+        token = jwt.encode(payload, current_app.config["SECRET_KEY"], algorithm='HS256')
+
+        return jsonify({
+            "message": "Success",
+            "user": {
+                "id": admin["id"],
+                "username": admin["username"],
+                "email": admin["email"],
+                "is_admin": bool(admin["is_admin"])
+            },
+            "token": token
+        }), 200
+
     except Exception as e:
         print(e)
-        return render_template(
-            'protected.html', 
-            status_code="500",
-            error="Server error!",
-            message="Something went wrong. Please contact the admin if issues persist."
-        ), 500
-    
+        return jsonify({
+            "message": "Server error!"
+        }), 500
+
     finally:
-        if conn:
-            conn.close()
         if cursor:
             cursor.close()
+        if conn:
+            conn.close()
 
 
 # Logging out logic

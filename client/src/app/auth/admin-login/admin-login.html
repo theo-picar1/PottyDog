@@ -2,10 +2,10 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <h1>{{ MESSAGES.TITLE.WEBSITE_TITLE }}</h1>
     <div class="form-field-name">
-      <mat-icon>email</mat-icon><span>{{ MESSAGES.LABEL.EMAIL_ADDRESS_LABEL }}</span>
+      <mat-icon>email</mat-icon><span>{{ MESSAGES.LABEL.ADMIN_EMAIL }}</span>
     </div>
     <mat-form-field>
-        <mat-label>{{ MESSAGES.LABEL.EMAIL_ADDRESS_LABEL }}</mat-label>
+        <mat-label>{{ MESSAGES.LABEL.ADMIN_EMAIL }}</mat-label>
         <input type="email" formControlName="email" matInput placeholder="Enter your email address" required />
         @if (formControls['email'].hasError('email')) {
           <mat-error>{{ MESSAGES.ERRORS.INVALID_EMAIL_ERROR }}</mat-error>
@@ -15,10 +15,10 @@
     </mat-form-field>
 
     <div class="form-field-name">
-      <mat-icon>lock</mat-icon><span>{{ MESSAGES.LABEL.PASSWORD_LABEL }}</span>
+      <mat-icon>lock</mat-icon><span>{{ MESSAGES.LABEL.ADMIN_PASSWORD }}</span>
     </div>
     <mat-form-field>
-      <mat-label>{{ MESSAGES.LABEL.PASSWORD_LABEL }}</mat-label>
+      <mat-label>{{ MESSAGES.LABEL.ADMIN_PASSWORD }}</mat-label>
         <input type="password" formControlName="password" matInput placeholder="Enter your password" required />
          @if (formControls['password'].hasError('required')) {
           <mat-error>{{ MESSAGES.ERRORS.PASSWORD_REQUIRED_ERROR }}</mat-error>
@@ -34,10 +34,6 @@
       <button type="reset" class="clear" (click)="onReset()">{{ MESSAGES.BUTTON.CLEAR_TEXT }}</button>
     </div>
 
-    <a [routerLink]="['/admin-login']" class="pd-link">{{ MESSAGES.LINK.ADMIN_LOGIN }}</a>
+    <a [routerLink]="['']" class="pd-link">{{ MESSAGES.LINK.GUEST_LOGIN }}</a>
   </form>
 </main>
-
-<div class="login-footer">
-  <p>{{ MESSAGES.COMMON.LOGIN_CONTACT_TEXT }}</p>
-</div>
